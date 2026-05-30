@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resolveNoteRef } from '../../lib/content';
+
+const people = await getCollection('people');
+const isDefined = <T,>(value: T | undefined): value is T => Boolean(value);
+
+const peopleWithNotes = await Promise.all(
+  people.map(async (person) => ({
+    person,
+    notes: (await Promise.all(person.data.relatedNotes.map((note) => resolveNoteRef(note)))).filter(isDefined),
+  })),
+);
+---
+
+<BaseLayout title="People" description="AI native generation의 사람 신호 데이터베이스입니다.">
+  <section class="frame heading">
+    <p class="eyebrow mono">People Database</p>
+    <h1>People</h1>
+    <p class="muted">이름, 역할, 사용 도구, 대표 신호, 관련 글 링크를 한 화면에서 관리합니다.</p>
+    <p class="mono count">total: {peopleWithNotes.length} entries</p>
+  </section>
+
+  <section class="grid-2">
+    {peopleWithNotes.map(({ person, notes }) => (
+      <article class="note-card people-card">
+        <div class="head-row">
+          <p class="eyebrow mono">{person.data.stage ?? 'n/a'}</p>
+          <span class="tag mono">{person.data.slug}</span>
+        </div>
+        <h2 class="note-title">{person.data.name}</h2>
+        <p class="note-subtitle">{person.data.role}</p>
+        <p class="muted">{person.data.summary}</p>
+        <div class="tag-list">
+          {person.data.tools.map((tool) => (
+            <span class="tag">{tool}</span>
+          ))}
+        </div>
+        <div class="note-meta mono">signals: {person.data.signals.join(', ') || 'n/a'}</div>
+        <div>
+          <p class="eyebrow mono">related notes</p>
+          <ul>
+            {notes.map((note) => (
+              <li>
+                <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .heading {
+    padding: 1.1rem;
+    margin-bottom: 1rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .heading h1 {
+    margin: 0;
+  }
+
+  .count {
+    font-size: 0.77rem;
+    color: var(--muted);
+  }
+
+  .people-card {
+    gap: 0.65rem;
+  }
+
+  .head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .people-card ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .people-card li + li {
+    margin-top: 0.3rem;
+  }
+</style>

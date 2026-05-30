@@ -1,0 +1,92 @@
+---
+import { SITE } from '../lib/site';
+---
+
+<section class="frame proposal">
+  <p class="eyebrow mono">Builder Recommendation / Interview Proposal (UI only)</p>
+  <h1>빌더 추천 또는 인터뷰 제안</h1>
+  <p class="muted">
+    서버 제출 기능 없이 운영하는 MVP입니다. 아래 구조를 참고해 작성 후 메일로 전달하거나
+    Google Forms/Tally로 연결할 수 있습니다.
+  </p>
+
+  <form class="proposal-form">
+    <label>
+      제안 유형
+      <select name="proposalType">
+        <option>인터뷰 제안</option>
+        <option>빌더 추천</option>
+        <option>프로젝트 제보</option>
+      </select>
+    </label>
+    <label>
+      이름
+      <input type="text" name="name" placeholder="홍길동" />
+    </label>
+    <label>
+      소개하고 싶은 사람 또는 프로젝트
+      <input type="text" name="target" placeholder="예: AI 에이전트 도구를 만드는 1인 팀" />
+    </label>
+    <label>
+      왜 최전선 노트에 맞는지
+      <textarea name="reason" rows={5} placeholder="현장에서 관찰한 작업 방식과 신호를 적어주세요." />
+    </label>
+    <label>
+      연락처
+      <input type="text" name="contact" placeholder="이메일 또는 SNS" />
+    </label>
+    <label>
+      참고 링크
+      <input type="url" name="reference" placeholder="https://..." />
+    </label>
+    <div class="actions">
+      <a class="btn" href={`mailto:${SITE.contactEmail}?subject=최전선%20노트%20인터뷰%20제안`}>
+        메일로 제안하기
+      </a>
+      <button type="button" class="btn secondary">폼 연동 예정</button>
+    </div>
+  </form>
+</section>
+
+<style>
+  .proposal {
+    padding: 1rem;
+  }
+
+  .proposal h1 {
+    margin: 0.2rem 0 0.6rem;
+  }
+
+  .proposal-form {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .proposal-form label {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .proposal-form input,
+  .proposal-form select,
+  .proposal-form textarea {
+    border: 1px solid var(--line);
+    border-radius: 0.35rem;
+    padding: 0.62rem 0.7rem;
+    font: inherit;
+    background: #fff;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .actions {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

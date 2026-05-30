@@ -1,0 +1,16 @@
+name: 이민호
+slug: minho-lee
+role: 커뮤니티 빌더
+company: meetup-collective
+stage: community
+tools:
+  - Codex
+  - GitHub
+  - Supabase
+signals:
+  - community-pull
+  - distribution
+relatedNotes:
+  - interviews/proving-collaboration-before-company
+  - field-notes/backstage-tool-consensus-at-community-stage
+summary: 팀이 만들어지기 전에도 협업 프로토콜을 공개해 신뢰를 확보하는 실무형 빌더.

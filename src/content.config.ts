@@ -1,0 +1,137 @@
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
+import { STAGE_OPTIONS } from './lib/site';
+
+const noteType = z.enum(['essay', 'interview', 'field-note', 'system', 'report']);
+
+const noteSchema = z.object({
+  title: z.string(),
+  subtitle: z.string(),
+  slug: z.string(),
+  date: z.coerce.date(),
+  updatedAt: z.coerce.date().optional(),
+  type: noteType,
+  issue: z.string(),
+  person: z.string().optional(),
+  role: z.string().optional(),
+  company: z.string().optional(),
+  stage: z.enum(STAGE_OPTIONS).optional(),
+  tools: z.array(z.string()).default([]),
+  themes: z.array(z.string()).default([]),
+  signals: z.array(z.string()).default([]),
+  location: z.string().optional(),
+  related_people: z.array(z.string()).default([]),
+  related_tools: z.array(z.string()).default([]),
+  next_questions: z.array(z.string()).default([]),
+  featured: z.boolean().default(false),
+  draft: z.boolean().default(false),
+  coverImage: z.string().optional(),
+});
+
+const issueSchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+  description: z.string(),
+  publishedAt: z.coerce.date(),
+  current: z.boolean().default(false),
+  themes: z.array(z.string()).default([]),
+  includedNotes: z
+    .array(
+      z.object({
+        collection: z.enum(['essays', 'interviews', 'field-notes', 'systems', 'reports']),
+        slug: z.string(),
+      }),
+    )
+    .default([]),
+});
+
+const peopleSchema = z.object({
+  name: z.string(),
+  slug: z.string(),
+  role: z.string(),
+  company: z.string().optional(),
+  stage: z.enum(STAGE_OPTIONS).optional(),
+  tools: z.array(z.string()).default([]),
+  signals: z.array(z.string()).default([]),
+  relatedNotes: z.array(z.string()).default([]),
+  summary: z.string(),
+});
+
+const toolsSchema = z.object({
+  name: z.string(),
+  slug: z.string(),
+  changedWorkflow: z.string(),
+  frequentSignals: z.array(z.string()).default([]),
+  relatedNotes: z.array(z.string()).default([]),
+  summary: z.string(),
+});
+
+const newsletterSchema = z.object({
+  title: z.string(),
+  subtitle: z.string(),
+  slug: z.string(),
+  date: z.coerce.date(),
+  updatedAt: z.coerce.date().optional(),
+  summary: z.string(),
+  topics: z.array(z.string()).default([]),
+  featured: z.boolean().default(false),
+  draft: z.boolean().default(false),
+});
+
+const essays = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/essays' }),
+  schema: noteSchema,
+});
+
+const interviews = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/interviews' }),
+  schema: noteSchema,
+});
+
+const fieldNotes = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/field-notes' }),
+  schema: noteSchema,
+});
+
+const systems = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/systems' }),
+  schema: noteSchema,
+});
+
+const reports = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/reports' }),
+  schema: noteSchema,
+});
+
+const issues = defineCollection({
+  loader: glob({ pattern: '**/*.{yaml,yml,json}', base: './src/content/issues' }),
+  schema: issueSchema,
+});
+
+const people = defineCollection({
+  loader: glob({ pattern: '**/*.{yaml,yml,json}', base: './src/content/people' }),
+  schema: peopleSchema,
+});
+
+const tools = defineCollection({
+  loader: glob({ pattern: '**/*.{yaml,yml,json}', base: './src/content/tools' }),
+  schema: toolsSchema,
+});
+
+const newsletters = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/newsletter' }),
+  schema: newsletterSchema,
+});
+
+export const collections = {
+  essays,
+  interviews,
+  'field-notes': fieldNotes,
+  systems,
+  reports,
+  issues,
+  people,
+  tools,
+  newsletter: newsletters,
+};

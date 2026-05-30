@@ -1,17 +1,352 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContentCard from '../components/ContentCard.astro';
+import NewsletterBlock from '../components/NewsletterBlock.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { formatDate, getPublishedNewsletters, getPublishedCollection, resolveIssueNotes } from '../lib/content';
+import { SITE } from '../lib/site';
 
+const essays = await getPublishedCollection('essays');
+const interviews = await getPublishedCollection('interviews');
+const fieldNotes = await getPublishedCollection('field-notes');
+const systems = await getPublishedCollection('systems');
+const reports = await getPublishedCollection('reports');
+const issues = await getCollection('issues');
+const people = await getCollection('people');
+const tools = await getCollection('tools');
+const newsletters = await getPublishedNewsletters();
+
+const currentIssue =
+  issues.find((item) => item.data.current) ??
+  issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())[0];
+
+const currentIssueNotes = currentIssue ? await resolveIssueNotes(currentIssue.data.includedNotes) : [];
+const featuredEssay = essays.find((entry) => entry.data.featured) ?? essays[0];
+const featuredNewsletter = newsletters.find((entry) => entry.data.featured) ?? newsletters[0];
+
+const peoplePreview = people.slice(0, 3);
+const toolsPreview = tools.slice(0, 3);
+
+const noteHrefFromRef = (noteRef: string) => {
+  const [collection, ...slugParts] = noteRef.split('/');
+  const slug = slugParts.join('/');
+  if (!collection || !slug) return '/notes';
+  return `/${collection}/${slug}`;
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Home" description={SITE.description}>
+  <section class="frame hero">
+    <div>
+      <p class="eyebrow mono">AI NATIVE MAGAZINE / EDITORIAL SIGNAL SYSTEM</p>
+      <h1>
+        {SITE.title}
+        <small>{SITE.englishName}</small>
+      </h1>
+      <p class="sub">{SITE.subtitle}</p>
+      <p class="core">{SITE.coreLines[0]}</p>
+      <p class="core">{SITE.coreLines[1]}</p>
+      <div class="cta">
+        <a class="btn" href={SITE.cta.readLatest}>최신 노트 읽기</a>
+        <a class="btn secondary" href={SITE.cta.interviewProposal}>인터뷰 제안하기</a>
+      </div>
+    </div>
+
+    {currentIssue ? (
+      <aside class="issue-panel">
+        <p class="eyebrow mono">Current Issue</p>
+        <h2>{currentIssue.data.title}</h2>
+        <p class="muted">{currentIssue.data.description}</p>
+        <div class="tag-list">
+          {currentIssue.data.themes.map((theme) => (
+            <span class="tag">{theme}</span>
+          ))}
+        </div>
+        {currentIssueNotes.length ? (
+          <ul>
+            {currentIssueNotes.slice(0, 4).map((note) => (
+              <li>
+                <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </aside>
+    ) : null}
+  </section>
+
+  <section class="grid-2 split-block">
+    {featuredEssay ? <ContentCard entry={featuredEssay} /> : null}
+
+    <article class="frame signal-hub">
+      <p class="eyebrow mono">Signal Intake</p>
+      <h2>사람 · 도구 · 현장 신호 허브</h2>
+      <p class="muted">
+        이 사이트의 핵심은 글 발행 수가 아니라, 관찰 데이터가 지속적으로 들어오고 다시 분류되는 운영 구조입니다.
+      </p>
+      <div class="hub-grid">
+        <a href="/people">
+          <strong>People DB</strong>
+          <span>{people.length} entries</span>
+        </a>
+        <a href="/tools">
+          <strong>Tools DB</strong>
+          <span>{tools.length} entries</span>
+        </a>
+        <a href="/field-notes">
+          <strong>Field Signals</strong>
+          <span>{fieldNotes.length} notes</span>
+        </a>
+        <a href="/newsletter">
+          <strong>Newsletter Archive</strong>
+          <span>{newsletters.length} issues</span>
+        </a>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <SectionHeading title="Latest Interviews" href="/interviews" />
+    <div class="grid-3">
+      {interviews.slice(0, 3).map((entry) => (
+        <ContentCard entry={entry} />
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <SectionHeading title="Field Notes" href="/field-notes" />
+    <div class="grid-3">
+      {fieldNotes.slice(0, 3).map((entry) => (
+        <ContentCard entry={entry} />
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <SectionHeading title="Systems" href="/systems" />
+    <div class="grid-3">
+      {systems.slice(0, 3).map((entry) => (
+        <ContentCard entry={entry} />
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <SectionHeading title="People" href="/people" linkLabel="People DB 보기" />
+    <div class="grid-3">
+      {peoplePreview.map((person) => (
+        <article class="note-card">
+          <p class="eyebrow mono">{person.data.stage ?? 'n/a'}</p>
+          <h3 class="note-title">{person.data.name}</h3>
+          <p class="note-subtitle">{person.data.role}</p>
+          <div class="note-meta mono">signals: {person.data.signals.join(', ') || 'n/a'}</div>
+          {person.data.relatedNotes[0] ? (
+            <a class="mono" href={noteHrefFromRef(person.data.relatedNotes[0])}>
+              related note →
+            </a>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <SectionHeading title="Tools" href="/tools" linkLabel="Tools DB 보기" />
+    <div class="grid-3">
+      {toolsPreview.map((tool) => (
+        <article class="note-card">
+          <p class="eyebrow mono">workflow change</p>
+          <h3 class="note-title">{tool.data.name}</h3>
+          <p class="note-subtitle">{tool.data.summary}</p>
+          <div class="note-meta mono">signals: {tool.data.frequentSignals.join(', ') || 'n/a'}</div>
+          {tool.data.relatedNotes[0] ? (
+            <a class="mono" href={noteHrefFromRef(tool.data.relatedNotes[0])}>
+              related note →
+            </a>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <SectionHeading title="Reports" href="/reports" />
+    <div class="grid-2">
+      {reports.slice(0, 2).map((entry) => (
+        <ContentCard entry={entry} />
+      ))}
+    </div>
+  </section>
+
+  <section class="grid-2 split-block">
+    {featuredNewsletter ? (
+      <article class="frame newsletter-featured">
+        <p class="eyebrow mono">Latest Newsletter</p>
+        <h2>
+          <a href={`/newsletter/${featuredNewsletter.id}`}>{featuredNewsletter.data.title}</a>
+        </h2>
+        <p class="note-subtitle">{featuredNewsletter.data.subtitle}</p>
+        <p class="muted">{featuredNewsletter.data.summary}</p>
+        <div class="tag-list">
+          <span class="tag mono">{formatDate(featuredNewsletter.data.date)}</span>
+          {featuredNewsletter.data.topics.map((topic) => (
+            <span class="tag">{topic}</span>
+          ))}
+        </div>
+      </article>
+    ) : null}
+
+    <div id="newsletter">
+      <NewsletterBlock />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 1.28rem 1.24rem 1.18rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
+    gap: 1.14rem;
+  }
+
+  .hero h1 {
+    margin: 0.15rem 0 0.48rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.08rem;
+    font-size: clamp(2.6rem, 5.9vw, 3.95rem);
+    line-height: 0.98;
+  }
+
+  .hero h1 small {
+    font-size: clamp(0.76rem, 1.7vw, 0.9rem);
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+  }
+
+  .sub {
+    margin: 0 0 0.68rem;
+    font-size: 0.97rem;
+  }
+
+  .core {
+    margin: 0.1rem 0 0;
+    font-size: 0.99rem;
+    max-width: 62ch;
+  }
+
+  .cta {
+    display: flex;
+    gap: 0.48rem;
+    margin-top: 0.95rem;
+  }
+
+  .issue-panel {
+    border-left: 1px solid var(--line-strong);
+    padding-left: 0.95rem;
+    display: grid;
+    align-content: flex-start;
+    gap: 0.48rem;
+  }
+
+  .issue-panel h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.18;
+  }
+
+  .issue-panel ul {
+    margin: 0;
+    padding-left: 1.05rem;
+  }
+
+  .split-block {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .signal-hub {
+    padding: 1rem 1rem 0.95rem;
+    display: grid;
+    gap: 0.64rem;
+  }
+
+  .signal-hub h2 {
+    margin: 0;
+    font-size: clamp(1.55rem, 2.5vw, 2rem);
+    line-height: 1.16;
+  }
+
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .hub-grid a {
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: var(--surface-strong);
+    padding: 0.62rem 0.6rem;
+    display: grid;
+    gap: 0.15rem;
+    text-decoration: none;
+  }
+
+  .hub-grid a strong {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .hub-grid a span {
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+
+  .newsletter-featured {
+    padding: 1rem 1rem 0.95rem;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .newsletter-featured h2 {
+    margin: 0;
+    font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+    line-height: 1.18;
+  }
+
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .issue-panel {
+      border-left: none;
+      border-top: 1px solid var(--line);
+      padding-left: 0;
+      padding-top: 0.85rem;
+    }
+
+    .hub-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .split-block {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cta {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,20 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F4F2EC"/>
+  <rect x="48" y="48" width="1104" height="534" fill="#FCFBF7" stroke="#B9B6AB" stroke-width="2"/>
+  <rect x="84" y="96" width="320" height="30" fill="#F0EEE7"/>
+  <rect x="84" y="154" width="420" height="2" fill="#B9B6AB"/>
+  <rect x="84" y="186" width="830" height="2" fill="#D5D3CA"/>
+  <rect x="84" y="215" width="760" height="2" fill="#D5D3CA"/>
+  <rect x="84" y="244" width="800" height="2" fill="#D5D3CA"/>
+  <rect x="84" y="314" width="500" height="170" fill="#FFFFFF" stroke="#D5D3CA"/>
+  <rect x="616" y="314" width="500" height="170" fill="#FFFFFF" stroke="#D5D3CA"/>
+  <text x="84" y="122" font-family="Menlo, Monaco, Consolas, monospace" font-size="20" fill="#4D4D4D">
+    FRONTIER NOTES / AI NATIVE MAGAZINE
+  </text>
+  <text x="84" y="292" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="54" fill="#101010">
+    최전선 노트
+  </text>
+  <text x="84" y="536" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="27" fill="#4D4D4D">
+    사람 · 도구 · 현장 신호를 기록하는 기술 매거진
+  </text>
+</svg>

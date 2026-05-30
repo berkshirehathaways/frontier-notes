@@ -1,0 +1,16 @@
+name: 박하나
+slug: hana-park
+role: 제품 실험 설계자
+company: stealth-project
+stage: project
+tools:
+  - Claude Code
+  - cmux
+  - GitHub
+signals:
+  - execution-density
+  - demo-pressure
+relatedNotes:
+  - interviews/sharing-the-30-minute-deploy-checklist
+  - systems/issue-driven-weekly-operating-system
+summary: 발표 직전까지 실행 상태를 조정하며, 데모 압박을 체크리스트로 구조화한다.

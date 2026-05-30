@@ -1,0 +1,10 @@
+name: Codex
+slug: codex
+changedWorkflow: 계획-구현-검증 루프를 한 세션에서 끝내도록 작업 단위를 재설계하게 만든다.
+frequentSignals:
+  - workflow-change
+  - execution-density
+relatedNotes:
+  - systems/issue-driven-weekly-operating-system
+  - interviews/sharing-the-30-minute-deploy-checklist
+summary: 작업 분해를 명확하게 하여, 작은 단위의 검증 가능한 생산을 유도한다.

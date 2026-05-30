@@ -1,0 +1,9 @@
+name: Supabase
+slug: supabase
+changedWorkflow: 백엔드 기본기를 빠르게 프로토타이핑해 실험 속도를 높이는 방향으로 사용된다.
+frequentSignals:
+  - speed
+  - tool-adoption
+relatedNotes:
+  - field-notes/first-thing-that-changes-at-hackathon-night
+summary: MVP 단계에서 기능 유효성 검증 시간을 단축한다.

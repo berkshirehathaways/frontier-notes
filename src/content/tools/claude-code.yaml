@@ -1,0 +1,11 @@
+name: Claude Code
+slug: claude-code
+changedWorkflow: 문제를 설명으로 끝내지 않고 바로 실행 가능한 수정 루프로 전환하게 만든다.
+frequentSignals:
+  - speed
+  - workflow-change
+  - execution-density
+relatedNotes:
+  - essays/launch-frontier-notes
+  - systems/one-person-three-roles-flow
+summary: 문서 작성과 코드 수정의 왕복 시간을 크게 줄여 실행 밀도를 높인다.

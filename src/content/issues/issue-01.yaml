@@ -1,0 +1,17 @@
+title: Issue 01. 처음부터 AI와 일하는 사람들
+slug: issue-01
+description: AI를 보조 도구가 아니라 기본 작업 환경으로 받아들인 사람들의 초반 신호를 모은 호.
+publishedAt: 2026-06-01
+current: false
+themes:
+  - ai-native
+  - builder-habits
+includedNotes:
+  - collection: essays
+    slug: launch-frontier-notes
+  - collection: interviews
+    slug: build-portfolio-through-deploy-logs
+  - collection: field-notes
+    slug: fix-terminal-one-minute-before-demo
+  - collection: systems
+    slug: one-person-three-roles-flow

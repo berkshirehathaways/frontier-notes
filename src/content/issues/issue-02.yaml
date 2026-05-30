@@ -1,0 +1,17 @@
+title: Issue 02. 피치덱 전에 보이는 신호
+slug: issue-02
+description: 데모 전후, 인터뷰 전후, 커뮤니티 현장에서 먼저 드러나는 실행 신호를 기록한 호.
+publishedAt: 2026-07-01
+current: false
+themes:
+  - signal-tracking
+  - pre-pitch
+includedNotes:
+  - collection: essays
+    slug: ask-for-working-first
+  - collection: interviews
+    slug: proving-collaboration-before-company
+  - collection: field-notes
+    slug: first-thing-that-changes-at-hackathon-night
+  - collection: reports
+    slug: signals-before-pitchdeck-report-preview

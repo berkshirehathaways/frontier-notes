@@ -1,0 +1,62 @@
+---
+import type { NoteEntry } from '../lib/content';
+import { formatDate, noteUrl } from '../lib/content';
+
+interface Props {
+  entry: NoteEntry;
+  href?: string;
+  showCollection?: boolean;
+}
+
+const { entry, href = noteUrl(entry), showCollection = false } = Astro.props;
+const typeLabel = entry.data.type.toUpperCase();
+const tools = entry.data.tools.length ? entry.data.tools.join(', ') : 'n/a';
+const signals = entry.data.signals.length ? entry.data.signals.join(', ') : 'n/a';
+const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
+
+const detailRowsByType: Record<NoteEntry['data']['type'], string[]> = {
+  essay: [`issue: ${entry.data.issue}`, `themes: ${themes}`],
+  interview: [`person: ${entry.data.person ?? 'n/a'}`, `role: ${entry.data.role ?? 'n/a'}`],
+  'field-note': [`location: ${entry.data.location ?? 'n/a'}`, `tools: ${tools}`],
+  system: [`issue: ${entry.data.issue}`, `tools: ${tools}`],
+  report: [`issue: ${entry.data.issue}`, `themes: ${themes}`],
+};
+
+const detailRows = detailRowsByType[entry.data.type];
+---
+
+<article class="note-card" data-note-card data-type={entry.data.type} data-themes={entry.data.themes.join(',')} data-tools={entry.data.tools.join(',')}>
+  <div class="note-meta mono">
+    <strong>[{typeLabel}]</strong> {formatDate(entry.data.date)}
+    {showCollection ? <span> / {entry.collection}</span> : null}
+    <br />
+    {detailRows[0]}
+    <br />
+    {detailRows[1]}
+    <br />
+    signals: {signals}
+  </div>
+
+  <div>
+    <h3 class="note-title">
+      <a href={href}>{entry.data.title}</a>
+    </h3>
+    <p class="note-subtitle">{entry.data.subtitle}</p>
+  </div>
+
+  <footer class="card-footer">
+    <div class="tag-list">
+      <span class="tag mono">issue: {entry.data.issue}</span>
+      {entry.data.themes.slice(0, 3).map((theme) => (
+        <span class="tag">{theme}</span>
+      ))}
+    </div>
+  </footer>
+</article>
+
+<style>
+  .card-footer {
+    margin-top: auto;
+    padding-top: 0.2rem;
+  }
+</style>

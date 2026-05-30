@@ -1,0 +1,68 @@
+---
+import { SITE } from '../lib/site';
+---
+
+<section class="frame newsletter">
+  <p class="eyebrow mono">Newsletter Subscription + Archive</p>
+  <h2>월간 노트 구독</h2>
+  <p class="muted">
+    MVP에서는 서버 전송 없이 구독 UI를 제공합니다. 실제 운영은 mailto 또는 Google Forms/Tally 무료 플랜으로 연결할 수 있습니다.
+  </p>
+  <form class="newsletter-form">
+    <label>
+      이메일
+      <input type="email" placeholder="you@example.com" aria-label="이메일" />
+    </label>
+    <button type="button" class="btn">구독 신청 준비중</button>
+  </form>
+  <div class="links">
+    <a class="mono" href="/newsletter">뉴스레터 아카이브 보기 →</a>
+    <a class="mono" href={`mailto:${SITE.contactEmail}?subject=최전선%20노트%20뉴스레터%20구독%20요청`}>
+      메일로 구독 요청하기 →
+    </a>
+  </div>
+</section>
+
+<style>
+  .newsletter {
+    padding: 1rem;
+  }
+
+  .newsletter h2 {
+    margin: 0.25rem 0 0.35rem;
+  }
+
+  .newsletter-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .links {
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.2rem;
+    font-size: 0.85rem;
+  }
+
+  label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.86rem;
+  }
+
+  input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 0.35rem;
+    padding: 0.6rem 0.7rem;
+    font: inherit;
+  }
+
+  @media (max-width: 768px) {
+    .newsletter-form {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

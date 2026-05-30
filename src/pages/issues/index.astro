@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, resolveIssueNotes } from '../../lib/content';
+
+const issues = (await getCollection('issues')).sort(
+  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime(),
+);
+
+const issueCards = await Promise.all(
+  issues.map(async (issue) => ({
+    issue,
+    notes: await resolveIssueNotes(issue.data.includedNotes),
+  })),
+);
+---
+
+<BaseLayout title="Issues" description="각 호의 주제와 포함 글 목록을 확인할 수 있습니다.">
+  <section class="frame heading">
+    <p class="eyebrow mono">Issue Archive</p>
+    <h1>Issues</h1>
+    <p class="muted">각 호의 주제와 포함 글 목록을 함께 보여줍니다.</p>
+  </section>
+
+  <section class="issues">
+    {issueCards.map(({ issue, notes }) => (
+      <article class="frame issue-card">
+        <div>
+          <p class="mono muted">{formatDate(issue.data.publishedAt)}</p>
+          <h2>{issue.data.title}</h2>
+          <p>{issue.data.description}</p>
+          <div class="tag-list">
+            {issue.data.themes.map((theme) => (
+              <span class="tag">{theme}</span>
+            ))}
+            {issue.data.current ? <span class="tag mono">current</span> : null}
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow mono">포함 글</p>
+          <ul>
+            {notes.map((note) => (
+              <li>
+                <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .heading {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .heading h1 {
+    margin: 0.2rem 0 0.4rem;
+  }
+
+  .issues {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .issue-card {
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 1rem;
+  }
+
+  .issue-card h2 {
+    margin: 0.2rem 0 0.4rem;
+  }
+
+  .issue-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .issue-card {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

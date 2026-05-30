@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resolveNoteRef } from '../../lib/content';
+
+const tools = await getCollection('tools');
+const isDefined = <T,>(value: T | undefined): value is T => Boolean(value);
+
+const toolsWithNotes = await Promise.all(
+  tools.map(async (tool) => ({
+    tool,
+    notes: (await Promise.all(tool.data.relatedNotes.map((note) => resolveNoteRef(note)))).filter(isDefined),
+  })),
+);
+---
+
+<BaseLayout title="Tools" description="도구 리뷰가 아닌, 작업 방식 변화를 추적하는 도구 데이터베이스입니다.">
+  <section class="frame heading">
+    <p class="eyebrow mono">Tools Database</p>
+    <h1>Tools</h1>
+    <p class="muted">도구 자체 평가가 아니라, 도구가 바꾼 작업 순서와 반복 신호를 기록합니다.</p>
+    <p class="mono count">total: {toolsWithNotes.length} entries</p>
+  </section>
+
+  <section class="grid-2">
+    {toolsWithNotes.map(({ tool, notes }) => (
+      <article class="note-card tool-card">
+        <div class="head-row">
+          <p class="eyebrow mono">workflow instrument</p>
+          <span class="tag mono">{tool.data.slug}</span>
+        </div>
+        <h2 class="note-title">{tool.data.name}</h2>
+        <p class="note-subtitle">{tool.data.summary}</p>
+        <p>{tool.data.changedWorkflow}</p>
+        <div class="note-meta mono">
+          frequent signals: {tool.data.frequentSignals.length ? tool.data.frequentSignals.join(', ') : 'n/a'}
+        </div>
+        <div>
+          <p class="eyebrow mono">related notes</p>
+          <ul>
+            {notes.map((note) => (
+              <li>
+                <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .heading {
+    padding: 1.1rem;
+    margin-bottom: 1rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .heading h1 {
+    margin: 0;
+  }
+
+  .count {
+    font-size: 0.77rem;
+    color: var(--muted);
+  }
+
+  .head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tool-card ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .tool-card li + li {
+    margin-top: 0.3rem;
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import NotesFilter from '../../components/NotesFilter.astro';
+import { getAllPublishedNotes } from '../../lib/content';
+
+const notes = await getAllPublishedNotes();
+const themes = [...new Set(notes.flatMap((note) => note.data.themes))].sort((a, b) => a.localeCompare(b));
+const tools = [...new Set(notes.flatMap((note) => note.data.tools))].sort((a, b) => a.localeCompare(b));
+---
+
+<BaseLayout title="Notes" description="type/theme/tool 필터로 최전선 노트를 탐색합니다.">
+  <section class="frame heading">
+    <p class="eyebrow mono">Notes Explorer</p>
+    <h1>Notes</h1>
+    <p class="muted">
+      MVP 단계에서는 본문 전체 검색 대신 type, theme, tool 기반 필터를 제공합니다.
+    </p>
+  </section>
+
+  <NotesFilter themes={themes} tools={tools} />
+
+  <section class="grid-3">
+    {notes.map((entry) => (
+      <ContentCard entry={entry} showCollection />
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .heading {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .heading h1 {
+    margin: 0.2rem 0 0.4rem;
+  }
+</style>

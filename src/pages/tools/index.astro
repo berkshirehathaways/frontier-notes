@@ -14,12 +14,12 @@ const toolsWithNotes = await Promise.all(
 );
 ---
 
-<BaseLayout title="Tools" description="도구 리뷰가 아닌, 작업 방식 변화를 추적하는 도구 데이터베이스입니다.">
+<BaseLayout title="도구" description="AI 창업자들이 실제로 쓰는 도구와 그 도구가 바꾼 작업 방식을 기록합니다.">
 
   <div class="page-head">
-    <p class="eyebrow mono">Research Index · Tools</p>
-    <h1>Tools</h1>
-    <p class="muted page-desc">도구 자체 평가가 아니라, 도구가 바꾼 작업 순서와 반복 신호를 기록합니다.</p>
+    <p class="eyebrow mono">Tools · {toolsWithNotes.length} entries</p>
+    <h1>도구</h1>
+    <p class="muted page-desc">AI 창업자들이 실제로 쓰는 도구와 그 도구가 바꾼 작업 방식을 기록합니다.</p>
     <p class="mono entry-count">total: {toolsWithNotes.length} entries</p>
   </div>
 

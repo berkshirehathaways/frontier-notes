@@ -1,36 +1,35 @@
 export const SITE = {
   title: '노이즈',
   englishName: 'Noise',
-  subtitle: '미래가 여기에 있고 동시에 없다',
+  subtitle: '아직 회사가 되기 전의 AI 창업자를 인터뷰합니다.',
   description:
-    '노이즈는 미래가 여기에 있고 동시에 없음을 기록하는 기술 매거진입니다. AI native generation의 사람, 도구, 작업 방식을 먼저 포착합니다.',
+    '노이즈는 아직 회사가 되기 전의 AI 창업자를 인터뷰하는 매거진입니다. 피치덱보다 먼저, 뉴스보다 먼저 드러나는 생각과 작업 방식을 기록합니다.',
   coreLines: [
-    '피치덱에 오르기 전의 사람, 도구, 작업 방식을 기록합니다.',
-    '아직 회사가 되기 전의 신호를 먼저 보기 위해 시작했습니다.',
+    '아직 회사가 되기 전의 AI 창업자를 인터뷰합니다.',
+    '피치덱보다 먼저, 뉴스보다 먼저 드러나는 작업 방식을 기록합니다.',
   ],
   cta: {
-    readLatest: '/notes',
+    readLatest: '/interviews',
     interviewProposal: '/interview-proposal',
   },
   contactEmail: 'frontier.notes.magazine@gmail.com',
 };
 
 export const MAIN_NAV = [
-  { href: '/issues', label: 'Issues' },
-  { href: '/essays', label: 'Essays' },
-  { href: '/interviews', label: 'Interviews' },
-  { href: '/field-notes', label: 'Field Notes' },
-  { href: '/systems', label: 'Systems' },
-  { href: '/reports', label: 'Reports' },
-  { href: '/about', label: 'About' },
+  { href: '/interviews', label: '인터뷰' },
+  { href: '/people', label: '사람들' },
+  { href: '/field-notes', label: '현장 노트' },
+  { href: '/tools', label: '도구' },
+  { href: '/systems', label: '작업 시스템' },
+  { href: '/reports', label: '리포트' },
+  { href: '/essays', label: '에세이' },
+  { href: '/about', label: '소개' },
+  { href: '/interview-proposal', label: '제안하기' },
 ] as const;
 
 export const HUB_NAV = [
   { href: '/notes', label: 'Notes Explorer' },
-  { href: '/people', label: 'People' },
-  { href: '/tools', label: 'Tools' },
   { href: '/newsletter', label: 'Newsletter Archive' },
-  { href: '/interview-proposal', label: 'Interview Proposal' },
 ] as const;
 
 export const SIGNAL_OPTIONS = [

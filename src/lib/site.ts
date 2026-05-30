@@ -1,9 +1,9 @@
 export const SITE = {
-  title: '최전선 노트',
-  englishName: 'Frontier Notes',
-  subtitle: 'AI native generation을 기록하는 기술 매거진',
+  title: '노이즈',
+  englishName: 'Noise',
+  subtitle: '미래가 여기에 있고 동시에 없다',
   description:
-    '최전선 노트는 AI native generation의 사람, 도구, 작업 방식, 현장 신호를 기록하는 기술 매거진입니다.',
+    '노이즈는 미래가 여기에 있고 동시에 없음을 기록하는 기술 매거진입니다. AI native generation의 사람, 도구, 작업 방식을 먼저 포착합니다.',
   coreLines: [
     '피치덱에 오르기 전의 사람, 도구, 작업 방식을 기록합니다.',
     '아직 회사가 되기 전의 신호를 먼저 보기 위해 시작했습니다.',

@@ -2,91 +2,268 @@
 import { SITE } from '../lib/site';
 ---
 
-<section class="frame proposal">
-  <p class="eyebrow mono">Builder Recommendation / Interview Proposal (UI only)</p>
-  <h1>빌더 추천 또는 인터뷰 제안</h1>
-  <p class="muted">
-    서버 제출 기능 없이 운영하는 MVP입니다. 아래 구조를 참고해 작성 후 메일로 전달하거나
-    Google Forms/Tally로 연결할 수 있습니다.
-  </p>
+<div class="proposal-wrap">
 
-  <form class="proposal-form">
-    <label>
-      제안 유형
-      <select name="proposalType">
-        <option>인터뷰 제안</option>
-        <option>빌더 추천</option>
-        <option>프로젝트 제보</option>
-      </select>
-    </label>
-    <label>
-      이름
-      <input type="text" name="name" placeholder="홍길동" />
-    </label>
-    <label>
-      소개하고 싶은 사람 또는 프로젝트
-      <input type="text" name="target" placeholder="예: AI 에이전트 도구를 만드는 1인 팀" />
-    </label>
-    <label>
-      왜 최전선 노트에 맞는지
-      <textarea name="reason" rows={5} placeholder="현장에서 관찰한 작업 방식과 신호를 적어주세요." />
-    </label>
-    <label>
-      연락처
-      <input type="text" name="contact" placeholder="이메일 또는 SNS" />
-    </label>
-    <label>
-      참고 링크
-      <input type="url" name="reference" placeholder="https://..." />
-    </label>
-    <div class="actions">
-      <a class="btn" href={`mailto:${SITE.contactEmail}?subject=최전선%20노트%20인터뷰%20제안`}>
-        메일로 제안하기
-      </a>
-      <button type="button" class="btn secondary">폼 연동 예정</button>
-    </div>
-  </form>
-</section>
+  <div class="proposal-head">
+    <p class="eyebrow mono">Builder Recommendation · Interview Proposal</p>
+    <h1>빌더 추천 또는 인터뷰 제안</h1>
+    <p class="head-desc muted">
+      서버 제출 없이 운영하는 MVP입니다. 아래 형식을 참고해 작성 후 메일로 전달하거나
+      링크된 폼으로 제출해 주세요.
+    </p>
+  </div>
+
+  <div class="proposal-layout">
+
+    <section class="form-section">
+      <form class="proposal-form">
+
+        <div class="form-group">
+          <label class="form-label mono" for="proposalType">제안 유형</label>
+          <select id="proposalType" name="proposalType" class="form-input">
+            <option>인터뷰 제안</option>
+            <option>빌더 추천</option>
+            <option>프로젝트 제보</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label mono" for="proposerName">제안자 이름</label>
+          <input id="proposerName" type="text" name="name" placeholder="홍길동" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label mono" for="target">소개하고 싶은 사람 또는 프로젝트</label>
+          <input id="target" type="text" name="target" placeholder="예: AI 에이전트 도구를 만드는 1인 팀" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label mono" for="reason">왜 노이즈에 맞는가</label>
+          <textarea id="reason" name="reason" rows={5} placeholder="현장에서 관찰한 작업 방식과 신호를 적어주세요. 피치덱보다 먼저 보이는 신호가 핵심입니다." class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label mono" for="contact">연락처</label>
+          <input id="contact" type="text" name="contact" placeholder="이메일 또는 SNS" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label mono" for="reference">참고 링크</label>
+          <input id="reference" type="url" name="reference" placeholder="https://..." class="form-input" />
+        </div>
+
+        <div class="form-actions">
+          <a class="btn" href={`mailto:${SITE.contactEmail}?subject=노이즈%20인터뷰%20제안`}>
+            메일로 제안하기
+          </a>
+          <span class="mono form-note">또는 폼 연동 예정 (운영중)</span>
+        </div>
+
+      </form>
+    </section>
+
+    <aside class="proposal-guide">
+
+      <section class="guide-block">
+        <p class="guide-label mono">어떤 제안을 찾는가</p>
+        <ul class="guide-list">
+          <li>피치덱보다 먼저 드러나는 작업 방식</li>
+          <li>회사 이전의 실험과 반복</li>
+          <li>AI를 기본 환경으로 쓰는 방식</li>
+          <li>커뮤니티, 해커톤, 현장에서 관찰된 신호</li>
+          <li>작은 팀이나 1인 빌더의 운영 패턴</li>
+        </ul>
+      </section>
+
+      <section class="guide-block">
+        <p class="guide-label mono">제안이 아닌 것</p>
+        <ul class="guide-list">
+          <li>완성된 회사의 홍보 제안</li>
+          <li>투자를 받은 기업의 소개 요청</li>
+          <li>도구 리뷰 또는 협찬 제안</li>
+        </ul>
+      </section>
+
+      <section class="guide-block">
+        <p class="guide-label mono">Contact</p>
+        <a class="contact-link mono" href={`mailto:${SITE.contactEmail}`}>
+          {SITE.contactEmail}
+        </a>
+      </section>
+
+    </aside>
+
+  </div>
+
+</div>
 
 <style>
-  .proposal {
-    padding: 1rem;
+  .proposal-wrap {
+    display: grid;
+    gap: 1.4rem;
   }
 
-  .proposal h1 {
-    margin: 0.2rem 0 0.6rem;
+  /* 헤더 */
+  .proposal-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
   }
 
+  .proposal-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+
+  .head-desc {
+    font-size: var(--text-sm);
+    max-width: 58ch;
+    line-height: 1.62;
+    margin: 0;
+  }
+
+  /* 2열 레이아웃 */
+  .proposal-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  /* 폼 */
   .proposal-form {
     display: grid;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
-  .proposal-form label {
+  .form-group {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .form-label {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .form-input {
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    padding: 0.6rem 0.7rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    background: var(--surface-strong);
+    color: var(--text);
+    width: 100%;
+    resize: vertical;
+  }
+
+  .form-input:focus {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+    border-color: var(--text);
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.3rem;
+    flex-wrap: wrap;
+  }
+
+  .form-note {
+    font-size: var(--text-2xs);
+    color: var(--faint);
+    letter-spacing: 0.06em;
+  }
+
+  /* 가이드 사이드바 */
+  .proposal-guide {
+    display: grid;
+    gap: 0;
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .guide-block {
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--line-strong);
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .guide-block:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .guide-label {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--faint);
+    margin: 0;
+  }
+
+  .guide-list {
+    margin: 0;
+    padding-left: 0.9rem;
     display: grid;
     gap: 0.3rem;
-    font-size: 0.9rem;
   }
 
-  .proposal-form input,
-  .proposal-form select,
-  .proposal-form textarea {
-    border: 1px solid var(--line);
-    border-radius: 0.35rem;
-    padding: 0.62rem 0.7rem;
-    font: inherit;
-    background: #fff;
+  .guide-list li {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.55;
   }
 
-  .actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
+  .contact-link {
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 0.14rem;
+  }
+
+  .contact-link:hover {
+    color: var(--text);
+  }
+
+  /* 반응형 */
+  @media (max-width: 900px) {
+    .proposal-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .proposal-guide {
+      position: static;
+      border-top: 1px solid var(--line-strong);
+      padding-top: 0.5rem;
+    }
+
+    .guide-block:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
   }
 
   @media (max-width: 768px) {
-    .actions {
-      grid-template-columns: 1fr;
+    .form-actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn {
+      width: 100%;
+      justify-content: center;
     }
   }
 </style>

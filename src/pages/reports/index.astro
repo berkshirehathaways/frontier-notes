@@ -4,29 +4,79 @@ import ContentCard from '../../components/ContentCard.astro';
 import { getPublishedCollection } from '../../lib/content';
 
 const reports = await getPublishedCollection('reports');
+const lead = reports[0];
+const rest = reports.slice(1);
 ---
 
-<BaseLayout title="Reports" description="월간/분기/반기 관찰 리포트가 쌓이는 공간입니다.">
-  <section class="frame heading">
-    <p class="eyebrow mono">Research Reports</p>
-    <h1>Reports</h1>
-    <p class="muted">MVP에서는 샘플 리포트 카드 1개를 기본으로 제공합니다.</p>
-  </section>
+<BaseLayout title="Reports" description="월간/분기 관찰 리포트가 쌓이는 공간입니다.">
 
-  <section class="grid-2">
-    {reports.map((entry) => (
-      <ContentCard entry={entry} />
-    ))}
-  </section>
+  <div class="page-head">
+    <p class="eyebrow mono">Research Reports · {reports.length} reports</p>
+    <h1>Reports</h1>
+    <p class="muted page-desc">관찰 데이터를 엮은 주기적 리포트. AI native generation의 현장 신호를 체계적으로 정리합니다.</p>
+  </div>
+
+  {lead && (
+    <section>
+      <ContentCard entry={lead} variant="cover" />
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="list-section">
+      <div class="list-header mono">이하 {rest.length}편</div>
+      {rest.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
+  {reports.length === 0 && (
+    <div class="empty-state mono">
+      <p>리포트 준비중. 곧 발행됩니다.</p>
+    </div>
+  )}
+
 </BaseLayout>
 
 <style>
-  .heading {
-    padding: 1rem;
-    margin-bottom: 1rem;
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
   }
 
-  .heading h1 {
-    margin: 0.2rem 0 0.4rem;
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .list-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .empty-state {
+    padding: 2rem 0;
+    font-size: var(--text-xs);
+    color: var(--faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--line);
   }
 </style>

@@ -4,37 +4,80 @@ import ContentCard from '../../components/ContentCard.astro';
 import { getPublishedCollection } from '../../lib/content';
 
 const systems = await getPublishedCollection('systems');
+const lead = systems[0];
+const rest = systems.slice(1);
 ---
 
-<BaseLayout title="Systems" description="도구 리뷰가 아닌 작업 방식과 시스템 변화를 기록합니다.">
-  <section class="frame heading">
-    <p class="eyebrow mono">Work Systems</p>
+<BaseLayout title="Systems" description="도구가 작업 순서를 어떻게 바꾸는지 추적하는 시스템 기록입니다.">
+
+  <div class="page-head">
+    <p class="eyebrow mono">Work Systems · {systems.length} entries</p>
     <h1>Systems</h1>
-    <p class="muted">
-      Cursor, Claude Code, Codex, GitHub, Supabase, cmux 같은 도구가 작업 순서를 어떻게 바꾸는지 추적합니다.
-    </p>
-  </section>
+    <p class="muted page-desc">Claude Code, Cursor, Codex, GitHub, cmux 같은 도구가 작업 순서를 어떻게 바꾸는지 추적합니다.</p>
+    <a class="mono tools-link" href="/tools">도구 중심 보기 → Tools</a>
+  </div>
 
-  <section class="grid-3">
-    {systems.map((entry) => (
-      <ContentCard entry={entry} />
-    ))}
-  </section>
+  {lead && (
+    <section>
+      <ContentCard entry={lead} variant="cover" />
+    </section>
+  )}
 
-  <section class="frame tool-link">
-    <p class="muted">도구 중심 보기</p>
-    <a class="mono" href="/tools">Tools 페이지 열기 →</a>
-  </section>
+  {rest.length > 0 && (
+    <section class="list-section">
+      <div class="list-header mono">이하 {rest.length}편</div>
+      {rest.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
 </BaseLayout>
 
 <style>
-  .heading,
-  .tool-link {
-    padding: 1rem;
-    margin-bottom: 1rem;
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
   }
 
-  .heading h1 {
-    margin: 0.2rem 0 0.4rem;
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .tools-link {
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .tools-link:hover {
+    color: var(--text);
+  }
+
+  .list-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .list-section .editorial-entry:first-of-type {
+    border-top: 1px solid var(--line-strong);
   }
 </style>

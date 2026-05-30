@@ -19,49 +19,115 @@ const { Content } = await render(entry);
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.subtitle}>
-  <article class="newsletter-detail">
-    <header class="frame detail-head">
-      <p class="eyebrow mono">Newsletter</p>
-      <h1>{entry.data.title}</h1>
-      <p class="note-subtitle">{entry.data.subtitle}</p>
-      <p class="mono muted">{formatDate(entry.data.date)}</p>
-      <div class="tag-list">
+
+  <article class="nl-detail">
+
+    <!-- 헤더 -->
+    <header class="nl-header">
+      <div class="nl-eyebrow">
+        <span class="eyebrow">[NEWSLETTER]</span>
+        <span class="eyebrow">{formatDate(entry.data.date)}</span>
+      </div>
+      <h1 class="nl-title">{entry.data.title}</h1>
+      {entry.data.subtitle && (
+        <p class="nl-subtitle">{entry.data.subtitle}</p>
+      )}
+      <div class="tag-list" style="margin-top: 0.6rem;">
         {entry.data.topics.map((topic) => (
           <span class="tag">{topic}</span>
         ))}
       </div>
     </header>
 
-    <section class="frame content-wrap">
+    <!-- 본문 -->
+    <section class="nl-content">
       <div class="prose">
         <Content />
       </div>
     </section>
 
-    <div id="newsletter">
-      <NewsletterBlock />
+    <!-- 구독 CTA -->
+    <div class="nl-subscribe" id="newsletter">
+      <div class="subscribe-inner">
+        <NewsletterBlock />
+      </div>
     </div>
+
+    <!-- 아카이브 링크 -->
+    <div class="nl-nav mono">
+      <a href="/newsletter">← 뉴스레터 아카이브</a>
+    </div>
+
   </article>
+
 </BaseLayout>
 
 <style>
-  .newsletter-detail {
+  .nl-detail {
     display: grid;
-    gap: 1rem;
+    gap: 1.6rem;
+    max-width: 800px;
   }
 
-  .detail-head,
-  .content-wrap {
-    padding: 1.2rem;
+  /* 헤더 */
+  .nl-header {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.5rem;
   }
 
-  .detail-head h1 {
-    margin: 0.2rem 0 0.45rem;
-    font-size: clamp(1.7rem, 3vw, 2.3rem);
-    line-height: 1.2;
+  .nl-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .content-wrap {
-    max-width: 860px;
+  .nl-title {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .nl-subtitle {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* 본문: 풀 넓이 읽기 레이아웃 */
+  .nl-content {
+    padding: 0.3rem 0;
+  }
+
+  /* 구독 */
+  .nl-subscribe {
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .subscribe-inner :global(.newsletter) {
+    border: none;
+    background: transparent;
+  }
+
+  /* 아카이브 링크 */
+  .nl-nav {
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nl-nav a {
+    text-decoration: none;
+  }
+
+  .nl-nav a:hover {
+    color: var(--text);
   }
 </style>

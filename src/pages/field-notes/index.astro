@@ -7,26 +7,45 @@ const notes = await getPublishedCollection('field-notes');
 ---
 
 <BaseLayout title="Field Notes" description="행사와 커뮤니티 현장에서 발견한 신호를 기록합니다.">
-  <section class="frame heading">
-    <p class="eyebrow mono">Field Signals</p>
-    <h1>Field Notes</h1>
-    <p class="muted">글 카드에는 location, tools, signals, date를 표시합니다.</p>
-  </section>
 
-  <section class="grid-3">
+  <div class="page-head">
+    <p class="eyebrow mono">Field Signals · {notes.length} notes</p>
+    <h1>Field Notes</h1>
+    <p class="muted page-desc">해커톤, 커뮤니티, 행사 현장에서 관찰한 신호. 짧고 밀도 있는 현장 기록입니다.</p>
+  </div>
+
+  <div class="field-list">
     {notes.map((entry) => (
-      <ContentCard entry={entry} />
+      <ContentCard entry={entry} variant="compact" />
     ))}
-  </section>
+  </div>
+
 </BaseLayout>
 
 <style>
-  .heading {
-    padding: 1rem;
-    margin-bottom: 1rem;
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
   }
 
-  .heading h1 {
-    margin: 0.2rem 0 0.4rem;
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .field-list .editorial-entry:first-child {
+    border-top: 1px solid var(--line-strong);
   }
 </style>

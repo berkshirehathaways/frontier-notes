@@ -2,67 +2,120 @@
 import { SITE } from '../lib/site';
 ---
 
-<section class="frame newsletter">
-  <p class="eyebrow mono">Newsletter Subscription + Archive</p>
+<section class="newsletter" id="newsletter-form">
+  <p class="eyebrow mono">Newsletter Subscription</p>
   <h2>월간 노트 구독</h2>
-  <p class="muted">
-    MVP에서는 서버 전송 없이 구독 UI를 제공합니다. 실제 운영은 mailto 또는 Google Forms/Tally 무료 플랜으로 연결할 수 있습니다.
+  <p class="muted desc">
+    피치덱에 오르기 전의 사람, 도구, 작업 방식을 매달 정리해 보냅니다.<br />
+    서버 없이 mailto로 연결됩니다.
   </p>
-  <form class="newsletter-form">
+  <form class="newsletter-form" onsubmit="return false;">
     <label>
-      이메일
-      <input type="email" placeholder="you@example.com" aria-label="이메일" />
+      <span class="mono label-text">이메일</span>
+      <input
+        type="email"
+        placeholder="you@example.com"
+        aria-label="이메일 주소"
+        class="newsletter-input"
+      />
     </label>
-    <button type="button" class="btn">구독 신청 준비중</button>
+    <a
+      class="btn"
+      href={`mailto:${SITE.contactEmail}?subject=노이즈%20뉴스레터%20구독%20요청`}
+    >
+      구독 요청 →
+    </a>
   </form>
-  <div class="links">
-    <a class="mono" href="/newsletter">뉴스레터 아카이브 보기 →</a>
-    <a class="mono" href={`mailto:${SITE.contactEmail}?subject=최전선%20노트%20뉴스레터%20구독%20요청`}>
-      메일로 구독 요청하기 →
+  <div class="nl-links">
+    <a class="mono nl-link" href="/newsletter">아카이브 보기 →</a>
+    <a class="mono nl-link" href={`mailto:${SITE.contactEmail}?subject=노이즈%20뉴스레터%20구독%20요청`}>
+      메일로 구독 →
     </a>
   </div>
 </section>
 
 <style>
   .newsletter {
-    padding: 1rem;
+    padding: 1.2rem 1.2rem 1.1rem;
+    background: transparent;
+    display: grid;
+    gap: 0.55rem;
   }
 
   .newsletter h2 {
-    margin: 0.25rem 0 0.35rem;
+    margin: 0.2rem 0 0.1rem;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  .desc {
+    font-size: var(--text-sm);
+    line-height: 1.62;
+    margin: 0;
   }
 
   .newsletter-form {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 0.6rem;
-    margin-top: 0.8rem;
-  }
-
-  .links {
-    margin-top: 0.75rem;
-    display: grid;
-    gap: 0.2rem;
-    font-size: 0.85rem;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+    align-items: end;
   }
 
   label {
     display: grid;
-    gap: 0.35rem;
-    font-size: 0.86rem;
+    gap: 0.3rem;
   }
 
-  input {
+  .label-text {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .newsletter-input {
     width: 100%;
-    border: 1px solid var(--line);
-    border-radius: 0.35rem;
-    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    padding: 0.52rem 0.7rem;
     font: inherit;
+    font-size: var(--text-sm);
+    background: var(--surface-strong);
+    color: var(--text);
   }
 
-  @media (max-width: 768px) {
+  .newsletter-input:focus {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  .nl-links {
+    display: flex;
+    gap: 1rem;
+    font-size: var(--text-2xs);
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    padding-top: 0.2rem;
+  }
+
+  .nl-link {
+    text-decoration: none;
+  }
+
+  .nl-link:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 640px) {
     .newsletter-form {
       grid-template-columns: 1fr;
+    }
+
+    .btn {
+      width: 100%;
+      justify-content: center;
     }
   }
 </style>

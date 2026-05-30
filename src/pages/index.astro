@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContentCard from '../components/ContentCard.astro';
 import NewsletterBlock from '../components/NewsletterBlock.astro';
-import SectionHeading from '../components/SectionHeading.astro';
 import { formatDate, getPublishedNewsletters, getPublishedCollection, resolveIssueNotes } from '../lib/content';
 import { SITE } from '../lib/site';
 
@@ -25,8 +24,8 @@ const currentIssueNotes = currentIssue ? await resolveIssueNotes(currentIssue.da
 const featuredEssay = essays.find((entry) => entry.data.featured) ?? essays[0];
 const featuredNewsletter = newsletters.find((entry) => entry.data.featured) ?? newsletters[0];
 
-const peoplePreview = people.slice(0, 3);
-const toolsPreview = tools.slice(0, 3);
+const peoplePreview = people.slice(0, 4);
+const toolsPreview = tools.slice(0, 4);
 
 const noteHrefFromRef = (noteRef: string) => {
   const [collection, ...slugParts] = noteRef.split('/');
@@ -37,316 +36,502 @@ const noteHrefFromRef = (noteRef: string) => {
 ---
 
 <BaseLayout title="Home" description={SITE.description}>
-  <section class="frame hero">
-    <div>
-      <p class="eyebrow mono">AI NATIVE MAGAZINE / EDITORIAL SIGNAL SYSTEM</p>
-      <h1>
-        {SITE.title}
-        <small>{SITE.englishName}</small>
-      </h1>
-      <p class="sub">{SITE.subtitle}</p>
-      <p class="core">{SITE.coreLines[0]}</p>
-      <p class="core">{SITE.coreLines[1]}</p>
-      <div class="cta">
-        <a class="btn" href={SITE.cta.readLatest}>최신 노트 읽기</a>
-        <a class="btn secondary" href={SITE.cta.interviewProposal}>인터뷰 제안하기</a>
-      </div>
-    </div>
 
-    {currentIssue ? (
-      <aside class="issue-panel">
-        <p class="eyebrow mono">Current Issue</p>
+  <!-- 세계관 문장 블록: 초대형 타이포 + 애니메이션 -->
+  <div class="world-block" aria-label="편집 세계관">
+    <div class="world-display">
+      <h1 class="world-giant mono" id="worldPhrase" aria-label="the future is nowhere / the future is now here">thefuture<span class="w-is">is</span><span class="w-now">now</span><span class="w-here">here</span></h1>
+    </div>
+    <div class="world-readings">
+      <span class="world-reading-item" id="readingNowhere">→ the future is nowhere</span>
+      <span class="world-reading-item" id="readingNowHere">→ the future is now here</span>
+    </div>
+    <p class="world-tagline">미래는 아직 어디에도 없다.<br />그런데 AI native 창업자들의 손에서는 이미 돌아간다.</p>
+  </div>
+
+  <!-- 현재 호 (Issue) 편집 블록 -->
+  {currentIssue && (
+    <section class="issue-feature" aria-label="현재 호">
+      <div class="issue-feature-main">
+        <div class="issue-number">
+          <span>ISSUE {(currentIssue.data.slug ?? currentIssue.id).replace(/^issue-/i, '')}</span>
+          {currentIssue.data.current && <span class="current-badge">Current</span>}
+          <span class="mono" style="color: var(--faint); font-size: 0.6rem;">{formatDate(currentIssue.data.publishedAt)}</span>
+        </div>
         <h2>{currentIssue.data.title}</h2>
-        <p class="muted">{currentIssue.data.description}</p>
-        <div class="tag-list">
+        <p style="color: var(--muted); font-size: var(--text-sm); line-height: 1.62; margin: 0;">{currentIssue.data.description}</p>
+        <div class="tag-list" style="margin-top: 0.85rem;">
           {currentIssue.data.themes.map((theme) => (
             <span class="tag">{theme}</span>
           ))}
         </div>
+      </div>
+
+      <div class="issue-feature-toc">
+        <p class="issue-toc-label mono">이번 호 수록 글</p>
         {currentIssueNotes.length ? (
-          <ul>
-            {currentIssueNotes.slice(0, 4).map((note) => (
+          <ul class="issue-toc-list">
+            {currentIssueNotes.map((note) => (
               <li>
-                <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
+                <span class="toc-type">[{note.data.type.toUpperCase().replace('-', ' ')}]</span>
+                <a href={`/${note.collection}/${note.id}`}>
+                  <span class="toc-title">{note.data.title}</span>
+                </a>
               </li>
             ))}
           </ul>
-        ) : null}
-      </aside>
-    ) : null}
-  </section>
-
-  <section class="grid-2 split-block">
-    {featuredEssay ? <ContentCard entry={featuredEssay} /> : null}
-
-    <article class="frame signal-hub">
-      <p class="eyebrow mono">Signal Intake</p>
-      <h2>사람 · 도구 · 현장 신호 허브</h2>
-      <p class="muted">
-        이 사이트의 핵심은 글 발행 수가 아니라, 관찰 데이터가 지속적으로 들어오고 다시 분류되는 운영 구조입니다.
-      </p>
-      <div class="hub-grid">
-        <a href="/people">
-          <strong>People DB</strong>
-          <span>{people.length} entries</span>
-        </a>
-        <a href="/tools">
-          <strong>Tools DB</strong>
-          <span>{tools.length} entries</span>
-        </a>
-        <a href="/field-notes">
-          <strong>Field Signals</strong>
-          <span>{fieldNotes.length} notes</span>
-        </a>
-        <a href="/newsletter">
-          <strong>Newsletter Archive</strong>
-          <span>{newsletters.length} issues</span>
-        </a>
+        ) : (
+          <p class="mono" style="font-size: var(--text-xs); color: var(--faint);">수록 글 준비중</p>
+        )}
+        <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--line);">
+          <a href="/issues" class="mono" style="font-size: var(--text-xs); color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;">전체 호 보기 →</a>
+        </div>
       </div>
-    </article>
-  </section>
+    </section>
+  )}
 
-  <section>
-    <SectionHeading title="Latest Interviews" href="/interviews" />
-    <div class="grid-3">
-      {interviews.slice(0, 3).map((entry) => (
-        <ContentCard entry={entry} />
-      ))}
-    </div>
-  </section>
+  <!-- 커버스토리: Featured Essay -->
+  {featuredEssay && (
+    <section aria-label="커버스토리">
+      <div class="section-title">
+        <h2>Cover Story</h2>
+      </div>
+      <ContentCard entry={featuredEssay} variant="cover" />
+    </section>
+  )}
 
-  <section>
-    <SectionHeading title="Field Notes" href="/field-notes" />
-    <div class="grid-3">
-      {fieldNotes.slice(0, 3).map((entry) => (
-        <ContentCard entry={entry} />
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <SectionHeading title="Systems" href="/systems" />
-    <div class="grid-3">
-      {systems.slice(0, 3).map((entry) => (
-        <ContentCard entry={entry} />
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <SectionHeading title="People" href="/people" linkLabel="People DB 보기" />
-    <div class="grid-3">
-      {peoplePreview.map((person) => (
-        <article class="note-card">
-          <p class="eyebrow mono">{person.data.stage ?? 'n/a'}</p>
-          <h3 class="note-title">{person.data.name}</h3>
-          <p class="note-subtitle">{person.data.role}</p>
-          <div class="note-meta mono">signals: {person.data.signals.join(', ') || 'n/a'}</div>
-          {person.data.relatedNotes[0] ? (
-            <a class="mono" href={noteHrefFromRef(person.data.relatedNotes[0])}>
-              related note →
-            </a>
-          ) : null}
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <SectionHeading title="Tools" href="/tools" linkLabel="Tools DB 보기" />
-    <div class="grid-3">
-      {toolsPreview.map((tool) => (
-        <article class="note-card">
-          <p class="eyebrow mono">workflow change</p>
-          <h3 class="note-title">{tool.data.name}</h3>
-          <p class="note-subtitle">{tool.data.summary}</p>
-          <div class="note-meta mono">signals: {tool.data.frequentSignals.join(', ') || 'n/a'}</div>
-          {tool.data.relatedNotes[0] ? (
-            <a class="mono" href={noteHrefFromRef(tool.data.relatedNotes[0])}>
-              related note →
-            </a>
-          ) : null}
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <SectionHeading title="Reports" href="/reports" />
-    <div class="grid-2">
-      {reports.slice(0, 2).map((entry) => (
-        <ContentCard entry={entry} />
-      ))}
-    </div>
-  </section>
-
-  <section class="grid-2 split-block">
-    {featuredNewsletter ? (
-      <article class="frame newsletter-featured">
-        <p class="eyebrow mono">Latest Newsletter</p>
-        <h2>
-          <a href={`/newsletter/${featuredNewsletter.id}`}>{featuredNewsletter.data.title}</a>
-        </h2>
-        <p class="note-subtitle">{featuredNewsletter.data.subtitle}</p>
-        <p class="muted">{featuredNewsletter.data.summary}</p>
-        <div class="tag-list">
-          <span class="tag mono">{formatDate(featuredNewsletter.data.date)}</span>
-          {featuredNewsletter.data.topics.map((topic) => (
-            <span class="tag">{topic}</span>
+  <!-- 인터뷰 섹션: 리드 + 목록 -->
+  {interviews.length > 0 && (
+    <section aria-label="인터뷰">
+      <div class="section-title">
+        <h2>Interviews</h2>
+        <a class="mono section-link muted" href="/interviews">전체 보기 →</a>
+      </div>
+      <div class="grid-editorial interviews-grid">
+        <div class="interviews-lead">
+          <ContentCard entry={interviews[0]} variant="lead" />
+          {interviews[1] && <ContentCard entry={interviews[1]} variant="lead" />}
+        </div>
+        <div class="interviews-list">
+          {interviews.slice(2, 5).map((entry) => (
+            <ContentCard entry={entry} variant="compact" />
           ))}
         </div>
-      </article>
-    ) : null}
+      </div>
+    </section>
+  )}
 
-    <div id="newsletter">
-      <NewsletterBlock />
+  <!-- 현장 노트 섹션: 목록형 -->
+  {fieldNotes.length > 0 && (
+    <section aria-label="현장 노트">
+      <div class="section-title">
+        <h2>Field Notes</h2>
+        <a class="mono section-link muted" href="/field-notes">전체 보기 →</a>
+      </div>
+      <div class="field-notes-list">
+        {fieldNotes.slice(0, 4).map((entry) => (
+          <ContentCard entry={entry} variant="compact" />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- 시스템 섹션 -->
+  {systems.length > 0 && (
+    <section aria-label="시스템">
+      <div class="section-title">
+        <h2>Systems</h2>
+        <a class="mono section-link muted" href="/systems">전체 보기 →</a>
+      </div>
+      <div class="grid-2">
+        {systems.slice(0, 2).map((entry) => (
+          <ContentCard entry={entry} variant="lead" />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- 리서치 인덱스: People · Tools -->
+  <section aria-label="리서치 인덱스">
+    <div class="section-title">
+      <h2>Research Index</h2>
+      <a class="mono section-link muted" href="/people">People & Tools →</a>
+    </div>
+    <div class="research-index">
+      <!-- People -->
+      <div class="research-column">
+        <div class="research-header mono">
+          <span>People</span>
+          <a href="/people" class="research-more">전체 보기 →</a>
+        </div>
+        {peoplePreview.map((person) => (
+          <div class="research-entry">
+            <p class="research-field">
+              <span class="field-key">name:</span>
+              <strong>{person.data.name}</strong>
+            </p>
+            <p class="research-field">
+              <span class="field-key">role:</span>
+              {person.data.role}
+            </p>
+            <p class="research-field">
+              <span class="field-key">signals:</span>
+              {person.data.signals.slice(0, 2).join(', ') || 'n/a'}
+            </p>
+            {person.data.relatedNotes[0] && (
+              <p class="research-field">
+                <a class="field-link" href={noteHrefFromRef(person.data.relatedNotes[0])}>related note →</a>
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <!-- Tools -->
+      <div class="research-column">
+        <div class="research-header mono">
+          <span>Tools</span>
+          <a href="/tools" class="research-more">전체 보기 →</a>
+        </div>
+        {toolsPreview.map((tool) => (
+          <div class="research-entry">
+            <p class="research-field">
+              <span class="field-key">tool:</span>
+              <strong>{tool.data.name}</strong>
+            </p>
+            <p class="research-field">
+              <span class="field-key">changes:</span>
+              {tool.data.summary}
+            </p>
+            <p class="research-field">
+              <span class="field-key">signals:</span>
+              {tool.data.frequentSignals.slice(0, 2).join(', ') || 'n/a'}
+            </p>
+            {tool.data.relatedNotes[0] && (
+              <p class="research-field">
+                <a class="field-link" href={noteHrefFromRef(tool.data.relatedNotes[0])}>related note →</a>
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   </section>
+
+  <!-- 리포트 섹션 -->
+  {reports.length > 0 && (
+    <section aria-label="리포트">
+      <div class="section-title">
+        <h2>Reports</h2>
+        <a class="mono section-link muted" href="/reports">전체 보기 →</a>
+      </div>
+      <div class="grid-2">
+        {reports.slice(0, 2).map((entry) => (
+          <ContentCard entry={entry} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- 뉴스레터 CTA -->
+  <section class="newsletter-section" id="newsletter" aria-label="뉴스레터">
+    <div class="section-title">
+      <h2>Newsletter</h2>
+    </div>
+    <div class="newsletter-inner">
+      <div class="newsletter-copy">
+        <h3 class="newsletter-headline">월간 노트</h3>
+        <p class="muted">피치덱에 오르기 전의 사람, 도구, 작업 방식 — 매달 정리해 보냅니다.</p>
+        {featuredNewsletter && (
+          <a class="mono newsletter-archive-link" href={`/newsletter/${featuredNewsletter.id}`}>
+            최근 발행: {featuredNewsletter.data.title} →
+          </a>
+        )}
+        <a class="mono newsletter-archive-link" href="/newsletter">아카이브 보기 →</a>
+      </div>
+      <div class="newsletter-form-wrap">
+        <NewsletterBlock />
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
 
+<script>
+  const phrase = document.getElementById('worldPhrase');
+  const rNowhere = document.getElementById('readingNowhere');
+  const rNowHere = document.getElementById('readingNowHere');
+
+  if (phrase && rNowhere && rNowHere) {
+    let stateA = true;
+
+    function applyState() {
+      if (stateA) {
+        phrase.classList.add('state-a');
+        phrase.classList.remove('state-b');
+        rNowhere.classList.add('reading-active');
+        rNowhere.classList.remove('reading-dim');
+        rNowHere.classList.remove('reading-active');
+        rNowHere.classList.add('reading-dim');
+      } else {
+        phrase.classList.add('state-b');
+        phrase.classList.remove('state-a');
+        rNowhere.classList.remove('reading-active');
+        rNowhere.classList.add('reading-dim');
+        rNowHere.classList.add('reading-active');
+        rNowHere.classList.remove('reading-dim');
+      }
+    }
+
+    applyState();
+    setInterval(() => {
+      stateA = !stateA;
+      applyState();
+    }, 2600);
+  }
+</script>
+
 <style>
-  .hero {
-    padding: 1.28rem 1.24rem 1.18rem;
-    display: grid;
-    grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
-    gap: 1.14rem;
+  /* ── 세계관 블록: 초대형 타이포 ─────────── */
+  .world-block {
+    padding: 1.2rem 0 0.9rem;
+    border-top: 2px solid var(--accent);
+    border-bottom: 1px solid var(--line);
   }
 
-  .hero h1 {
-    margin: 0.15rem 0 0.48rem;
+  .world-display {
+    line-height: 1;
+    margin-bottom: 0.7rem;
+  }
+
+  .world-giant {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 6vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* 세계관 애니메이션 스팬 */
+  .w-is,
+  .w-now {
+    display: inline;
+    padding: 0 0.05em;
+    transition: background-color 0.55s ease, color 0.55s ease;
+  }
+
+  /* w-here: padding-left로 공백 등장/소멸 */
+  .w-here {
+    display: inline;
+    padding: 0 0.05em;
+    transition:
+      background-color 0.55s ease,
+      color 0.55s ease,
+      padding-left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* state-a: "nowhere" — 붙어있음 */
+  #worldPhrase.state-a .w-is { background: none; color: var(--text); }
+  #worldPhrase.state-a .w-now { background: var(--accent); color: var(--accent-text); }
+  #worldPhrase.state-a .w-here { background: var(--accent); color: var(--accent-text); padding-left: 0.05em; }
+
+  /* state-b: "now here" — 공백 생김 */
+  #worldPhrase.state-b .w-is { background: var(--accent); color: var(--accent-text); }
+  #worldPhrase.state-b .w-now { background: var(--accent); color: var(--accent-text); }
+  #worldPhrase.state-b .w-here { background: var(--accent); color: var(--accent-text); padding-left: 0.52em; }
+
+  /* 리딩 텍스트 트랜지션 */
+  .world-reading-item {
+    transition: opacity 0.55s ease, color 0.55s ease;
+  }
+
+  .world-reading-item.reading-active {
+    opacity: 1;
+    color: var(--text);
+  }
+
+  .world-reading-item.reading-dim {
+    opacity: 0.28;
+    color: var(--faint);
+  }
+
+  .world-block .world-readings {
     display: flex;
-    flex-direction: column;
-    gap: 0.08rem;
-    font-size: clamp(2.6rem, 5.9vw, 3.95rem);
-    line-height: 0.98;
+    gap: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--faint);
+    letter-spacing: 0.06em;
+    flex-wrap: wrap;
   }
 
-  .hero h1 small {
-    font-size: clamp(0.76rem, 1.7vw, 0.9rem);
+  .world-tagline {
+    margin: 0.9rem 0 0;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    line-height: 1.65;
     color: var(--muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.13em;
+    max-width: 42ch;
   }
 
-  .sub {
-    margin: 0 0 0.68rem;
-    font-size: 0.97rem;
+  /* ── 인터뷰 그리드 ─────────────────────── */
+  .interviews-grid {
+    border-top: 1px solid var(--line-strong);
+    align-items: flex-start;
   }
 
-  .core {
-    margin: 0.1rem 0 0;
-    font-size: 0.99rem;
-    max-width: 62ch;
+  .interviews-lead {
+    padding-right: 1.2rem;
+    display: grid;
+    gap: 0;
+    border-right: 1px solid var(--line);
   }
 
-  .cta {
+  .interviews-list {
+    padding-left: 1.1rem;
+    border-top: none;
+  }
+
+  /* compact 엔트리 위에 border-top이 있으므로 첫 번째는 없앰 */
+  .interviews-list .editorial-entry:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* ── 현장 노트 목록 ──────────────────── */
+  .field-notes-list .editorial-entry:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* ── 리서치 헤더 ─────────────────────── */
+  .research-header {
     display: flex;
-    gap: 0.48rem;
-    margin-top: 0.95rem;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line-strong);
   }
 
-  .issue-panel {
-    border-left: 1px solid var(--line-strong);
-    padding-left: 0.95rem;
-    display: grid;
-    align-content: flex-start;
-    gap: 0.48rem;
-  }
-
-  .issue-panel h2 {
-    margin: 0;
-    font-size: 1.6rem;
-    line-height: 1.18;
-  }
-
-  .issue-panel ul {
-    margin: 0;
-    padding-left: 1.05rem;
-  }
-
-  .split-block {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    align-items: stretch;
-  }
-
-  .signal-hub {
-    padding: 1rem 1rem 0.95rem;
-    display: grid;
-    gap: 0.64rem;
-  }
-
-  .signal-hub h2 {
-    margin: 0;
-    font-size: clamp(1.55rem, 2.5vw, 2rem);
-    line-height: 1.16;
-  }
-
-  .hub-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.4rem;
-  }
-
-  .hub-grid a {
-    border: 1px solid var(--line-strong);
-    border-radius: 0;
-    background: var(--surface-strong);
-    padding: 0.62rem 0.6rem;
-    display: grid;
-    gap: 0.15rem;
+  .research-more {
+    font-size: 0.62rem;
+    color: var(--faint);
+    letter-spacing: 0.08em;
     text-decoration: none;
   }
 
-  .hub-grid a strong {
-    font-size: 0.85rem;
+  .research-more:hover {
+    color: var(--text);
+  }
+
+  /* ── section link ──────────────────── */
+  .section-link {
+    font-size: var(--text-xs);
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-decoration: none;
   }
 
-  .hub-grid a span {
-    font-size: 0.74rem;
-    color: var(--muted);
+  .section-link:hover {
+    color: var(--text);
   }
 
-  .newsletter-featured {
-    padding: 1rem 1rem 0.95rem;
+  /* ── 뉴스레터 섹션 ─────────────────── */
+  .newsletter-section {
+    margin-top: 0.5rem;
+  }
+
+  .newsletter-inner {
     display: grid;
-    gap: 0.45rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
   }
 
-  .newsletter-featured h2 {
+  .newsletter-copy {
+    padding: 1.2rem 1.2rem 1.2rem;
+    border-right: 1px solid var(--line);
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+
+  .newsletter-headline {
     margin: 0;
-    font-size: clamp(1.3rem, 2.2vw, 1.8rem);
-    line-height: 1.18;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  .newsletter-archive-link {
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    display: block;
+  }
+
+  .newsletter-archive-link:hover {
+    color: var(--text);
+  }
+
+  .newsletter-form-wrap {
+    padding: 0;
+  }
+
+  /* NewsletterBlock 내부 frame 스타일을 오버라이드 */
+  .newsletter-form-wrap :global(.newsletter) {
+    border: none;
+    background: transparent;
+  }
+
+  /* ── 반응형 ──────────────────────────── */
+  @media (max-width: 1024px) {
+    .interviews-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .interviews-lead {
+      padding-right: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.85rem;
+    }
+
+    .interviews-list {
+      padding-left: 0;
+      padding-top: 0;
+    }
+
+    .interviews-list .editorial-entry:first-child {
+      padding-top: 0.72rem;
+      border-top: 1px solid var(--line);
+    }
   }
 
   @media (max-width: 900px) {
-    .hero {
+    .newsletter-inner {
       grid-template-columns: 1fr;
     }
 
-    .issue-panel {
-      border-left: none;
-      border-top: 1px solid var(--line);
-      padding-left: 0;
-      padding-top: 0.85rem;
-    }
-
-    .hub-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .split-block {
-      grid-template-columns: 1fr;
+    .newsletter-copy {
+      border-right: none;
+      border-bottom: 1px solid var(--line);
     }
   }
 
   @media (max-width: 768px) {
-    .cta {
+    .world-block .world-readings {
       flex-direction: column;
+      gap: 0.2rem;
     }
   }
 </style>

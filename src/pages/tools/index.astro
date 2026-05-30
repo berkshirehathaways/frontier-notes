@@ -15,71 +15,236 @@ const toolsWithNotes = await Promise.all(
 ---
 
 <BaseLayout title="Tools" description="도구 리뷰가 아닌, 작업 방식 변화를 추적하는 도구 데이터베이스입니다.">
-  <section class="frame heading">
-    <p class="eyebrow mono">Tools Database</p>
-    <h1>Tools</h1>
-    <p class="muted">도구 자체 평가가 아니라, 도구가 바꾼 작업 순서와 반복 신호를 기록합니다.</p>
-    <p class="mono count">total: {toolsWithNotes.length} entries</p>
-  </section>
 
-  <section class="grid-2">
+  <div class="page-head">
+    <p class="eyebrow mono">Research Index · Tools</p>
+    <h1>Tools</h1>
+    <p class="muted page-desc">도구 자체 평가가 아니라, 도구가 바꾼 작업 순서와 반복 신호를 기록합니다.</p>
+    <p class="mono entry-count">total: {toolsWithNotes.length} entries</p>
+  </div>
+
+  <div class="index-grid">
     {toolsWithNotes.map(({ tool, notes }) => (
-      <article class="note-card tool-card">
-        <div class="head-row">
-          <p class="eyebrow mono">workflow instrument</p>
+      <article class="index-entry">
+        <div class="entry-header">
+          <div class="entry-fields">
+            <p class="index-field">
+              <span class="field-key">tool:</span>
+              <strong class="field-val">{tool.data.name}</strong>
+            </p>
+            <p class="index-field">
+              <span class="field-key">type:</span>
+              <span>workflow instrument</span>
+            </p>
+          </div>
           <span class="tag mono">{tool.data.slug}</span>
         </div>
-        <h2 class="note-title">{tool.data.name}</h2>
-        <p class="note-subtitle">{tool.data.summary}</p>
-        <p>{tool.data.changedWorkflow}</p>
-        <div class="note-meta mono">
-          frequent signals: {tool.data.frequentSignals.length ? tool.data.frequentSignals.join(', ') : 'n/a'}
+
+        {tool.data.summary && (
+          <p class="entry-summary">{tool.data.summary}</p>
+        )}
+
+        {tool.data.changedWorkflow && (
+          <div class="change-block">
+            <p class="meta-label mono">changes:</p>
+            <p class="change-text">{tool.data.changedWorkflow}</p>
+          </div>
+        )}
+
+        <div class="entry-meta-grid">
+          <div class="meta-col">
+            <p class="meta-label mono">signals</p>
+            <div class="tag-list">
+              {tool.data.frequentSignals.length
+                ? tool.data.frequentSignals.map((s) => <span class="tag">{s}</span>)
+                : <span class="na-text">n/a</span>}
+            </div>
+          </div>
         </div>
-        <div>
-          <p class="eyebrow mono">related notes</p>
-          <ul>
-            {notes.map((note) => (
-              <li>
-                <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
+
+        {notes.length > 0 && (
+          <div class="entry-notes">
+            <p class="meta-label mono">seen in</p>
+            <ul class="related-ul">
+              {notes.map((note) => (
+                <li>
+                  <span class="eyebrow">[{note.data.type.toUpperCase().replace('-',' ')}]</span>
+                  <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </article>
     ))}
-  </section>
+  </div>
+
 </BaseLayout>
 
 <style>
-  .heading {
-    padding: 1.1rem;
-    margin-bottom: 1rem;
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
     display: grid;
-    gap: 0.35rem;
+    gap: 0.4rem;
   }
 
-  .heading h1 {
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
     margin: 0;
   }
 
-  .count {
-    font-size: 0.77rem;
-    color: var(--muted);
+  .entry-count {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    margin: 0;
   }
 
-  .head-row {
+  .index-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .index-entry {
+    padding: 1.1rem 1rem 1.1rem 0;
+    border-top: 1px solid var(--line-strong);
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .index-entry:nth-child(even) {
+    padding-left: 1rem;
+    padding-right: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .entry-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
   }
 
-  .tool-card ul {
-    margin: 0;
-    padding-left: 1rem;
+  .entry-fields {
+    display: grid;
+    gap: 0.18rem;
   }
 
-  .tool-card li + li {
-    margin-top: 0.3rem;
+  .index-field {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    line-height: 1.5;
+    margin: 0;
+    color: var(--text);
+  }
+
+  .field-key {
+    color: var(--faint);
+    margin-right: 0.3em;
+  }
+
+  .field-val {
+    font-weight: 700;
+  }
+
+  .entry-summary {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .change-block {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .change-text {
+    font-size: var(--text-sm);
+    line-height: 1.58;
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .entry-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .meta-col {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .meta-label {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    margin: 0;
+  }
+
+  .na-text {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--faint);
+  }
+
+  .entry-notes {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .related-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .related-ul li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+  }
+
+  .related-ul a {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.14rem;
+    text-decoration-color: var(--line);
+  }
+
+  .related-ul a:hover {
+    text-decoration-color: var(--text);
+  }
+
+  @media (max-width: 900px) {
+    .index-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .index-entry:nth-child(even) {
+      padding-left: 0;
+      border-left: none;
+    }
   }
 </style>

@@ -119,7 +119,9 @@ import { SITE } from '../../lib/site';
   }
 
   .brace {
-    color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-text);
+    padding: 0 0.08em;
     font-weight: 700;
   }
 
@@ -134,7 +136,7 @@ import { SITE } from '../../lib/site';
   /* h2 comment 마크 */
   .comment-mark {
     font-family: var(--font-mono);
-    color: var(--faint);
+    color: var(--muted);
     font-size: 0.85em;
     font-weight: 400;
     margin-right: 0.4em;
@@ -145,8 +147,8 @@ import { SITE } from '../../lib/site';
   .prose code {
     font-family: var(--font-mono);
     font-size: 0.88em;
-    color: var(--accent);
-    background: var(--surface);
+    background: var(--accent);
+    color: var(--accent-text);
     padding: 0.1em 0.35em;
     border-radius: 2px;
     letter-spacing: 0.02em;

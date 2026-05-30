@@ -46,7 +46,7 @@ const noteHrefFromRef = (noteRef: string) => {
       <span class="world-reading-item" id="readingNowhere">→ the future is nowhere</span>
       <span class="world-reading-item" id="readingNowHere">→ the future is now here</span>
     </div>
-    <p class="world-tagline">아직 회사가 되기 전의 AI 창업자를 인터뷰합니다.<br />피치덱보다 먼저, 뉴스보다 먼저, 투자 검토서보다 먼저 드러나는 생각과 작업 방식을 기록합니다.</p>
+    <p class="world-tagline">미래는 아직 어디에도 없다.<br />그런데 아직 회사가 되기 전의 AI 창업자들의 손에서는 이미 돌아간다.</p>
   </div>
 
   <!-- 현재 호 (Issue) 편집 블록 -->
@@ -90,16 +90,6 @@ const noteHrefFromRef = (noteRef: string) => {
     </section>
   )}
 
-  <!-- 커버스토리: Featured Essay -->
-  {featuredEssay && (
-    <section aria-label="커버스토리">
-      <div class="section-title">
-        <h2>Cover Story</h2>
-      </div>
-      <ContentCard entry={featuredEssay} variant="cover" />
-    </section>
-  )}
-
   <!-- 인터뷰 섹션: 리드 + 목록 -->
   {interviews.length > 0 && (
     <section aria-label="인터뷰">
@@ -131,103 +121,6 @@ const noteHrefFromRef = (noteRef: string) => {
       <div class="field-notes-list">
         {fieldNotes.slice(0, 4).map((entry) => (
           <ContentCard entry={entry} variant="compact" />
-        ))}
-      </div>
-    </section>
-  )}
-
-  <!-- 시스템 섹션 -->
-  {systems.length > 0 && (
-    <section aria-label="시스템">
-      <div class="section-title">
-        <h2>작업 시스템</h2>
-        <a class="mono section-link muted" href="/systems">전체 보기 →</a>
-      </div>
-      <div class="grid-2">
-        {systems.slice(0, 2).map((entry) => (
-          <ContentCard entry={entry} variant="lead" />
-        ))}
-      </div>
-    </section>
-  )}
-
-  <!-- 리서치 인덱스: People · Tools -->
-  <section aria-label="리서치 인덱스">
-    <div class="section-title">
-      <h2>사람 · 도구</h2>
-      <a class="mono section-link muted" href="/people">전체 보기 →</a>
-    </div>
-    <div class="research-index">
-      <!-- People -->
-      <div class="research-column">
-        <div class="research-header mono">
-          <span>People</span>
-          <a href="/people" class="research-more">전체 보기 →</a>
-        </div>
-        {peoplePreview.map((person) => (
-          <div class="research-entry">
-            <p class="research-field">
-              <span class="field-key">name:</span>
-              <strong>{person.data.name}</strong>
-            </p>
-            <p class="research-field">
-              <span class="field-key">role:</span>
-              {person.data.role}
-            </p>
-            <p class="research-field">
-              <span class="field-key">signals:</span>
-              {person.data.signals.slice(0, 2).join(', ') || 'n/a'}
-            </p>
-            {person.data.relatedNotes[0] && (
-              <p class="research-field">
-                <a class="field-link" href={noteHrefFromRef(person.data.relatedNotes[0])}>related note →</a>
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <!-- Tools -->
-      <div class="research-column">
-        <div class="research-header mono">
-          <span>Tools</span>
-          <a href="/tools" class="research-more">전체 보기 →</a>
-        </div>
-        {toolsPreview.map((tool) => (
-          <div class="research-entry">
-            <p class="research-field">
-              <span class="field-key">tool:</span>
-              <strong>{tool.data.name}</strong>
-            </p>
-            <p class="research-field">
-              <span class="field-key">changes:</span>
-              {tool.data.summary}
-            </p>
-            <p class="research-field">
-              <span class="field-key">signals:</span>
-              {tool.data.frequentSignals.slice(0, 2).join(', ') || 'n/a'}
-            </p>
-            {tool.data.relatedNotes[0] && (
-              <p class="research-field">
-                <a class="field-link" href={noteHrefFromRef(tool.data.relatedNotes[0])}>related note →</a>
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- 리포트 섹션 -->
-  {reports.length > 0 && (
-    <section aria-label="리포트">
-      <div class="section-title">
-        <h2>리포트</h2>
-        <a class="mono section-link muted" href="/reports">전체 보기 →</a>
-      </div>
-      <div class="grid-2">
-        {reports.slice(0, 2).map((entry) => (
-          <ContentCard entry={entry} />
         ))}
       </div>
     </section>

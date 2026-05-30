@@ -17,12 +17,7 @@ export const SITE = {
 
 export const MAIN_NAV = [
   { href: '/interviews', label: '인터뷰' },
-  { href: '/people', label: '사람들' },
   { href: '/field-notes', label: '현장 노트' },
-  { href: '/tools', label: '도구' },
-  { href: '/systems', label: '작업 시스템' },
-  { href: '/reports', label: '리포트' },
-  { href: '/essays', label: '에세이' },
   { href: '/about', label: '소개' },
   { href: '/interview-proposal', label: '제안하기' },
 ] as const;

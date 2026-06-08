@@ -44,6 +44,11 @@ const issueCards = await Promise.all(
           </div>
           <div class="issue-title-col">
             <h2 class="issue-chapter-title">{issue.data.title}</h2>
+            {issue.data.coverImage && (
+              <div class="issue-chapter-cover">
+                <img src={issue.data.coverImage} alt={issue.data.title} />
+              </div>
+            )}
             <p class="issue-chapter-desc">{issue.data.description}</p>
             <div class="tag-list" style="margin-top: 0.65rem;">
               {issue.data.themes.map((theme) => (
@@ -200,6 +205,20 @@ const issueCards = await Promise.all(
     letter-spacing: -0.03em;
     overflow-wrap: break-word;
     word-break: keep-all;
+  }
+
+  .issue-chapter-cover {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .issue-chapter-cover img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    object-position: center 35%;
   }
 
   .issue-chapter-desc {

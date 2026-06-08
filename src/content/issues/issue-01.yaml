@@ -3,6 +3,7 @@ slug: issue-01
 description: AI를 보조 도구가 아니라 기본 작업 환경으로 받아들인 사람들의 초반 신호를 모은 호.
 publishedAt: 2026-06-01
 current: false
+hidden: true
 themes:
   - ai-native
   - builder-habits

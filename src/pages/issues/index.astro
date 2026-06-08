@@ -3,12 +3,15 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatDate, resolveIssueNotes } from '../../lib/content';
 
-const issues = (await getCollection('issues')).sort(
+const allIssues = (await getCollection('issues')).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
 
+// hidden: true 이슈는 목록에서 제외
+const visibleIssues = allIssues.filter((issue) => !issue.data.hidden);
+
 const issueCards = await Promise.all(
-  issues.map(async (issue) => ({
+  visibleIssues.map(async (issue) => ({
     issue,
     notes: await resolveIssueNotes(issue.data.includedNotes),
   })),
@@ -19,7 +22,7 @@ const issueCards = await Promise.all(
 
   <!-- 페이지 헤더 -->
   <div class="page-head">
-    <p class="eyebrow mono">Issue Archive · {issues.length} Issues</p>
+    <p class="eyebrow mono">Issue Archive · {visibleIssues.length} Issues</p>
     <h1>Issues</h1>
     <p class="muted page-desc">각 호는 하나의 편집 주제로 묶인 글 모음입니다. AI native generation의 현장 신호를 호별로 기록합니다.</p>
   </div>
@@ -32,7 +35,7 @@ const issueCards = await Promise.all(
         <div class="issue-chapter-head">
           <div class="issue-meta-col">
             <p class="issue-chapter-num mono">
-              Issue {String(issueCards.length - idx).padStart(2, '0')}
+              Issue {issue.data.number ?? String(issueCards.length - idx).padStart(2, '0')}
             </p>
             <p class="issue-date mono">{formatDate(issue.data.publishedAt)}</p>
             {issue.data.current && (
@@ -51,9 +54,11 @@ const issueCards = await Promise.all(
         </div>
 
         <!-- 수록 글 목차 -->
-        {notes.length > 0 && (
+        {(notes.length > 0 || issue.data.upcomingNotes.length > 0) && (
           <div class="issue-contents">
-            <p class="toc-header mono">수록 글 {notes.length}편</p>
+            <p class="toc-header mono">
+              수록 글 {notes.length + issue.data.upcomingNotes.length}편
+            </p>
             <ul class="issue-notes-list">
               {notes.map((note, noteIdx) => (
                 <li class="issue-note-item">
@@ -72,6 +77,24 @@ const issueCards = await Promise.all(
                       {formatDate(note.data.date)} ·
                       signals: {note.data.signals.slice(0, 2).join(', ') || 'n/a'}
                     </p>
+                  </div>
+                </li>
+              ))}
+              {issue.data.upcomingNotes.map((upcoming, upIdx) => (
+                <li class="issue-note-item upcoming-note">
+                  <span class="issue-note-type mono">
+                    {String(notes.length + upIdx + 1).padStart(2, '0')}<br />
+                    [{upcoming.type}]
+                  </span>
+                  <div class="issue-note-body">
+                    <span class="issue-note-title upcoming-title">{upcoming.title}</span>
+                    {upcoming.subtitle && (
+                      <p class="issue-note-sub">{upcoming.subtitle}</p>
+                    )}
+                    {upcoming.card_description && (
+                      <p class="issue-note-card-desc">{upcoming.card_description}</p>
+                    )}
+                    <p class="issue-note-meta mono upcoming-meta">발행 준비중</p>
                   </div>
                 </li>
               ))}
@@ -175,6 +198,8 @@ const issueCards = await Promise.all(
     font-size: clamp(1.4rem, 3vw, 2rem);
     line-height: 1.2;
     letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+    word-break: keep-all;
   }
 
   .issue-chapter-desc {
@@ -223,6 +248,7 @@ const issueCards = await Promise.all(
   .issue-note-body {
     display: grid;
     gap: 0.22rem;
+    min-width: 0;
   }
 
   .issue-note-title {
@@ -232,6 +258,8 @@ const issueCards = await Promise.all(
     letter-spacing: -0.02em;
     color: var(--text);
     text-decoration: none;
+    overflow-wrap: break-word;
+    word-break: keep-all;
   }
 
   .issue-note-title:hover {
@@ -244,6 +272,8 @@ const issueCards = await Promise.all(
     color: var(--muted);
     line-height: 1.5;
     margin: 0;
+    overflow-wrap: break-word;
+    word-break: keep-all;
   }
 
   .issue-note-meta {
@@ -251,6 +281,37 @@ const issueCards = await Promise.all(
     color: var(--faint);
     margin: 0;
     letter-spacing: 0.03em;
+  }
+
+  /* ── 예정 글 (upcoming) ──────────────────────── */
+  .upcoming-note {
+    opacity: 0.72;
+  }
+
+  .upcoming-title {
+    display: block;
+    cursor: default;
+  }
+
+  .issue-note-card-desc {
+    font-size: var(--text-sm);
+    color: var(--faint);
+    line-height: 1.52;
+    margin: 0;
+    font-style: italic;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+  }
+
+  .upcoming-meta {
+    color: var(--accent-text);
+    background: var(--accent);
+    display: inline-block;
+    padding: 0.04rem 0.38rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
   }
 
   /* ── 반응형 ──────────────────────────────────── */
@@ -264,6 +325,7 @@ const issueCards = await Promise.all(
       grid-template-columns: auto auto auto;
       align-items: center;
       gap: 0.5rem 0.8rem;
+      flex-wrap: wrap;
     }
 
     .issue-note-item {

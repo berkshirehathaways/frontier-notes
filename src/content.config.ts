@@ -32,15 +32,28 @@ const noteSchema = z.object({
 const issueSchema = z.object({
   title: z.string(),
   slug: z.string(),
+  number: z.string().optional(),
   description: z.string(),
   publishedAt: z.coerce.date(),
   current: z.boolean().default(false),
+  hidden: z.boolean().default(false),
   themes: z.array(z.string()).default([]),
   includedNotes: z
     .array(
       z.object({
         collection: z.enum(['essays', 'interviews', 'field-notes', 'systems', 'reports']),
         slug: z.string(),
+      }),
+    )
+    .default([]),
+  upcomingNotes: z
+    .array(
+      z.object({
+        title: z.string(),
+        subtitle: z.string().optional(),
+        type: z.string(),
+        slug: z.string(),
+        card_description: z.string().optional(),
       }),
     )
     .default([]),

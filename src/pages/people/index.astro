@@ -1,87 +1,54 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { resolveNoteRef } from '../../lib/content';
+import ContentCard from '../../components/ContentCard.astro';
+import { getPublishedCollection } from '../../lib/content';
 
-const people = await getCollection('people');
-const isDefined = <T,>(value: T | undefined): value is T => Boolean(value);
-
-const peopleWithNotes = await Promise.all(
-  people.map(async (person) => ({
-    person,
-    notes: (await Promise.all(person.data.relatedNotes.map((note) => resolveNoteRef(note)))).filter(isDefined),
-  })),
-);
+const allInterviews = await getPublishedCollection('interviews');
+const relayInterviews = allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay');
+const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
 ---
 
-<BaseLayout title="사람들" description="노이즈가 인터뷰한 AI 창업자들의 프로필과 작업 신호를 모읍니다.">
+<BaseLayout title="사람들" description="노이즈가 만난 AI 최전선의 창업가와 빌더. 한줄 릴레이 인터뷰와 심층 인터뷰로 나눠 기록한다.">
 
   <div class="page-head">
-    <p class="eyebrow mono">People · {peopleWithNotes.length} entries</p>
+    <p class="eyebrow mono">People · {allInterviews.length}편</p>
     <h1>사람들</h1>
-    <p class="muted page-desc">노이즈가 인터뷰한 AI 창업자들의 프로필과 작업 신호를 모읍니다.</p>
+    <p class="muted page-desc">노이즈가 만난 AI 최전선의 창업가와 빌더를 기록한다.</p>
   </div>
 
-  <div class="index-grid">
-    {peopleWithNotes.map(({ person, notes }) => (
-      <article class="index-entry">
-        <div class="entry-header">
-          <div class="entry-fields">
-            <p class="index-field">
-              <span class="field-key">name:</span>
-              <strong class="field-val">{person.data.name}</strong>
-            </p>
-            <p class="index-field">
-              <span class="field-key">stage:</span>
-              <span>{person.data.stage ?? 'n/a'}</span>
-            </p>
-            <p class="index-field">
-              <span class="field-key">role:</span>
-              <span>{person.data.role}</span>
-            </p>
-          </div>
-          <span class="tag mono">{person.data.slug}</span>
-        </div>
+  <!-- 한줄 릴레이 인터뷰 -->
+  <section class="interview-section" aria-label="한줄 릴레이 인터뷰">
+    <div class="interview-section-head">
+      <p class="section-kind mono">한줄 릴레이 인터뷰 · {relayInterviews.length}편</p>
+      <p class="section-kind-desc muted">한줄 릴레이 인터뷰는 최전선에서 일하는 사람들의 한 문장을 따라가는 인터뷰다. 한 사람이 남긴 말이 다음 사람의 질문이 되고, 그렇게 현장의 언어가 쌓인다.</p>
+    </div>
+    {relayInterviews.length > 0 ? (
+      <div class="interview-list">
+        {relayInterviews.map((entry) => (
+          <ContentCard entry={entry} variant="compact" />
+        ))}
+      </div>
+    ) : (
+      <p class="mono empty-msg">준비 중</p>
+    )}
+  </section>
 
-        {person.data.summary && (
-          <p class="entry-summary">{person.data.summary}</p>
-        )}
-
-        <div class="entry-meta-grid">
-          <div class="meta-col">
-            <p class="meta-label mono">tools</p>
-            <div class="tag-list">
-              {person.data.tools.length
-                ? person.data.tools.map((t) => <span class="tag">{t}</span>)
-                : <span class="na-text">n/a</span>}
-            </div>
-          </div>
-          <div class="meta-col">
-            <p class="meta-label mono">signals</p>
-            <div class="tag-list">
-              {person.data.signals.length
-                ? person.data.signals.map((s) => <span class="tag">{s}</span>)
-                : <span class="na-text">n/a</span>}
-            </div>
-          </div>
-        </div>
-
-        {notes.length > 0 && (
-          <div class="entry-notes">
-            <p class="meta-label mono">related notes</p>
-            <ul class="related-ul">
-              {notes.map((note) => (
-                <li>
-                  <span class="eyebrow">[{note.data.type.toUpperCase().replace('-',' ')}]</span>
-                  <a href={`/${note.collection}/${note.id}`}>{note.data.title}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </article>
-    ))}
-  </div>
+  <!-- 심층 인터뷰 -->
+  <section class="interview-section" aria-label="심층 인터뷰">
+    <div class="interview-section-head">
+      <p class="section-kind mono">심층 인터뷰 · {deepInterviews.length}편</p>
+      <p class="section-kind-desc muted">심층 인터뷰는 한 사람의 작업 방식, 기획 의도, 공간 운영 방식이 특정 Issue와 어떻게 연결되는지 길게 따라가는 글이다.</p>
+    </div>
+    {deepInterviews.length > 0 ? (
+      <div class="interview-list">
+        {deepInterviews.map((entry) => (
+          <ContentCard entry={entry} variant="compact" />
+        ))}
+      </div>
+    ) : (
+      <p class="mono empty-msg">준비 중</p>
+    )}
+  </section>
 
 </BaseLayout>
 
@@ -108,141 +75,46 @@ const peopleWithNotes = await Promise.all(
     margin: 0;
   }
 
-  .entry-count {
-    font-size: var(--text-2xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--faint);
-    margin: 0;
+  .interview-section {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--line-strong);
   }
 
-  /* 인덱스 그리드 */
-  .index-grid {
+  .interview-section-head {
+    margin-bottom: 0.8rem;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
-  }
-
-  .index-entry {
-    padding: 1.1rem 1rem 1.1rem 0;
-    border-top: 1px solid var(--line-strong);
-    display: grid;
-    gap: 0.65rem;
-  }
-
-  .index-entry:nth-child(even) {
-    padding-left: 1rem;
-    padding-right: 0;
-    border-left: 1px solid var(--line);
-  }
-
-  .entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .entry-fields {
-    display: grid;
-    gap: 0.18rem;
-  }
-
-  .index-field {
-    font-family: var(--font-mono);
-    font-size: var(--text-2xs);
-    line-height: 1.5;
-    margin: 0;
-    color: var(--text);
-  }
-
-  .field-key {
-    color: var(--faint);
-    margin-right: 0.3em;
-  }
-
-  .field-val {
-    font-weight: 700;
-  }
-
-  .entry-summary {
-    font-size: var(--text-sm);
-    color: var(--muted);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .entry-meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
-  }
-
-  .meta-col {
-    display: grid;
-    gap: 0.3rem;
-  }
-
-  .meta-label {
-    font-size: var(--text-2xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--faint);
-    margin: 0;
-  }
-
-  .na-text {
-    font-family: var(--font-mono);
-    font-size: var(--text-2xs);
-    color: var(--faint);
-  }
-
-  .entry-notes {
-    display: grid;
-    gap: 0.35rem;
-    padding-top: 0.4rem;
-    border-top: 1px solid var(--line);
-  }
-
-  .related-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.25rem;
-  }
-
-  .related-ul li {
-    display: flex;
-    align-items: baseline;
     gap: 0.4rem;
+  }
+
+  .section-kind {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .section-kind-desc {
     font-size: var(--text-sm);
+    line-height: 1.65;
+    max-width: 62ch;
+    margin: 0;
   }
 
-  .related-ul a {
-    color: var(--text);
-    text-decoration: underline;
-    text-underline-offset: 0.14rem;
-    text-decoration-color: var(--line);
+  .interview-list .editorial-entry:first-child {
+    border-top: 1px solid var(--line-strong);
   }
 
-  .related-ul a:hover {
-    text-decoration-color: var(--text);
+  .empty-msg {
+    font-size: var(--text-xs);
+    color: var(--faint);
+    padding: 1rem 0;
   }
 
-  @media (max-width: 900px) {
-    .index-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .index-entry:nth-child(even) {
-      padding-left: 0;
-      border-left: none;
-    }
-
-    .entry-meta-grid {
-      grid-template-columns: 1fr;
-      gap: 0.45rem;
+  @media (max-width: 768px) {
+    .interview-section {
+      margin-top: 1.5rem;
     }
   }
 </style>

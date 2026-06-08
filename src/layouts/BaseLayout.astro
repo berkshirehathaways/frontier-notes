@@ -11,6 +11,7 @@ const { title, description = SITE.description } = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.title}` : `${SITE.title} | ${SITE.englishName}`;
 const currentPath = Astro.url.pathname;
 const canonicalUrl = Astro.url.href;
+const isActiveNav = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
 <!doctype html>
@@ -64,7 +65,7 @@ const canonicalUrl = Astro.url.href;
           {MAIN_NAV.map((item) => (
             <li>
               <a
-                class={currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) ? 'active' : ''}
+                class={isActiveNav(item.href) ? 'active' : ''}
                 href={item.href}
               >
                 {item.label}
@@ -86,10 +87,11 @@ const canonicalUrl = Astro.url.href;
             <p class="footer-sub muted">{SITE.subtitle}</p>
           </div>
           <nav class="footer-links" aria-label="푸터 메뉴">
-            <a href="/interviews">인터뷰</a>
-            <a href="/field-notes">현장 노트</a>
-            <a href="/interview-proposal">제안하기</a>
+            <a href="/issues">이슈</a>
+            <a href="/notes">노트</a>
+            <a href="/people">사람들</a>
             <a href="/about">소개</a>
+            <a href="/interview-proposal">제안하기</a>
           </nav>
           <p class="footer-copy muted mono">
             {new Date().getFullYear()}. 모든 글은 현장에서 관찰한 기록입니다.

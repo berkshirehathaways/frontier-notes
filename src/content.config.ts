@@ -12,6 +12,7 @@ const noteSchema = z.object({
   date: z.coerce.date(),
   updatedAt: z.coerce.date().optional(),
   type: noteType,
+  interviewKind: z.enum(['relay', 'deep']).optional(),
   issue: z.string(),
   person: z.string().optional(),
   role: z.string().optional(),
@@ -27,6 +28,7 @@ const noteSchema = z.object({
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
   coverImage: z.string().optional(),
+  series: z.string().optional(),
 });
 
 const issueSchema = z.object({
@@ -37,6 +39,7 @@ const issueSchema = z.object({
   publishedAt: z.coerce.date(),
   current: z.boolean().default(false),
   hidden: z.boolean().default(false),
+  coverImage: z.string().optional(),
   themes: z.array(z.string()).default([]),
   includedNotes: z
     .array(

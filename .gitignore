@@ -17,6 +17,16 @@ pnpm-debug.log*
 .env
 .env.production
 
+# local agent/session state
+.omc/
+.omx/
+
+# private working notes
+docs/CLAUDE_HANDOFF.md
+docs/design-audit.md
+docs/design-variants.md
+src/content/essays/internal-draft-note.mdx
+
 # macOS-specific files
 .DS_Store
 

@@ -1,0 +1,14 @@
+name: 김연규
+slug: yeongyu-kim
+role: 에이전트 하네스 빌더
+company: Sisyphus Labs
+stage: project
+tools:
+  - OmO
+  - LazyCodex
+signals:
+  - workflow-change
+  - execution-density
+relatedNotes:
+  - essays/complete-light-clear-boundary
+summary: 긴 AI 작업이 계획, 실행, 검증, 기억의 루프를 지나 끝까지 굴러가게 만드는 하네스 구조를 만든다.

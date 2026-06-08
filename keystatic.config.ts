@@ -32,7 +32,7 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
   company: fields.text({ label: 'Company', validation: { isRequired: false } }),
   stage: fields.select({
     label: 'Stage',
-    defaultValue: 'pre-company',
+    defaultValue: 'project',
     options: stageOptions,
   }),
   tools: fields.array(fields.text({ label: 'Tool' }), { label: 'Tools', itemLabel: (props) => props.value || 'tool' }),
@@ -220,7 +220,7 @@ export default config({
         company: fields.text({ label: 'Company', validation: { isRequired: false } }),
         stage: fields.select({
           label: 'Stage',
-          defaultValue: 'pre-company',
+          defaultValue: 'project',
           options: stageOptions,
         }),
         tools: fields.array(fields.text({ label: 'Tool' }), {

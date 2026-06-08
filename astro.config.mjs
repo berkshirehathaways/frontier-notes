@@ -8,5 +8,6 @@ import keystatic from '@keystatic/astro';
 const skipKeystatic = process.env.SKIP_KEYSTATIC === 'true';
 
 export default defineConfig({
+  site: 'https://frontier-notes.vercel.app',
   integrations: [mdx(), react(), ...(skipKeystatic ? [] : [keystatic()])],
 });

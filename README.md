@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Interview Writer Studio (Internal)
 
-## Getting Started
+Internal-only tool for generating `frontier-notes` interview markdown drafts from:
+- direct transcript paste, or
+- browser recording -> Friendli transcription -> K-EXAONE generation.
 
-First, run the development server:
+## Security constraints
+- No audio file persistence.
+- No DB storage for transcript/audio.
+- No automatic publishing.
+- No logging of transcript full text, token, or API key.
+- `FRIENDLI_API_KEY` is read in server-only module.
+
+## Required environment variables
+Copy `.env.example` to `.env.local` and fill values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```dotenv
+FRIENDLI_API_KEY=
+FRIENDLI_BASE_URL=https://api.friendli.ai/serverless/v1
+TRANSCRIBE_MODEL=openai/whisper-large-v3
+EXAONE_MODEL=LGAI-EXAONE/K-EXAONE-236B-A23B
+STUDIO_ACCESS_TOKEN=
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Local usage
+1. Set `.env.local`.
+2. Start local server.
+3. Open `/studio/interview-writer`.
+4. Enter access token.
+5. Record audio or paste transcript.
+6. Run transcribe or generate.
+7. Copy markdown output.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open: [http://localhost:3000/studio/interview-writer](http://localhost:3000/studio/interview-writer)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
+```bash
+npm run test
+npm run lint
+npm run typecheck
+npm run build
+```

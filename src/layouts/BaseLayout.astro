@@ -44,7 +44,7 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
       <div class="topbar">
         <a href="/" class="topbar-id" aria-label="홈">
           <span class="topbar-brand">노이즈</span>
-          <span class="topbar-sentence mono">thefutureisnowhere</span>
+          <span class="topbar-sentence mono" id="headerPhrase">thefuture<span class="th-is">is</span><span class="th-now">now</span><span class="th-here">here</span></span>
         </a>
         <nav class="util-nav" aria-label="유틸리티 메뉴">
           <ul>
@@ -108,6 +108,20 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     </div>
   </body>
 </html>
+
+<script>
+  const hp = document.getElementById('headerPhrase');
+  if (hp) {
+    let stateA = true;
+    const tick = () => {
+      hp.classList.toggle('state-a', stateA);
+      hp.classList.toggle('state-b', !stateA);
+      stateA = !stateA;
+    };
+    tick();
+    setInterval(tick, 2600);
+  }
+</script>
 
 <style>
   /* ── 상단 바 ─────────────────────────────── */
@@ -287,6 +301,33 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     font-size: var(--text-2xs);
     margin: 0;
   }
+
+  /* ── 헤더 phrase 애니메이션 ──────────────── */
+  .th-is,
+  .th-now {
+    display: inline;
+    padding: 0 0.04em;
+    transition: background-color 0.55s ease, color 0.55s ease;
+  }
+
+  .th-here {
+    display: inline;
+    padding: 0 0.04em;
+    transition:
+      background-color 0.55s ease,
+      color 0.55s ease,
+      padding-left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* state-a: nowhere — now·here 하이라이트 */
+  #headerPhrase.state-a .th-is  { background: none; color: var(--muted); }
+  #headerPhrase.state-a .th-now { background: var(--accent); color: var(--accent-text); }
+  #headerPhrase.state-a .th-here { background: var(--accent); color: var(--accent-text); padding-left: 0.04em; }
+
+  /* state-b: now here — is·now·here 하이라이트, 공백 등장 */
+  #headerPhrase.state-b .th-is  { background: var(--accent); color: var(--accent-text); }
+  #headerPhrase.state-b .th-now { background: var(--accent); color: var(--accent-text); }
+  #headerPhrase.state-b .th-here { background: var(--accent); color: var(--accent-text); padding-left: 0.38em; }
 
   /* ── 반응형 ──────────────────────────────── */
   @media (max-width: 768px) {

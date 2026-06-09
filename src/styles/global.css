@@ -997,6 +997,11 @@ main {
     gap: 0.3rem;
   }
 
+  /* 모든 페이지 page-head 상단 여백 축소 (scoped 스타일 override) */
+  .page-head {
+    padding-top: 0.85rem !important;
+  }
+
   /* Issue TOC 모바일 압축: 번호+타입 인라인, 제목 두 번째 줄 */
   .issue-toc-list li {
     display: flex;

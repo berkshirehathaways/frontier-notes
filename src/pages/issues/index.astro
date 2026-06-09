@@ -357,5 +357,14 @@ const issueCards = await Promise.all(
       align-items: center;
       gap: 0.5rem;
     }
+
+    /* 첫 번째 이슈 카드 상단 여백 축소 */
+    .issue-chapter {
+      margin-top: 1.2rem;
+    }
+
+    .issue-chapter:first-child {
+      margin-top: 0.5rem;
+    }
   }
 </style>

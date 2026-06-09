@@ -1002,26 +1002,22 @@ main {
     padding-top: 0.85rem !important;
   }
 
-  /* Issue TOC 모바일 압축: 번호+타입 인라인, 제목 두 번째 줄 */
+  /* Issue TOC 모바일: 번호·타입·제목 3열 고정 grid — 제목 시작점 통일 */
   .issue-toc-list li {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1.6rem 5.6rem minmax(0, 1fr);
     align-items: baseline;
-    gap: 0 0.4em;
+    column-gap: 0.3em;
     padding: 0.45rem 0;
   }
 
-  .issue-toc-list .toc-num {
-    flex-shrink: 0;
-  }
-
   .issue-toc-list .toc-type {
-    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .issue-toc-list a {
-    flex: 1;
-    min-width: 7rem;
+    min-width: 0;
   }
 
   .issue-toc-list .toc-title {
@@ -1032,10 +1028,11 @@ main {
     overflow: hidden;
   }
 
-  /* editorial-entry: 세로 패딩 줄임, gap 축소, title 영역 최대 확보 */
+  /* editorial-entry: badge 열 고정폭 6rem → 모든 제목 시작점 동일 */
   .editorial-entry {
     padding: 0.55rem 0;
-    gap: 0.4rem 0.6rem;
+    gap: 0.4rem 0.5rem;
+    grid-template-columns: 6rem minmax(0, 1fr);
   }
 
   .editorial-entry .entry-body {

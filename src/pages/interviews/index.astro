@@ -3,17 +3,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContentCard from '../../components/ContentCard.astro';
 import { getPublishedCollection } from '../../lib/content';
 
-const interviews = await getPublishedCollection('interviews');
+// 릴레이 인터뷰만 노출: issue-01, issue-02, issue-03 등 issue-XX 패턴
+const interviews = (await getPublishedCollection('interviews'))
+  .filter((e) => /^issue-\d/.test(e.data.issue));
 const lead = interviews[0];
 const rest = interviews.slice(1);
 ---
 
-<BaseLayout title="인터뷰" description="처음부터 AI와 함께 만들고 검증하는 창업자들의 생각과 작업 방식을 인터뷰합니다.">
+<BaseLayout title="인터뷰" description="AI를 기본 작업 방식으로 삼는 창업가와 빌더의 생각과 작업 방식을 인터뷰합니다.">
 
   <div class="page-head">
-    <p class="eyebrow mono">Interviews · {interviews.length} conversations</p>
+    <p class="eyebrow mono">한줄 릴레이 인터뷰 · {interviews.length}편</p>
     <h1>인터뷰</h1>
-    <p class="muted page-desc">처음부터 AI와 함께 만들고 검증하는 창업자들의 생각과 작업 방식을 인터뷰합니다.</p>
+    <p class="muted page-desc">AI를 기본 작업 방식으로 삼는 창업가와 빌더의 생각과 작업 방식을 인터뷰합니다.</p>
+    <p class="relay-desc">한줄 릴레이 인터뷰는 최전선에서 일하는 사람들의 한 문장을 따라가는 인터뷰다. 한 사람이 남긴 말이 다음 사람의 질문이 되고, 그렇게 현장의 언어가 쌓인다.</p>
+    <p class="page-note muted" style="font-size: var(--text-xs); margin: 0.3rem 0 0;">인터뷰는 <a href="/people">사람들</a>에서도 분류별로 볼 수 있습니다.</p>
   </div>
 
   {lead && (
@@ -54,6 +58,16 @@ const rest = interviews.slice(1);
     max-width: 60ch;
     line-height: 1.6;
     margin: 0;
+  }
+
+  .relay-desc {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 62ch;
+    margin: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
   }
 
   .list-header {

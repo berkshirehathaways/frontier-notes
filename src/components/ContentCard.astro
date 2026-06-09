@@ -133,6 +133,8 @@ const meta = metaByType[entry.data.type];
     font-size: clamp(1.7rem, 3.5vw, 2.7rem);
     line-height: 1.16;
     letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+    word-break: keep-all;
   }
 
   .cover-title a {
@@ -149,6 +151,8 @@ const meta = metaByType[entry.data.type];
     font-size: var(--text-2xs);
     color: var(--muted);
     line-height: 1.6;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .cover-read {
@@ -169,7 +173,8 @@ const meta = metaByType[entry.data.type];
   .card-cover .lead-footer {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
     padding-top: 0.7rem;
     border-top: 1px solid var(--line);
   }
@@ -211,6 +216,7 @@ const meta = metaByType[entry.data.type];
   .entry-body {
     display: grid;
     gap: 0.2rem;
+    min-width: 0;
   }
 
   /* ── DEFAULT VARIANT ───────────────────────────── */
@@ -233,5 +239,28 @@ const meta = metaByType[entry.data.type];
     white-space: nowrap;
     align-self: start;
     margin-top: 0.22rem;
+  }
+
+  /* ── 모바일 ───────────────────────────────── */
+  @media (max-width: 768px) {
+    .card-cover {
+      padding: 1.2rem 1rem 1.1rem;
+    }
+
+    .cover-meta {
+      white-space: normal;
+    }
+
+    .lead-meta {
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .entry-meta {
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
   }
 </style>

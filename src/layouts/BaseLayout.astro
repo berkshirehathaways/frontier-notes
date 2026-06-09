@@ -11,6 +11,7 @@ const { title, description = SITE.description } = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.title}` : `${SITE.title} | ${SITE.englishName}`;
 const currentPath = Astro.url.pathname;
 const canonicalUrl = Astro.url.href;
+const isActiveNav = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
 <!doctype html>
@@ -41,7 +42,10 @@ const canonicalUrl = Astro.url.href;
 
       <!-- 상단 바: 브랜드 식별자 + 유틸리티 링크 -->
       <div class="topbar">
-        <a href="/" class="mono topbar-id" aria-label="홈">thefutureisnowhere</a>
+        <a href="/" class="topbar-id" aria-label="홈">
+          <span class="topbar-brand">노이즈</span>
+          <span class="topbar-sentence mono">thefutureisnowhere</span>
+        </a>
         <nav class="util-nav" aria-label="유틸리티 메뉴">
           <ul>
             {HUB_NAV.map((item) => (
@@ -64,7 +68,7 @@ const canonicalUrl = Astro.url.href;
           {MAIN_NAV.map((item) => (
             <li>
               <a
-                class={currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) ? 'active' : ''}
+                class={isActiveNav(item.href) ? 'active' : ''}
                 href={item.href}
               >
                 {item.label}
@@ -82,14 +86,16 @@ const canonicalUrl = Astro.url.href;
       <footer class="footer">
         <div class="footer-inner">
           <div class="footer-brand">
-            <p class="mono footer-title">thefutureisnowhere</p>
-            <p class="footer-sub muted">{SITE.subtitle}</p>
+            <p class="footer-name">노이즈</p>
+            <p class="mono footer-tagline">thefutureisnowhere</p>
+            <p class="footer-sub muted">AI 최전선의 소음이 신호가 되는 장면을 기록합니다.</p>
           </div>
           <nav class="footer-links" aria-label="푸터 메뉴">
-            <a href="/interviews">인터뷰</a>
-            <a href="/field-notes">현장 노트</a>
-            <a href="/interview-proposal">제안하기</a>
+            <a href="/issues">이슈</a>
+            <a href="/notes">노트</a>
+            <a href="/people">사람들</a>
             <a href="/about">소개</a>
+            <a href="/interview-proposal">제안하기</a>
           </nav>
           <p class="footer-copy muted mono">
             {new Date().getFullYear()}. 모든 글은 현장에서 관찰한 기록입니다.
@@ -114,12 +120,29 @@ const canonicalUrl = Astro.url.href;
   }
 
   .topbar-id {
-    letter-spacing: 0.04em;
-    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.06rem;
     text-decoration: none;
   }
 
-  .topbar-id:hover {
+  .topbar-brand {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  .topbar-sentence {
+    font-size: var(--text-2xs);
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+
+  .topbar-id:hover .topbar-sentence {
     color: var(--text);
   }
 
@@ -204,17 +227,25 @@ const canonicalUrl = Astro.url.href;
     gap: 0.75rem;
   }
 
-  .footer-title {
-    font-size: var(--text-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+  .footer-name {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.01em;
     color: var(--text);
     margin: 0;
   }
 
+  .footer-tagline {
+    font-size: var(--text-2xs);
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 0.1rem 0 0;
+  }
+
   .footer-sub {
     font-size: var(--text-sm);
-    margin: 0;
+    margin: 0.25rem 0 0;
   }
 
   .footer-world {

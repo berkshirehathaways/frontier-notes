@@ -1,31 +1,28 @@
 export const SITE = {
   title: '노이즈',
   englishName: 'Noise',
-  subtitle: '아직 회사가 되기 전의 AI 창업자를 인터뷰합니다.',
-  description:
-    '노이즈는 아직 회사가 되기 전의 AI 창업자를 인터뷰하는 매거진입니다. 피치덱보다 먼저, 뉴스보다 먼저 드러나는 생각과 작업 방식을 기록합니다.',
+  subtitle: 'AI 최전선의 언어를 기록하는 매거진.',
+  description: '노이즈는 아직 산업, 법, 대중의 언어로 정리되기 전, AI 최전선에서 먼저 나타나는 말, 행동, 장면, 감각을 기록하는 매거진이다.',
   coreLines: [
-    '아직 회사가 되기 전의 AI 창업자를 인터뷰합니다.',
-    '피치덱보다 먼저, 뉴스보다 먼저 드러나는 작업 방식을 기록합니다.',
+    'AI 최전선의 언어를 기록합니다.',
+    'Issue로 묶고, 사람으로 기억합니다.',
   ],
   cta: {
-    readLatest: '/interviews',
+    readLatest: '/issues',
     interviewProposal: '/interview-proposal',
   },
   contactEmail: 'frontier.notes.magazine@gmail.com',
 };
 
 export const MAIN_NAV = [
-  { href: '/interviews', label: '인터뷰' },
-  { href: '/field-notes', label: '현장 노트' },
-  { href: '/about', label: '소개' },
-  { href: '/interview-proposal', label: '제안하기' },
+  { href: '/issues', label: 'ISSUES' },
+  { href: '/notes', label: 'NOTES' },
+  { href: '/people', label: 'PEOPLE' },
+  { href: '/about', label: 'ABOUT' },
+  { href: '/interview-proposal', label: 'CONTRIBUTE' },
 ] as const;
 
-export const HUB_NAV = [
-  { href: '/notes', label: 'Notes Explorer' },
-  { href: '/newsletter', label: 'Newsletter Archive' },
-] as const;
+export const HUB_NAV: ReadonlyArray<{ readonly href: string; readonly label: string }> = [];
 
 export const SIGNAL_OPTIONS = [
   'speed',
@@ -41,7 +38,6 @@ export const SIGNAL_OPTIONS = [
 ] as const;
 
 export const STAGE_OPTIONS = [
-  'pre-company',
   'project',
   'startup',
   'operator',

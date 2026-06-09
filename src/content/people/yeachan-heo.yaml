@@ -1,0 +1,13 @@
+name: 허예찬
+slug: yeachan-heo
+role: 에이전트 하네스 빌더
+company: Layoff Labs
+stage: project
+tools:
+  - Gajae-Code
+signals:
+  - workflow-change
+  - product-sense
+relatedNotes:
+  - essays/complete-light-clear-boundary
+summary: 많은 기능보다 반복 가능한 하나의 루프에 집중하며 가벼운 AI 코딩 하네스의 표면을 다듬는다.

@@ -1,0 +1,16 @@
+name: 민웅기
+slug: woongki-min
+role: 에이전트 런타임 빌더
+company: ''
+stage: project
+tools:
+  - pss-next
+  - plugsuits
+  - ai-sdk-tool-call-middleware
+  - pss-mgba
+signals:
+  - workflow-change
+  - product-sense
+relatedNotes:
+  - essays/complete-light-clear-boundary
+summary: 모델과 도구 사이의 최소 인터페이스, 범용 런타임과 특정 하네스 사이의 경계를 다룬다.

@@ -4,7 +4,8 @@ import ContentCard from '../../components/ContentCard.astro';
 import NotesFilter from '../../components/NotesFilter.astro';
 import { getAllPublishedNotes } from '../../lib/content';
 
-const notes = await getAllPublishedNotes();
+const allNotes = await getAllPublishedNotes();
+const notes = allNotes.filter((n) => n.data.showInRecentNotes !== false);
 const themes = [...new Set(notes.flatMap((note) => note.data.themes))].sort((a, b) => a.localeCompare(b));
 const tools = [...new Set(notes.flatMap((note) => note.data.tools))].sort((a, b) => a.localeCompare(b));
 ---

@@ -1,0 +1,16 @@
+name: 나정환
+slug: junghwan-na
+role: CTO, Rivetta
+company: Rivetta
+stage: startup
+tools:
+  - GitHub
+  - Claude Code
+  - Codex CLI
+signals:
+  - lab-to-github
+  - translation-workflow
+  - harness-engineering
+relatedNotes:
+  - interviews/translator-from-lab-to-github
+summary: 생명과학·뇌과학 연구자 출신 번역가. 8년간 일본어 전문 번역 후 Rivetta CTO로 K웹소설 IP 메모리 시스템을 설계하고 있다.

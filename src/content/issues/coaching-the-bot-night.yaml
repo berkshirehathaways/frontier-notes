@@ -1,0 +1,28 @@
+title: "봇에게 훈수 두는 사람들"
+slug: coaching-the-bot-night
+number: "01"
+description: >-
+  "얼른 레포 파쿠리해서 만드세요." 포켓몬을 에이전트가 깨는 행사에서 이 말은 농담처럼 나왔지만, 그 공간에서는 가장 빠른 작업 지시처럼 들렸다. AI는 생각보다 자주 길을 잃었고, 방 하나를 나가는 것도 어려워했다. 그런데 사람들은 그 실패를 숨기지 않고, 레포를 열고, 하네스를 깎고, 밤늦게까지 다시 이야기했다. Issue 01은 그 이상한 밤을 기록한다.
+publishedAt: 2026-06-08
+current: true
+hidden: false
+coverImage: "/uploads/issue-01-cover.jpg"
+themes:
+  - ai-native
+  - agent-harness
+  - pokemon
+  - fork
+  - hacker-house
+  - open-ecosystem
+includedNotes:
+  - collection: essays
+    slug: fork
+  - collection: interviews
+    slug: bot-coach
+  - collection: field-notes
+    slug: first-map
+  - collection: field-notes
+    slug: good-vibe
+  - collection: reports
+    slug: bot-entry
+upcomingNotes: []

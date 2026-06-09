@@ -54,7 +54,12 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
           {currentIssue.data.current && <span class="current-badge">Current</span>}
           <span class="mono" style="color: var(--faint); font-size: 0.6rem;">{formatDate(currentIssue.data.publishedAt)}</span>
         </div>
-        <h2>{currentIssue.data.title}</h2>
+        <h2>
+          {currentIssue.data.publicPath
+            ? <a href={currentIssue.data.publicPath} class="issue-title-link">{currentIssue.data.title}</a>
+            : currentIssue.data.title
+          }
+        </h2>
         {currentIssue.data.coverImage && (
           <div class="issue-cover-img">
             <img src={currentIssue.data.coverImage} alt={currentIssue.data.title} />
@@ -288,6 +293,17 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
   .tagline-l1,
   .tagline-l2 {
     display: block;
+  }
+
+  /* ── 이슈 제목 링크 ──────────────────────── */
+  .issue-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .issue-title-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
   }
 
   /* ── upcoming TOC 항목 ──────────────────── */

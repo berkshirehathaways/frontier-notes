@@ -7,8 +7,11 @@ const allIssues = (await getCollection('issues')).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
 
-// hidden: true 이슈는 목록에서 제외
-const visibleIssues = allIssues.filter((issue) => !issue.data.hidden);
+// status가 있으면 published만, 없으면 hidden:false 기준 (하위 호환)
+const visibleIssues = allIssues.filter((issue) => {
+  if (issue.data.status !== undefined) return issue.data.status === 'published';
+  return !issue.data.hidden;
+});
 
 const issueCards = await Promise.all(
   visibleIssues.map(async (issue) => ({
@@ -18,7 +21,7 @@ const issueCards = await Promise.all(
 );
 ---
 
-<BaseLayout title="Issues" description="하나의 편집 주제로 묶은 글 모음을 기록합니다.">
+<BaseLayout title="Issues" description="편집 주제로 묶은 노이즈의 이슈를 모았습니다.">
 
   <!-- 페이지 헤더 -->
   <div class="page-head">
@@ -43,7 +46,12 @@ const issueCards = await Promise.all(
             )}
           </div>
           <div class="issue-title-col">
-            <h2 class="issue-chapter-title">{issue.data.title}</h2>
+            <h2 class="issue-chapter-title">
+              {issue.data.publicPath
+                ? <a href={issue.data.publicPath} class="issue-title-link">{issue.data.title}</a>
+                : issue.data.title
+              }
+            </h2>
             {issue.data.coverImage && (
               <div class="issue-chapter-cover">
                 <img src={issue.data.coverImage} alt={issue.data.title} />
@@ -58,11 +66,11 @@ const issueCards = await Promise.all(
           </div>
         </div>
 
-        <!-- 수록 글 목차 -->
+        <!-- 콘텐츠 구성 -->
         {(notes.length > 0 || issue.data.upcomingNotes.length > 0) && (
           <div class="issue-contents">
             <p class="toc-header mono">
-              수록 글 {notes.length + issue.data.upcomingNotes.length}편
+              콘텐츠 구성 {notes.length + issue.data.upcomingNotes.length}편
             </p>
             <ul class="issue-notes-list">
               {notes.map((note, noteIdx) => (
@@ -198,6 +206,16 @@ const issueCards = await Promise.all(
     gap: 0.4rem;
   }
 
+  .issue-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .issue-title-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+  }
+
   .issue-chapter-title {
     margin: 0;
     font-size: clamp(1.4rem, 3vw, 2rem);
@@ -228,7 +246,7 @@ const issueCards = await Promise.all(
     line-height: 1.62;
   }
 
-  /* ── 수록 글 목차 ────────────────────────────── */
+  /* ── 콘텐츠 구성 ────────────────────────────── */
   .issue-contents {
     padding: 0.85rem 0 0;
   }

@@ -3,7 +3,6 @@ import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 export const NOTE_COLLECTIONS = ['essays', 'interviews', 'field-notes', 'systems', 'reports'] as const;
 export type NoteCollection = (typeof NOTE_COLLECTIONS)[number];
 export type NoteEntry = CollectionEntry<NoteCollection>;
-export type NewsletterEntry = CollectionEntry<'newsletter'>;
 
 const showDraftsInDev = !import.meta.env.PROD && import.meta.env.SHOW_DRAFTS === 'true';
 
@@ -31,11 +30,6 @@ export async function getPublishedCollection(collection: NoteCollection) {
 export async function getAllPublishedNotes() {
   const notesPerCollection = await Promise.all(NOTE_COLLECTIONS.map((name) => getPublishedCollection(name)));
   return sortByDateDesc(notesPerCollection.flat());
-}
-
-export async function getPublishedNewsletters() {
-  const entries = await getCollection('newsletter', ({ data }) => shouldShowDraft(data.draft));
-  return sortByDateDesc(entries);
 }
 
 export function noteUrl(entry: NoteEntry) {

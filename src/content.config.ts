@@ -84,18 +84,6 @@ const toolsSchema = z.object({
   summary: z.string(),
 });
 
-const newsletterSchema = z.object({
-  title: z.string(),
-  subtitle: z.string(),
-  slug: z.string(),
-  date: z.coerce.date(),
-  updatedAt: z.coerce.date().optional(),
-  summary: z.string(),
-  topics: z.array(z.string()).default([]),
-  featured: z.boolean().default(false),
-  draft: z.boolean().default(false),
-});
-
 const essays = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/essays' }),
   schema: noteSchema,
@@ -136,11 +124,6 @@ const tools = defineCollection({
   schema: toolsSchema,
 });
 
-const newsletters = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/newsletter' }),
-  schema: newsletterSchema,
-});
-
 export const collections = {
   essays,
   interviews,
@@ -150,5 +133,4 @@ export const collections = {
   issues,
   people,
   tools,
-  newsletter: newsletters,
 };

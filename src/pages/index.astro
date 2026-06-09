@@ -39,7 +39,10 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
       <span class="world-reading-item" id="readingNowhere">→ the future is nowhere</span>
       <span class="world-reading-item" id="readingNowHere">→ the future is now here</span>
     </div>
-    <p class="world-tagline">미래는 아직 어디에도 없다.<br />그런데 AI 네이티브 창업가와 빌더의 손에서는 이미 돌아간다.</p>
+    <p class="world-tagline">
+      <span class="tagline-l1">미래는 아직 어디에도 없다.</span>
+      <span class="tagline-l2">그런데 AI 네이티브 창업가와 빌더의 손에는 있다.</span>
+    </p>
   </div>
 
   <!-- Current Issue -->
@@ -277,6 +280,14 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
     line-height: 1.65;
     color: var(--muted);
     max-width: 58ch;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tagline-l1,
+  .tagline-l2 {
+    display: block;
   }
 
   /* ── upcoming TOC 항목 ──────────────────── */

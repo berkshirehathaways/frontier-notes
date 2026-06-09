@@ -331,13 +331,18 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
 
   /* ── 반응형 ──────────────────────────────── */
   @media (max-width: 768px) {
-    /* 보조 nav 모바일 숨김 — topbar는 thefutureisnowhere만 */
+    /* 보조 nav 모바일 숨김 */
     .util-nav {
       display: none;
     }
 
     .primary-nav ul {
       gap: 0 1rem;
+    }
+
+    /* 네비게이션 아래 → 본문 시작까지 여백 축소 */
+    main {
+      margin-top: 0.85rem;
     }
   }
 </style>

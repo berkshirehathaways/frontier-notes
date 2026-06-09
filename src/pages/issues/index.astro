@@ -46,7 +46,12 @@ const issueCards = await Promise.all(
             )}
           </div>
           <div class="issue-title-col">
-            <h2 class="issue-chapter-title">{issue.data.title}</h2>
+            <h2 class="issue-chapter-title">
+              {issue.data.publicPath
+                ? <a href={issue.data.publicPath} class="issue-title-link">{issue.data.title}</a>
+                : issue.data.title
+              }
+            </h2>
             {issue.data.coverImage && (
               <div class="issue-chapter-cover">
                 <img src={issue.data.coverImage} alt={issue.data.title} />
@@ -199,6 +204,16 @@ const issueCards = await Promise.all(
   .issue-title-col {
     display: grid;
     gap: 0.4rem;
+  }
+
+  .issue-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .issue-title-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
   }
 
   .issue-chapter-title {

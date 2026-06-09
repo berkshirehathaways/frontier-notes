@@ -66,11 +66,11 @@ const issueCards = await Promise.all(
           </div>
         </div>
 
-        <!-- 수록 글 목차 -->
+        <!-- 콘텐츠 구성 -->
         {(notes.length > 0 || issue.data.upcomingNotes.length > 0) && (
           <div class="issue-contents">
             <p class="toc-header mono">
-              수록 글 {notes.length + issue.data.upcomingNotes.length}편
+              콘텐츠 구성 {notes.length + issue.data.upcomingNotes.length}편
             </p>
             <ul class="issue-notes-list">
               {notes.map((note, noteIdx) => (
@@ -246,7 +246,7 @@ const issueCards = await Promise.all(
     line-height: 1.62;
   }
 
-  /* ── 수록 글 목차 ────────────────────────────── */
+  /* ── 콘텐츠 구성 ────────────────────────────── */
   .issue-contents {
     padding: 0.85rem 0 0;
   }

@@ -26,7 +26,7 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
     defaultValue: defaultType,
     options: noteTypeOptions.map((item) => ({ ...item })),
   }),
-  issue: fields.text({ label: 'Issue', description: '예: issue-01' }),
+  issue: fields.text({ label: 'Issue', description: '예: coaching-the-bot-night' }),
   person: fields.text({ label: 'Person', validation: { isRequired: false } }),
   role: fields.text({ label: 'Role', validation: { isRequired: false } }),
   company: fields.text({ label: 'Company', validation: { isRequired: false } }),
@@ -78,46 +78,18 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
   }),
 });
 
-const newsletterSchema = {
-  title: fields.slug({ name: { label: 'Title' } }),
-  subtitle: fields.text({ label: 'Subtitle' }),
-  slug: fields.text({
-    label: 'Slug',
-    description: '뉴스레터 URL 슬러그입니다. 파일명과 분리해 관리할 수 있습니다.',
-  }),
-  date: fields.date({ label: 'Date', validation: { isRequired: true } }),
-  updatedAt: fields.date({ label: 'Updated At', validation: { isRequired: false } }),
-  summary: fields.text({ label: 'Summary', multiline: true }),
-  topics: fields.array(fields.text({ label: 'Topic' }), {
-    label: 'Topics',
-    itemLabel: (props) => props.value || 'topic',
-  }),
-  featured: fields.checkbox({ label: 'Featured', defaultValue: false }),
-  draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
-  content: fields.mdx({
-    label: 'Content',
-    extension: 'mdx',
-    options: {
-      image: {
-        directory: 'public/uploads/newsletter',
-        publicPath: '/uploads/newsletter/',
-      },
-    },
-  }),
-};
-
 export default config({
   storage: {
     kind: 'local',
   },
   ui: {
     brand: {
-      name: '최전선 노트 CMS',
+      name: '노이즈 CMS',
     },
     navigation: {
       Notes: ['essays', 'interviews', 'field-notes', 'systems', 'reports'],
-      Archive: ['newsletter'],
-      Data: ['issues', 'people', 'tools'],
+      Issues: ['issues'],
+      Data: ['people', 'tools'],
     },
   },
   collections: {
@@ -161,26 +133,46 @@ export default config({
       columns: ['type', 'issue', 'date', 'draft'],
       schema: noteSchema('report'),
     }),
-    newsletter: collection({
-      label: 'Newsletter',
-      slugField: 'title',
-      path: 'src/content/newsletter/*',
-      format: { contentField: 'content' },
-      columns: ['date', 'featured', 'draft'],
-      schema: newsletterSchema,
-    }),
     issues: collection({
       label: 'Issues',
       slugField: 'title',
       path: 'src/content/issues/*',
       format: 'yaml',
-      columns: ['slug', 'publishedAt', 'current'],
+      columns: ['number', 'slug', 'status', 'publishedAt', 'current'],
       schema: {
-        title: fields.slug({ name: { label: 'Issue Name' } }),
-        slug: fields.text({ label: 'Issue Slug' }),
-        description: fields.text({ label: 'Description', multiline: true }),
-        publishedAt: fields.date({ label: 'Published At', validation: { isRequired: true } }),
-        current: fields.checkbox({ label: 'Current Issue', defaultValue: false }),
+        title: fields.slug({ name: { label: 'Issue 제목' } }),
+        slug: fields.text({ label: 'Issue Slug', description: '예: coaching-the-bot-night' }),
+        number: fields.text({ label: 'Issue 번호', description: '예: 01', validation: { isRequired: false } }),
+        publicPath: fields.text({
+          label: '공개 경로',
+          description: '예: /issues-01 (다음 단계에서 전용 랜딩 라우트로 사용)',
+          validation: { isRequired: false },
+        }),
+        status: fields.select({
+          label: '발행 상태',
+          defaultValue: 'draft',
+          options: [
+            { label: 'Draft', value: 'draft' },
+            { label: 'Published', value: 'published' },
+            { label: 'Archived', value: 'archived' },
+          ],
+        }),
+        hidden: fields.checkbox({ label: '목록에서 숨기기', defaultValue: true }),
+        current: fields.checkbox({ label: '현재 이슈', defaultValue: false }),
+        description: fields.text({ label: '설명', multiline: true }),
+        publishedAt: fields.date({ label: '발행일', validation: { isRequired: true } }),
+        coverImage: fields.image({
+          label: 'Cover Image',
+          directory: 'public/uploads',
+          publicPath: '/uploads/',
+          validation: { isRequired: false },
+        }),
+        ogImage: fields.image({
+          label: 'OG Image',
+          directory: 'public/uploads',
+          publicPath: '/uploads/',
+          validation: { isRequired: false },
+        }),
         themes: fields.array(fields.text({ label: 'Theme' }), {
           label: 'Themes',
           itemLabel: (props) => props.value || 'theme',
@@ -199,10 +191,24 @@ export default config({
               ],
             }),
             slug: fields.text({ label: 'Content Slug' }),
+            order: fields.integer({ label: '순서', validation: { isRequired: false } }),
+            type: fields.select({
+              label: '타입 표시',
+              defaultValue: 'ESSAY',
+              options: [
+                { label: 'ESSAY', value: 'ESSAY' },
+                { label: 'INTERVIEW', value: 'INTERVIEW' },
+                { label: 'FIELD NOTE', value: 'FIELD NOTE' },
+                { label: 'SYSTEM', value: 'SYSTEM' },
+                { label: 'REPORT', value: 'REPORT' },
+              ],
+            }),
+            title: fields.text({ label: '글 제목', validation: { isRequired: false } }),
           }),
           {
-            label: 'Included Notes',
-            itemLabel: (props) => props.fields.slug.value || 'note',
+            label: '콘텐츠 구성',
+            itemLabel: (props) =>
+              `${props.fields.order.value ? `${props.fields.order.value}. ` : ''}${props.fields.title.value || props.fields.slug.value || 'note'}`,
           },
         ),
       },

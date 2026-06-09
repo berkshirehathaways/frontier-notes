@@ -7,8 +7,11 @@ const allIssues = (await getCollection('issues')).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
 
-// hidden: true 이슈는 목록에서 제외
-const visibleIssues = allIssues.filter((issue) => !issue.data.hidden);
+// status가 있으면 published만, 없으면 hidden:false 기준 (하위 호환)
+const visibleIssues = allIssues.filter((issue) => {
+  if (issue.data.status !== undefined) return issue.data.status === 'published';
+  return !issue.data.hidden;
+});
 
 const issueCards = await Promise.all(
   visibleIssues.map(async (issue) => ({

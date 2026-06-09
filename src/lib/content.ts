@@ -50,10 +50,11 @@ export async function resolveNoteRef(noteRef: string) {
 }
 
 export async function resolveIssueNotes(
-  includedNotes: Array<{ collection: NoteCollection; slug: string }>,
+  includedNotes: Array<{ collection: NoteCollection; slug: string; order?: number }>,
 ): Promise<NoteEntry[]> {
+  const sorted = [...includedNotes].sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
   const loaded = await Promise.all(
-    includedNotes.map(async ({ collection, slug }) => {
+    sorted.map(async ({ collection, slug }) => {
       const entry = await getEntry(collection, slug);
       if (entry && shouldShowDraft(entry.data.draft)) return entry;
       return getNoteBySlug(collection, slug);

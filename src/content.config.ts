@@ -36,17 +36,23 @@ const issueSchema = z.object({
   title: z.string(),
   slug: z.string(),
   number: z.string().optional(),
+  publicPath: z.string().optional(),
+  status: z.enum(['draft', 'published', 'archived']).optional(),
   description: z.string(),
   publishedAt: z.coerce.date(),
   current: z.boolean().default(false),
   hidden: z.boolean().default(false),
   coverImage: z.string().optional(),
+  ogImage: z.string().optional(),
   themes: z.array(z.string()).default([]),
   includedNotes: z
     .array(
       z.object({
         collection: z.enum(['essays', 'interviews', 'field-notes', 'systems', 'reports']),
         slug: z.string(),
+        order: z.number().optional(),
+        type: z.string().optional(),
+        title: z.string().optional(),
       }),
     )
     .default([]),

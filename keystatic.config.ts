@@ -58,6 +58,11 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
     label: 'Next Questions',
     itemLabel: (props) => props.value || 'question',
   }),
+  series: fields.text({
+    label: '시리즈',
+    description: '연결된 시리즈명이 있을 때만 입력합니다.',
+    validation: { isRequired: false },
+  }),
   featured: fields.checkbox({ label: 'Featured', defaultValue: false }),
   draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
   showInRecentNotes: fields.checkbox({
@@ -112,7 +117,18 @@ export default config({
       path: 'src/content/interviews/*',
       format: { contentField: 'content' },
       columns: ['type', 'issue', 'date', 'draft'],
-      schema: noteSchema('interview'),
+      schema: {
+        ...noteSchema('interview'),
+        interviewKind: fields.select({
+          label: '인터뷰 형식',
+          description: '비워두면 한줄 릴레이 인터뷰로 처리됩니다. 심층 인터뷰일 때만 deep을 선택합니다.',
+          defaultValue: 'relay',
+          options: [
+            { label: '한줄 릴레이 인터뷰', value: 'relay' },
+            { label: '심층 인터뷰', value: 'deep' },
+          ],
+        }),
+      },
     }),
     'field-notes': collection({
       label: 'Field Notes',

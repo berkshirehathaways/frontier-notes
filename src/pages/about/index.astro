@@ -66,6 +66,9 @@ import { SITE } from '../../lib/site';
     <aside class="about-meta">
       <section class="meta-panel">
         <p class="meta-label mono">// 만드는 사람</p>
+        <div class="maker-portrait">
+          <img src="/uploads/steven-shin-portrait.jpg" alt="Steven Shin portrait" />
+        </div>
         <div class="meta-facts">
           <div class="fact-row">
             <dt>name</dt>
@@ -277,6 +280,25 @@ import { SITE } from '../../lib/site';
     font-size: var(--text-xs);
     color: var(--muted);
     letter-spacing: 0.02em;
+  }
+
+  /* maker 프로필 이미지 */
+  .maker-portrait {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    margin-bottom: 0.55rem;
+    flex-shrink: 0;
+  }
+
+  .maker-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 15%;
+    display: block;
   }
 
   /* maker 소개 */

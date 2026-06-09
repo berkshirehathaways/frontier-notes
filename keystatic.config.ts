@@ -85,6 +85,27 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
         publicPath: '/uploads/content/',
       },
     },
+    components: {
+      FigureImage: {
+        label: 'Figure Image',
+        kind: 'block',
+        schema: {
+          src: fields.text({ label: '이미지 경로' }),
+          alt: fields.text({ label: '대체 텍스트' }),
+          caption: fields.text({ label: '캡션', multiline: true }),
+          variant: fields.select({
+            label: '여백 스타일',
+            defaultValue: 'normal',
+            options: [
+              { label: '기본 (2rem 위아래)', value: 'normal' },
+              { label: '좁은 여백 (1.5rem 위아래)', value: 'tight' },
+              { label: '하단 여백 (0 0 2rem)', value: 'bottom' },
+              { label: '하단 여백 + 테두리', value: 'bottom-bordered' },
+            ],
+          }),
+        },
+      },
+    },
   }),
 });
 

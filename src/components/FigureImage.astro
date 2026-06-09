@@ -1,0 +1,30 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption: string;
+  variant?: 'normal' | 'bottom' | 'tight' | 'bottom-bordered';
+}
+
+const { src, alt, caption, variant = 'normal' } = Astro.props;
+
+const marginMap: Record<string, string> = {
+  normal: '2rem 0',
+  bottom: '0 0 2rem',
+  tight: '1.5rem 0',
+  'bottom-bordered': '0 0 2rem',
+};
+
+const hasBorder = variant === 'bottom-bordered';
+---
+
+<figure style={`margin: ${marginMap[variant]}; overflow: hidden;`}>
+  <img
+    src={src}
+    alt={alt}
+    style={`width: 100%; display: block; border-radius: 2px;${hasBorder ? ' border: 1px solid var(--line);' : ''}`}
+  />
+  <figcaption style="margin-top: 0.55rem; font-size: 0.72rem; color: var(--faint); font-family: var(--font-mono); letter-spacing: 0.04em; line-height: 1.5;">
+    {caption}
+  </figcaption>
+</figure>

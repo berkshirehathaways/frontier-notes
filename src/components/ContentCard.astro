@@ -80,7 +80,9 @@ const meta = metaByType[entry.data.type];
       <h3 class="entry-title">
         <a href={href}>{entry.data.title}</a>
       </h3>
-      <p class="entry-meta">{dateStr} · {meta[0]} · signals: {signals}</p>
+      <p class="entry-meta">
+        <span class="entry-meta-base">{dateStr} · {meta[0]}</span><span class="entry-meta-signals"> · signals: {signals}</span>
+      </p>
     </div>
   </article>
 )}
@@ -261,6 +263,11 @@ const meta = metaByType[entry.data.type];
       white-space: normal;
       overflow-wrap: break-word;
       word-break: break-word;
+    }
+
+    /* 모바일에서 signals 숨김 */
+    .entry-meta-signals {
+      display: none;
     }
   }
 </style>

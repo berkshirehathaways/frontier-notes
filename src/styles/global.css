@@ -1027,13 +1027,18 @@ main {
     overflow: hidden;
   }
 
-  /* editorial-entry: entry-meta signals 모바일에서 숨김 */
-  .editorial-entry .entry-meta-signals {
-    display: none;
-  }
-
-  /* editorial-entry: 세로 패딩 줄임 */
+  /* editorial-entry: 세로 패딩 줄임, gap 축소, title 영역 최대 확보 */
   .editorial-entry {
     padding: 0.55rem 0;
+    gap: 0.4rem 0.6rem;
+  }
+
+  .editorial-entry .entry-body {
+    min-width: 0;
+  }
+
+  .editorial-entry .entry-title {
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 }

@@ -27,6 +27,11 @@ const metaByType: Record<NoteEntry['data']['type'], string[]> = {
 };
 
 const meta = metaByType[entry.data.type];
+
+// 모바일 compact용: 인터뷰는 "이름 · 날짜", 나머지는 "날짜 · meta[0]"
+const mobileMeta = entry.data.type === 'interview'
+  ? `${entry.data.person ?? ''} · ${dateStr}`
+  : `${dateStr} · ${meta[0]}`;
 ---
 
 {variant === 'cover' && (
@@ -81,7 +86,8 @@ const meta = metaByType[entry.data.type];
         <a href={href}>{entry.data.title}</a>
       </h3>
       <p class="entry-meta">
-        <span class="entry-meta-base">{dateStr} · {meta[0]}</span><span class="entry-meta-signals"> · signals: {signals}</span>
+        <span class="entry-meta-base">{dateStr} · {meta[0]}<span class="entry-meta-signals"> · signals: {signals}</span></span>
+        <span class="entry-meta-mobile">{mobileMeta}</span>
       </p>
     </div>
   </article>
@@ -243,6 +249,11 @@ const meta = metaByType[entry.data.type];
     margin-top: 0.22rem;
   }
 
+  /* 기본(데스크톱): 모바일 메타 숨김 */
+  .entry-meta-mobile {
+    display: none;
+  }
+
   /* ── 모바일 ───────────────────────────────── */
   @media (max-width: 768px) {
     .card-cover {
@@ -265,9 +276,13 @@ const meta = metaByType[entry.data.type];
       word-break: break-word;
     }
 
-    /* 모바일에서 signals 숨김 */
-    .entry-meta-signals {
+    /* 모바일: 데스크톱 메타 숨기고 mobile 메타 표시 */
+    .entry-meta-base {
       display: none;
+    }
+
+    .entry-meta-mobile {
+      display: inline;
     }
   }
 </style>

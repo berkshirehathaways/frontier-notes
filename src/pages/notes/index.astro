@@ -10,7 +10,7 @@ const themes = [...new Set(notes.flatMap((note) => note.data.themes))].sort((a, 
 const tools = [...new Set(notes.flatMap((note) => note.data.tools))].sort((a, b) => a.localeCompare(b));
 ---
 
-<BaseLayout title="Notes" description="type/theme/tool 필터로 노이즈 전체 아카이브를 탐색합니다.">
+<BaseLayout title="Notes" description="이슈 밖에서 새로 기록한 글을 모았습니다.">
 
   <div class="page-head">
     <p class="eyebrow mono">Notes Explorer · {notes.length} total</p>

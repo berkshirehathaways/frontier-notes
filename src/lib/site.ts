@@ -1,8 +1,10 @@
 export const SITE = {
   title: '노이즈',
-  englishName: 'Noise',
+  englishName: 'thefutureisnowhere',
   subtitle: 'AI 최전선의 언어를 기록하는 매거진.',
-  description: '노이즈는 아직 산업, 법, 대중의 언어로 정리되기 전, AI 최전선에서 먼저 나타나는 말, 행동, 장면, 감각을 기록하는 매거진이다.',
+  description: '소음이 신호가 되기 전의 장면을 기록하는 매거진입니다.',
+  baseUrl: 'https://frontier-notes.vercel.app',
+  defaultOgImage: '/og-default.svg',
   coreLines: [
     'AI 최전선의 언어를 기록합니다.',
     'Issue로 묶고, 사람으로 기억합니다.',

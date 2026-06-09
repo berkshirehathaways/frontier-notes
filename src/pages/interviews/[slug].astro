@@ -28,7 +28,7 @@ const related = allNotes
   .slice(0, 3);
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.subtitle}>
+<BaseLayout title={entry.data.title} description={entry.data.subtitle} image={entry.data.coverImage}>
   <NoteLayout entry={entry} related={related}>
     <Content />
   </NoteLayout>

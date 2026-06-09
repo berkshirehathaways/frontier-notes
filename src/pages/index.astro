@@ -375,56 +375,6 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
     color: var(--text);
   }
 
-  /* ── 뉴스레터 섹션 ─────────────────── */
-  .newsletter-section {
-    margin-top: 0.5rem;
-  }
-
-  .newsletter-inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    gap: 0;
-    border: 1px solid var(--line);
-    background: var(--surface);
-  }
-
-  .newsletter-copy {
-    padding: 1.2rem 1.2rem 1.2rem;
-    border-right: 1px solid var(--line);
-    display: grid;
-    gap: 0.5rem;
-    align-content: start;
-  }
-
-  .newsletter-headline {
-    margin: 0;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    letter-spacing: -0.025em;
-  }
-
-  .newsletter-archive-link {
-    font-size: var(--text-xs);
-    letter-spacing: 0.06em;
-    color: var(--muted);
-    text-decoration: none;
-    display: block;
-  }
-
-  .newsletter-archive-link:hover {
-    color: var(--text);
-  }
-
-  .newsletter-form-wrap {
-    padding: 0;
-  }
-
-  /* NewsletterBlock 내부 frame 스타일을 오버라이드 */
-  .newsletter-form-wrap :global(.newsletter) {
-    border: none;
-    background: transparent;
-  }
-
   /* ── New section styles ──────────────── */
   .section-desc {
     font-size: var(--text-sm);
@@ -515,16 +465,7 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
     }
   }
 
-  @media (max-width: 900px) {
-    .newsletter-inner {
-      grid-template-columns: 1fr;
-    }
 
-    .newsletter-copy {
-      border-right: none;
-      border-bottom: 1px solid var(--line);
-    }
-  }
 
   @media (max-width: 768px) {
     /* 홈 히어로: 상단 padding 소폭 축소 (감성 유지) */

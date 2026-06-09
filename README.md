@@ -210,3 +210,44 @@ SHOW_DRAFTS=true npm run dev -- --host 127.0.0.1 --port 4321
 
 ## 샘플 콘텐츠
 요청된 샘플 5개를 포함해 각 섹션 동작 확인용 샘플을 추가했습니다.
+
+## Local Keystatic Admin
+
+### 기본 실행
+
+```bash
+npm run admin:open
+```
+
+서버가 없으면 자동으로 백그라운드에서 시작하고 브라우저를 엽니다.
+서버가 이미 떠 있으면 브라우저만 엽니다.
+
+### 접속 URL
+
+```
+http://127.0.0.1:4321/keystatic
+```
+
+### 종료
+
+```bash
+npm run admin:stop
+```
+
+### 어디서든 `noise-admin`으로 실행하기 (Mac zsh)
+
+터미널 어디서든 `noise-admin`만 입력하면 실행되도록 alias를 설정합니다.
+아래 명령을 직접 실행하세요.
+
+```bash
+echo 'alias noise-admin='"'"'cd "/Users/stevenshin/Documents/New project/frontier-notes" && npm run admin:open'"'"'' >> ~/.zshrc
+echo 'alias noise-admin-stop='"'"'cd "/Users/stevenshin/Documents/New project/frontier-notes" && npm run admin:stop'"'"'' >> ~/.zshrc
+source ~/.zshrc
+```
+
+설정 후 사용법:
+
+```bash
+noise-admin        # Keystatic 어드민 열기
+noise-admin-stop   # 서버 종료
+```

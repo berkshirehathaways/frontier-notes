@@ -14,9 +14,13 @@ const currentIssue =
 
 const currentIssueNotes = currentIssue ? await resolveIssueNotes(currentIssue.data.includedNotes) : [];
 
-// Latest Notes: exclude notes already in current issue, show up to 6
+// Latest Notes: exclude current issue, interviews, and showInRecentNotes:false, show up to 6
 const currentIssueSlugs = new Set(currentIssueNotes.map((n) => n.data.slug));
-const latestNotes = allNotes.filter((n) => !currentIssueSlugs.has(n.data.slug)).slice(0, 6);
+const latestNotes = allNotes
+  .filter((n) => !currentIssueSlugs.has(n.data.slug))
+  .filter((n) => n.data.type !== 'interview')
+  .filter((n) => n.data.showInRecentNotes !== false)
+  .slice(0, 6);
 
 // People: interviews split by kind
 const allInterviews = await getPublishedCollection('interviews');

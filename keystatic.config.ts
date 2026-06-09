@@ -60,6 +60,11 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
   }),
   featured: fields.checkbox({ label: 'Featured', defaultValue: false }),
   draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
+  showInRecentNotes: fields.checkbox({
+    label: '최근 노트에 표시',
+    description: '홈 또는 최근 노트 목록에 표시할지 결정합니다.',
+    defaultValue: true,
+  }),
   coverImage: fields.image({
     label: 'Cover Image',
     directory: 'public/uploads/covers',

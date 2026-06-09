@@ -232,6 +232,19 @@ export default config({
               `${props.fields.order.value ? `${props.fields.order.value}. ` : ''}${props.fields.title.value || props.fields.slug.value || 'note'}`,
           },
         ),
+        upcomingNotes: fields.array(
+          fields.object({
+            title: fields.text({ label: '글 제목' }),
+            subtitle: fields.text({ label: '부제', validation: { isRequired: false } }),
+            type: fields.text({ label: '타입', description: '예: ESSAY, INTERVIEW' }),
+            slug: fields.text({ label: 'Slug' }),
+            card_description: fields.text({ label: '카드 설명', multiline: true, validation: { isRequired: false } }),
+          }),
+          {
+            label: '다음 이슈 예고',
+            itemLabel: (props) => props.fields.title.value || props.fields.slug.value || 'note',
+          },
+        ),
       },
     }),
     people: collection({

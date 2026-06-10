@@ -27,6 +27,10 @@ docs/design-audit.md
 docs/design-variants.md
 src/content/essays/internal-draft-note.mdx
 
+# local admin server state
+.admin-server.pid
+.admin-server.log
+
 # macOS-specific files
 .DS_Store
 

@@ -11,7 +11,10 @@
     "build:full": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "typecheck": "astro check"
+    "typecheck": "astro check",
+    "admin": "astro dev --host 127.0.0.1 --port 4321",
+    "admin:open": "bash scripts/open-admin.sh",
+    "admin:stop": "bash scripts/stop-admin.sh"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.1",

@@ -11,16 +11,18 @@
   <!-- NOISE -->
   <text x="84" y="228" font-family="Georgia, 'Times New Roman', serif" font-size="84" font-weight="700" fill="#101010">NOISE</text>
 
-  <!-- line 1: thefutureis + [nowhere] highlighted -->
-  <rect x="252" y="257" width="120" height="30" fill="#c8f260"/>
+  <!-- line 1: "the future is " + [nowhere] -->
+  <!-- "the future is " = 14 chars × 15.27px ≈ 214px → highlight starts at x≈298 -->
+  <rect x="293" y="256" width="117" height="31" fill="#c8f260"/>
   <text y="281" font-family="Menlo, Monaco, Consolas, monospace" font-size="26" fill="#101010">
-    <tspan x="84">thefutureis</tspan><tspan fill="#3a6200">nowhere</tspan>
+    <tspan x="84">the future is </tspan><tspan fill="#1f4700">nowhere</tspan>
   </text>
 
-  <!-- line 2: thefutureis + [now here] highlighted -->
-  <rect x="252" y="295" width="136" height="30" fill="#c8f260"/>
+  <!-- line 2: "the future is " + [now here] -->
+  <!-- "now here" = 8 chars (space counts) × 15.27px ≈ 122px → rect width = 132 -->
+  <rect x="293" y="294" width="132" height="31" fill="#c8f260"/>
   <text y="319" font-family="Menlo, Monaco, Consolas, monospace" font-size="26" fill="#101010">
-    <tspan x="84">thefutureis</tspan><tspan fill="#3a6200">now here</tspan>
+    <tspan x="84">the future is </tspan><tspan fill="#1f4700">now here</tspan>
   </text>
 
   <!-- divider -->

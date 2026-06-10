@@ -28,6 +28,7 @@ const noteSchema = z.object({
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
   coverImage: z.string().optional(),
+  ogImage: z.string().optional(),
   series: z.string().optional(),
   showInRecentNotes: z.boolean().default(true),
 });

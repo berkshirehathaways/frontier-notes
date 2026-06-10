@@ -573,11 +573,11 @@ main {
 }
 
 .editorial-entry .entry-meta {
-  grid-column: 2;
+  grid-column: 1;
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   color: var(--faint);
-  margin-top: 0.12rem;
+  margin-top: 0.1rem;
 }
 
 /* ============================================================

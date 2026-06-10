@@ -1043,4 +1043,10 @@ main {
     word-break: keep-all;
     overflow-wrap: break-word;
   }
+
+  /* 모바일 상위 규칙: 메타는 제목 아래 전폭 배치 — 날짜가 옆 컬럼에 끼어 줄바꿈되는 현상 방지 */
+  .editorial-entry .entry-meta {
+    grid-column: 1;
+    margin-top: 0;
+  }
 }

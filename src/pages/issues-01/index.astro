@@ -1,9 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate, resolveIssueNotes } from '../../lib/content';
+import { formatDate, getVisibleIssues, resolveIssueNotes } from '../../lib/content';
 
-const allIssues = await getCollection('issues');
+const allIssues = await getVisibleIssues();
 const issue = allIssues.find((i) => i.data.publicPath === '/issues-01');
 
 if (!issue) {

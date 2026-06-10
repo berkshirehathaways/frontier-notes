@@ -1,253 +1,162 @@
-# frontier-notes
+# Noise (노이즈) — thefutureisnowhere
 
-최전선 노트(Frontier Notes) MVP입니다.
+소음이 신호가 되기 전의 장면을 기록하는 에디토리얼 매거진입니다.
 
-- 사이트 이름: 최전선 노트
-- 영문 보조명: Frontier Notes
-- 부제: AI native generation을 기록하는 기술 매거진
-- 핵심 문장:
-  - AI를 기본 작업 방식으로 삼는 창업가와 빌더를 인터뷰합니다.
-  - 문제의식, 도구, 런타임, 작업 방식을 기록합니다.
+- 사이트 이름: 노이즈
+- 영문 보조명: thefutureisnowhere
+- 부제: AI 최전선의 언어를 기록하는 매거진
+- 핵심 읽기: `the future is nowhere` ↔ `the future is now here`
+- 프로덕션: https://frontier-notes.vercel.app
 
 ## 기술 스택
-- Astro + TypeScript + MDX
-- Astro Content Collections (타입 안정성)
-- Keystatic (Git 기반 CMS)
-- 정적 빌드 중심 배포 (Cloudflare Pages Free 또는 Vercel Hobby)
 
-## MVP 핵심 5기능
-이 프로젝트는 단순 블로그가 아니라 아래 5개 운영 기능을 기본으로 둡니다.
+- Astro 6 + TypeScript + MDX
+- Astro Content Collections (`src/content.config.ts`)
+- Keystatic (Git 기반 CMS, `keystatic.config.ts`)
+- Vercel 배포 (기본은 완전 정적 빌드, 어드민 활성화 시에만 서버 라우트 추가)
 
-1. CMS 기반 콘텐츠 작성/수정 (Keystatic)
-2. People 데이터베이스
-3. Tools 데이터베이스
-4. 뉴스레터 구독 UI + 뉴스레터 아카이브
-5. 빌더 추천/인터뷰 제안 폼(UI)
+## 콘텐츠 모델
 
-## CMS 선택 이유
-1순위 요구사항에 맞춰 Keystatic을 적용했습니다.
+Issue가 편집의 기본 묶음 단위입니다. 모든 노트는 `issue` 필드로 이슈에 연결되고,
+이슈 YAML의 `includedNotes`(collection + slug + order)가 수록 순서를 결정합니다.
 
-- Git 기반으로 콘텐츠(문서/데이터)가 그대로 저장소에 남음
-- 운영자가 `/keystatic`에서 새 글/수정/데이터 관리 가능
-- 외부 DB, 유료 CMS 없이 운영 가능
+| 컬렉션 | 경로 | 포맷 | 비고 |
+|---|---|---|---|
+| essays | `src/content/essays/*.mdx` | MDX | ESSAY |
+| interviews | `src/content/interviews/*.mdx` | MDX | `interviewKind: relay \| deep` 으로 한줄 릴레이/심층 구분 |
+| field-notes | `src/content/field-notes/*.mdx` | MDX | FIELD NOTE |
+| systems | `src/content/systems/*.mdx` | MDX | SYSTEM |
+| reports | `src/content/reports/*.mdx` | MDX | REPORT |
+| issues | `src/content/issues/*.yaml` | YAML | `status: draft\|published\|archived`, `includedNotes`, `upcomingNotes` |
+| people | `src/content/people/*.yaml` | YAML | 인물 아카이브 |
+| tools | `src/content/tools/*.yaml` | YAML | 도구 아카이브 |
 
-참고:
-- 프로덕션 정적 배포를 위해 `npm run build`는 `SKIP_KEYSTATIC=true`로 관리자 라우트를 제외합니다.
-- 로컬 개발에서는 `/keystatic` 관리자 화면을 사용할 수 있습니다.
-- 만약 향후 Keystatic 충돌이 크게 발생하면 Decap CMS를 대안으로 검토할 수 있습니다.
+### 노트 공통 frontmatter
 
-## 로컬 실행 방법
+`title`, `subtitle`, `slug`, `date`, `updatedAt`, `type`(essay/interview/field-note/system/report),
+`issue`(이슈 slug), `person`, `role`, `company`, `stage`, `tools`, `themes`, `signals`,
+`location`, `related_people`, `related_tools`, `next_questions`, `series`,
+`featured`, `order`(목록 수동 정렬, 작은 숫자 우선, 비우면 발행일 역순), `draft`,
+`showInRecentNotes`, `coverImage`, `ogImage`
+
+### 인터뷰 전용
+
+- `interviewKind: relay` — 한줄 릴레이 인터뷰 (기본값, 비우면 relay로 처리)
+- `interviewKind: deep` — 심층 인터뷰 (예: `/interviews/bot-coach`)
+
+### 정렬 규칙
+
+- 기본: `date`(발행일) 내림차순
+- 수동 큐레이션 목록(릴레이 인터뷰 등): `order` 오름차순 우선, 나머지는 발행일 역순
+- 이슈 수록 글: `includedNotes[].order` 오름차순
+
+### 공개/비공개 규칙
+
+- 노트: `draft: true`는 빌드(목록·상세)에서 제외. 로컬 확인은 `SHOW_DRAFTS=true npm run dev`
+- 이슈: `status: published`만 공개 (`status`가 없으면 하위 호환으로 `hidden: false` 기준)
+
+## 라우트
+
+`/` · `/issues` · `/issues-01`(이슈 랜딩, 이슈의 `publicPath`) · `/essays` · `/interviews`
+· `/field-notes` · `/systems` · `/reports` · `/notes` · `/people` · `/tools` · `/about`
+· `/interview-proposal` · `/<collection>/<slug>` 상세 · `/keystatic` 어드민
+
+## 로컬 실행
+
 ```bash
 npm install
-npm run dev
+npm run dev          # http://127.0.0.1:4321
 ```
 
-- 사이트: `http://127.0.0.1:4321`
-- 관리자: `http://127.0.0.1:4321/keystatic`
+로컬 어드민(Keystatic, local 모드 — 파일 직접 수정):
 
-## 빌드 방법
+```bash
+npm run admin:open   # 백그라운드 서버 + 브라우저 오픈
+npm run admin:stop
+# 또는 npm run dev 후 http://127.0.0.1:4321/keystatic
+```
+
+## 빌드
+
 ```bash
 npm run typecheck
-npm run build
+npm run build        # 완전 정적 빌드 (SKIP_KEYSTATIC=true, /keystatic 없음)
+npm run build:full   # Keystatic 포함 빌드 (Vercel 어댑터, /keystatic 서버 라우트 활성화)
 ```
 
-- `npm run build`는 정적 사이트 빌드입니다.
-- 결과물은 `dist/`에 생성됩니다.
+## 프로덕션 어드민 (/keystatic) 설정
 
-## 새 글 쓰는 방법
-1. `npm run dev` 실행
-2. `/keystatic` 접속
-3. `Essays / Interviews / Field Notes / Systems / Reports / Newsletter` 중 컬렉션 선택
-4. 새 엔트리 생성 후 저장
+Keystatic은 빌드 모드에 따라 스토리지가 전환됩니다 (`keystatic.config.ts`):
 
-콘텐츠 파일은 `src/content/<collection>/`에 MDX로 생성됩니다.
+- 개발: `local` — 파일을 직접 수정
+- 프로덕션 빌드: `github` — GitHub App OAuth 로그인 후 **GitHub 커밋으로 저장**
 
-## 기존 글 수정 방법
-1. `/keystatic`에서 해당 컬렉션/글 선택
-2. 본문(MDX) + frontmatter 메타데이터 수정
-3. 저장 후 Git 커밋
+저장 흐름:
 
-## 데이터(people/tools/issues) 수정 방법
-- `/keystatic`의 `Data` 섹션에서 `issues`, `people`, `tools` 수정
-- 파일은 `src/content/issues`, `src/content/people`, `src/content/tools`에 YAML로 저장
-
-## 뉴스레터 작성/아카이브 방법
-- `/keystatic`의 `Archive > Newsletter`에서 발행본 작성/수정
-- 파일은 `src/content/newsletter/*.mdx`에 저장
-- 공개 아카이브는 `/newsletter`, 상세는 `/newsletter/<slug>`에서 확인
-- `draft: true`는 공개 목록에서 제외
-
-## 이미지 업로드 방법
-권장 저장 경로: `public/uploads`
-
-선택 이유:
-- 정적 사이트에서 절대 경로(`/uploads/...`)로 즉시 참조 가능
-- Git 기반 관리와 배포 단순성 유지
-
-Keystatic 설정:
-- 커버 이미지: `public/uploads/covers`
-- 본문 이미지: `public/uploads/content`
-
-권장 규격:
-- 카드 썸네일: `1200x675` (16:9)
-- 본문 대표 이미지: `1600px` 너비 이하
-- 파일 형식: 가능하면 `webp`
-- 권장 용량:
-  - 썸네일 1장: `300KB` 이하
-  - 본문 이미지 1장: `700KB` 이하
-
-## draft 발행 방법
-기본 규칙:
-- `draft: true`인 글은 공개 목록/정적 빌드에서 제외
-- `draft: false`만 공개
-
-로컬에서 draft 확인 옵션:
-```bash
-SHOW_DRAFTS=true npm run dev -- --host 127.0.0.1 --port 4321
+```
+/keystatic 편집 → GitHub 커밋 (berkshirehathaways/frontier-notes) → Vercel 재빌드 → 공개 사이트 반영
 ```
 
-## 콘텐츠 frontmatter 설명
-모든 노트 타입(essay/interview/field-note/system/report)은 아래 필드를 지원합니다.
+쓰기 권한은 GitHub 저장소 권한을 그대로 따릅니다. 저장소에 write 권한이 없는 사용자는
+로그인해도 저장할 수 없으므로 어드민이 공개적으로 쓰기 가능해지지 않습니다.
 
-- `title`
-- `subtitle`
-- `slug`
-- `date`
-- `updatedAt`
-- `type`
-- `issue`
-- `person`
-- `role`
-- `company`
-- `stage`
-- `tools`
-- `themes`
-- `signals`
-- `location`
-- `related_people`
-- `related_tools`
-- `next_questions`
-- `featured`
-- `draft`
-- `coverImage`
+### 1. GitHub App 만들기
 
-## 배포 흐름 (GitHub + Cloudflare Pages / Vercel)
-1. GitHub 저장소에 push
-2. Cloudflare Pages Free 또는 Vercel Hobby에 프로젝트 연결
-3. Build command: `npm run build`
-4. Output directory: `dist`
-5. 배포 완료
-
-## 왜 현재 운영비가 0원인가
-- 외부 DB 없음
-- 유료 CMS 없음
-- 유료 이미지 저장소 없음
-- 유료 검색 없음
-- 유료 분석 기본 미도입
-- 로그인/결제/서버 함수 없음
-- 정적 빌드 + Git 저장소 기반 운영
-
-## 어떤 무료 한도에 의존하는가
-- GitHub 저장소/Actions 무료 범위
-- Cloudflare Pages Free 또는 Vercel Hobby 무료 범위
-- 정적 파일 서빙 무료 범위
-
-## 트래픽/콘텐츠 증가 시 비용 위험
-- 이미지 용량 증가로 Git 저장소 비대화
-- 배포 플랫폼 무료 대역폭/빌드 시간 한도 초과 가능성
-- 팀 협업 증가 시 CMS 워크플로 고도화 필요
-
-## 이미지가 많아질 때 repo 용량 관리
-1. 업로드 전 압축(webp 우선)
-2. 원본 대용량 파일 저장 금지
-3. 정기적으로 미사용 이미지 정리
-4. 6개월 뒤 전환 조건 문서화
-   - 저장소 용량 증가가 개발 속도/클론 속도를 저해할 때
-   - 배포 시간 급증 시
-
-## 무료 한도 초과 시 유료 전환 우선순서
-1. 이미지 저장 전략 전환(외부 스토리지 검토)
-2. 배포 플랜 상향
-3. 검색/분석 도구 도입 검토
-4. 필요 시 CMS 운영 고도화
-
-## 비용 발생 전 체크리스트
-- 외부 DB 도입이 정말 필요한가?
-- 현재 문제를 정적 구조/콘텐츠 구조 개선으로 해결 가능한가?
-- 이미지 최적화를 먼저 했는가?
-- 무료 플랜 한도 수치를 실제로 초과했는가?
-- 유료 전환 시 어떤 지표가 개선되는지 명확한가?
-
-## 운영비 0원 체크리스트
-- [x] 외부 DB 없음
-- [x] 유료 CMS 없음
-- [x] 유료 이미지 저장소 없음
-- [x] 유료 검색 없음
-- [x] 유료 분석 없음
-- [x] 로그인 없음
-- [x] 결제 없음
-- [x] 서버 함수 없음
-- [x] 정적 빌드 성공
-- [x] Git 기반 콘텐츠 관리 가능
-- [x] 무료 배포 플랜에서 동작 가능
-
-## 라우트 개요
-- `/` Home
-- `/issues`
-- `/essays`
-- `/interviews`
-- `/field-notes`
-- `/systems`
-- `/reports`
-- `/about`
-- `/notes` (type/theme/tool 필터)
-- `/people`
-- `/tools`
-- `/newsletter`
-- `/newsletter/<slug>`
-- `/interview-proposal` (빌더 추천/인터뷰 제안 UI)
-- `/<collection>/<slug>` 상세 페이지
-
-## 샘플 콘텐츠
-요청된 샘플 5개를 포함해 각 섹션 동작 확인용 샘플을 추가했습니다.
-
-## Local Keystatic Admin
-
-### 기본 실행
+가장 쉬운 방법: 로컬에서 GitHub 모드로 한 번 띄우면 Keystatic이 App 생성을 안내합니다.
 
 ```bash
-npm run admin:open
+npm run build:full && npm run preview
+# http://127.0.0.1:4321/keystatic 접속 → "Create GitHub App" 플로우를 따라가면
+# .env에 아래 환경변수가 자동 기록됩니다.
 ```
 
-서버가 없으면 자동으로 백그라운드에서 시작하고 브라우저를 엽니다.
-서버가 이미 떠 있으면 브라우저만 엽니다.
+수동으로 만들 경우 GitHub → Settings → Developer settings → GitHub Apps:
 
-### 접속 URL
+- Callback URL: `https://frontier-notes.vercel.app/api/keystatic/github/oauth/callback`
+- (로컬 preview 테스트용으로 `http://127.0.0.1:4321/api/keystatic/github/oauth/callback` 추가 가능)
+- 권한: Repository permissions → Contents: Read & write, Metadata: Read-only
+- App을 `berkshirehathaways/frontier-notes` 저장소에 설치
 
-```
-http://127.0.0.1:4321/keystatic
-```
+### 2. Vercel 환경변수 (Production)
 
-### 종료
+| 변수 | 값 |
+|---|---|
+| `KEYSTATIC_GITHUB_CLIENT_ID` | GitHub App의 Client ID |
+| `KEYSTATIC_GITHUB_CLIENT_SECRET` | GitHub App의 Client Secret |
+| `KEYSTATIC_SECRET` | 임의의 긴 랜덤 문자열 (`openssl rand -hex 32`) |
+| `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` | GitHub App slug (URL에 보이는 이름) |
 
-```bash
-npm run admin:stop
-```
+비밀값은 절대 커밋하지 않습니다. `.env`는 `.gitignore`에 포함되어 있습니다.
 
-### 어디서든 `noise-admin`으로 실행하기 (Mac zsh)
+### 3. Vercel 빌드 커맨드 전환
 
-터미널 어디서든 `noise-admin`만 입력하면 실행되도록 alias를 설정합니다.
-아래 명령을 직접 실행하세요.
+프로덕션 어드민을 켜려면 Vercel 프로젝트의 Build Command를 `npm run build:full`로 변경합니다.
+기본 `npm run build`를 유지하면 지금처럼 완전 정적 사이트로 배포되고 `/keystatic`은 존재하지 않습니다
+(어댑터·서버 함수 없음). 어떤 쪽이든 공개 페이지는 전부 정적 프리렌더링됩니다.
 
-```bash
-echo 'alias noise-admin='"'"'cd "/Users/stevenshin/Documents/New project/frontier-notes" && npm run admin:open'"'"'' >> ~/.zshrc
-echo 'alias noise-admin-stop='"'"'cd "/Users/stevenshin/Documents/New project/frontier-notes" && npm run admin:stop'"'"'' >> ~/.zshrc
-source ~/.zshrc
-```
+### 4. 배포 후 확인 사항
 
-설정 후 사용법:
+- `https://frontier-notes.vercel.app/keystatic` 접속 → GitHub 로그인 → 편집 → 저장 시 커밋 생성 확인
+- 커밋 후 Vercel이 자동 재빌드하고 사이트에 반영되는지 확인
 
-```bash
-noise-admin        # Keystatic 어드민 열기
-noise-admin-stop   # 서버 종료
-```
+## SEO / OG
+
+- 메타데이터는 `src/layouts/BaseLayout.astro`에 중앙화: title 패턴, description, canonical,
+  Open Graph(og:type 포함), Twitter card, 상세 페이지의 `article:published_time`
+- OG 이미지 우선순위: frontmatter `ogImage` → `coverImage` → `/og-default.svg`
+- 기본 OG 이미지는 `the future is nowhere` / `the future is now here` 두 읽기를
+  하이라이트와 공백으로 함께 보여줍니다
+- 알려진 한계: 기본 이미지가 SVG라 일부 SNS 크롤러(페이스북 등)는 렌더링하지 못할 수
+  있습니다. 필요해지면 동일 디자인의 1200×630 PNG로 교체하세요
+
+## 이미지 업로드
+
+- 커버: `public/uploads/covers` · 본문: `public/uploads/content`
+- 권장: webp, 썸네일 1200×675(≤300KB), 본문 이미지 ≤1600px(≤700KB)
+
+## 새 글 작성 (어드민 기준)
+
+1. `/keystatic` 접속 (로컬 또는 프로덕션)
+2. Notes(essays/interviews/field-notes/systems/reports) 또는 Issues/Data(people/tools)에서 생성
+3. `draft: false` + (이슈는 `status: published`)로 발행
+4. 이슈에 수록하려면 해당 이슈의 `includedNotes`에 collection/slug/order 추가

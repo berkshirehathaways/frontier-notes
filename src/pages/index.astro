@@ -1,16 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContentCard from '../components/ContentCard.astro';
-import { formatDate, getAllPublishedNotes, getPublishedCollection, resolveIssueNotes } from '../lib/content';
-import { getCollection } from 'astro:content';
-import { SITE } from '../lib/site';
+import {
+  formatDate,
+  getAllPublishedNotes,
+  getPublishedCollection,
+  getVisibleIssues,
+  resolveIssueNotes,
+  sortByCuratedOrder,
+} from '../lib/content';
 
-const issues = await getCollection('issues');
+const issues = await getVisibleIssues();
 const allNotes = await getAllPublishedNotes();
 
-const currentIssue =
-  issues.find((item) => item.data.current) ??
-  issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())[0];
+const currentIssue = issues.find((item) => item.data.current) ?? issues[0];
 
 const currentIssueNotes = currentIssue ? await resolveIssueNotes(currentIssue.data.includedNotes) : [];
 
@@ -24,7 +27,9 @@ const latestNotes = allNotes
 
 // People: interviews split by kind
 const allInterviews = await getPublishedCollection('interviews');
-const relayInterviews = allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay');
+const relayInterviews = sortByCuratedOrder(
+  allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay'),
+);
 const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
 ---
 

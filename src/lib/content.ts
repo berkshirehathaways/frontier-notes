@@ -27,6 +27,27 @@ export async function getPublishedCollection(collection: NoteCollection) {
   return sortByDateDesc(entries);
 }
 
+/** order가 지정된 글이 먼저(오름차순), 나머지는 발행일 역순. 큐레이션 목록용. */
+export function sortByCuratedOrder<T extends { data: { date: Date; order?: number } }>(items: T[]) {
+  return [...items].sort((a, b) => {
+    const orderA = a.data.order ?? Infinity;
+    const orderB = b.data.order ?? Infinity;
+    if (orderA !== orderB) return orderA - orderB;
+    return b.data.date.getTime() - a.data.date.getTime();
+  });
+}
+
+/**
+ * 공개 가능한 이슈만 발행일 역순으로 반환.
+ * status가 있으면 published만, 없으면 hidden:false 기준 (하위 호환).
+ */
+export async function getVisibleIssues() {
+  const issues = await getCollection('issues', ({ data }) =>
+    data.status !== undefined ? data.status === 'published' : !data.hidden,
+  );
+  return issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+}
+
 export async function getAllPublishedNotes() {
   const notesPerCollection = await Promise.all(NOTE_COLLECTIONS.map((name) => getPublishedCollection(name)));
   return sortByDateDesc(notesPerCollection.flat());

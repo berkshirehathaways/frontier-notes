@@ -26,6 +26,7 @@ const noteSchema = z.object({
   related_tools: z.array(z.string()).default([]),
   next_questions: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
+  order: z.number().optional(),
   draft: z.boolean().default(false),
   coverImage: z.string().optional(),
   ogImage: z.string().optional(),

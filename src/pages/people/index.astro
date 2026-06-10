@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContentCard from '../../components/ContentCard.astro';
-import { getPublishedCollection } from '../../lib/content';
+import { getPublishedCollection, sortByCuratedOrder } from '../../lib/content';
 
 const allInterviews = await getPublishedCollection('interviews');
-const relayInterviews = allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay');
+const relayInterviews = sortByCuratedOrder(
+  allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay'),
+);
 const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
 ---
 

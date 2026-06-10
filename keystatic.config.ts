@@ -1,6 +1,16 @@
 import { collection, config, fields } from '@keystatic/core';
 import { SIGNAL_OPTIONS, STAGE_OPTIONS } from './src/lib/site';
 
+// 스토리지 모드:
+// - 개발(astro dev): local — 파일을 직접 수정
+// - 프로덕션 빌드(build:full): github — GitHub App OAuth 로그인 후 커밋으로 저장
+//   (저장 흐름: /keystatic 편집 → GitHub 커밋 → Vercel 재빌드 → 공개 사이트 반영)
+//   필요한 환경변수: KEYSTATIC_GITHUB_CLIENT_ID, KEYSTATIC_GITHUB_CLIENT_SECRET,
+//   KEYSTATIC_SECRET, PUBLIC_KEYSTATIC_GITHUB_APP_SLUG (README 참고)
+const storage = import.meta.env.PROD
+  ? ({ kind: 'github', repo: { owner: 'berkshirehathaways', name: 'frontier-notes' } } as const)
+  : ({ kind: 'local' } as const);
+
 const noteTypeOptions = [
   { label: 'Essay', value: 'essay' },
   { label: 'Interview', value: 'interview' },
@@ -64,6 +74,11 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
     validation: { isRequired: false },
   }),
   featured: fields.checkbox({ label: 'Featured', defaultValue: false }),
+  order: fields.integer({
+    label: 'Order',
+    description: '목록에서 직접 순서를 지정할 때만 입력합니다. 작은 숫자가 먼저, 비우면 발행일 역순.',
+    validation: { isRequired: false },
+  }),
   draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
   showInRecentNotes: fields.checkbox({
     label: '최근 노트에 표시',
@@ -72,6 +87,13 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
   }),
   coverImage: fields.image({
     label: 'Cover Image',
+    directory: 'public/uploads/covers',
+    publicPath: '/uploads/covers/',
+    validation: { isRequired: false },
+  }),
+  ogImage: fields.image({
+    label: 'OG Image',
+    description: '공유 카드 이미지. 비우면 Cover Image → 사이트 기본 이미지 순으로 사용됩니다.',
     directory: 'public/uploads/covers',
     publicPath: '/uploads/covers/',
     validation: { isRequired: false },
@@ -110,9 +132,7 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
 });
 
 export default config({
-  storage: {
-    kind: 'local',
-  },
+  storage,
   ui: {
     brand: {
       name: '노이즈 CMS',

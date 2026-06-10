@@ -29,7 +29,13 @@ const related = allNotes
   .slice(0, 3);
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.subtitle} image={entry.data.ogImage ?? entry.data.coverImage}>
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.subtitle}
+  image={entry.data.ogImage ?? entry.data.coverImage}
+  ogType="article"
+  publishedAt={entry.data.date}
+>
   <NoteLayout entry={entry} related={related}>
     <Content components={{ FigureImage }} />
   </NoteLayout>

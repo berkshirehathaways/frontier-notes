@@ -6,9 +6,13 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** 콘텐츠 상세 페이지는 'article', 그 외에는 기본값 'website' */
+  ogType?: 'website' | 'article';
+  /** ogType이 article일 때 article:published_time으로 출력 */
+  publishedAt?: Date;
 }
 
-const { title, description = SITE.description, image } = Astro.props;
+const { title, description = SITE.description, image, ogType = 'website', publishedAt } = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.title}` : `${SITE.title} ${SITE.englishName}`;
 const currentPath = Astro.url.pathname;
 const canonicalUrl = Astro.url.href;
@@ -27,8 +31,11 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="ko_KR" />
+    {ogType === 'article' && publishedAt && (
+      <meta property="article:published_time" content={publishedAt.toISOString()} />
+    )}
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     {!image && (

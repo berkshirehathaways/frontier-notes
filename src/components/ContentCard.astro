@@ -1,0 +1,289 @@
+---
+import type { NoteEntry } from '../lib/content';
+import { formatDate, noteUrl } from '../lib/content';
+
+interface Props {
+  entry: NoteEntry;
+  href?: string;
+  showCollection?: boolean;
+  /** 'default': 기본 카드 | 'lead': 리드 기사 | 'cover': 커버스토리 | 'compact': 목록 엔트리 */
+  variant?: 'default' | 'lead' | 'cover' | 'compact';
+}
+
+const { entry, href = noteUrl(entry), showCollection = false, variant = 'default' } = Astro.props;
+
+const typeLabel = entry.data.type.toUpperCase().replace('-', ' ');
+const tools = entry.data.tools.length ? entry.data.tools.join(', ') : 'n/a';
+const signals = entry.data.signals.length ? entry.data.signals.join(', ') : 'n/a';
+const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
+const dateStr = formatDate(entry.data.date);
+
+const metaByType: Record<NoteEntry['data']['type'], string[]> = {
+  essay: [`issue: ${entry.data.issue}`, `themes: ${themes}`],
+  interview: [`person: ${entry.data.person ?? 'n/a'}`, `role: ${entry.data.role ?? 'n/a'}`],
+  'field-note': [`location: ${entry.data.location ?? 'n/a'}`, `tools: ${tools}`],
+  system: [`issue: ${entry.data.issue}`, `tools: ${tools}`],
+  report: [`issue: ${entry.data.issue}`, `themes: ${themes}`],
+};
+
+const meta = metaByType[entry.data.type];
+
+// 모바일 compact용: 인터뷰는 "이름 · 날짜", 나머지는 "날짜 · meta[0]"
+const mobileMeta = entry.data.type === 'interview'
+  ? `${entry.data.person ?? ''} · ${dateStr}`
+  : `${dateStr} · ${meta[0]}`;
+---
+
+{variant === 'cover' && (
+  <article class="card-cover editorial-lead" data-note-card data-type={entry.data.type}>
+    <div class="lead-eyebrow">
+      <span class="type-badge">{typeLabel}</span>
+      <span class="eyebrow">{dateStr}</span>
+      {showCollection && <span class="eyebrow">{entry.collection}</span>}
+    </div>
+    <h2 class="cover-title">
+      <a href={href}>{entry.data.title}</a>
+    </h2>
+    <p class="lead-subtitle">{entry.data.subtitle}</p>
+    <div class="cover-meta mono">
+      {meta[0]} · {meta[1]} · signals: {signals}
+    </div>
+    <div class="lead-footer">
+      <div class="tag-list">
+        {entry.data.themes.slice(0, 3).map((theme) => (
+          <span class="tag">{theme}</span>
+        ))}
+      </div>
+      <a href={href} class="cover-read mono">읽기 →</a>
+    </div>
+  </article>
+)}
+
+{variant === 'lead' && (
+  <article class="card-lead" data-note-card data-type={entry.data.type}>
+    <div class="lead-eyebrow">
+      <span class="type-badge">{typeLabel}</span>
+      <span class="eyebrow">{dateStr}</span>
+    </div>
+    <h3 class="lead-title">
+      <a href={href}>{entry.data.title}</a>
+    </h3>
+    <p class="note-subtitle">{entry.data.subtitle}</p>
+    <p class="lead-meta mono">{meta[0]} · signals: {signals}</p>
+    <div class="tag-list" style="margin-top: auto; padding-top: 0.5rem;">
+      {entry.data.themes.slice(0, 2).map((theme) => (
+        <span class="tag">{theme}</span>
+      ))}
+    </div>
+  </article>
+)}
+
+{variant === 'compact' && (
+  <article class="editorial-entry" data-note-card data-type={entry.data.type}>
+    <span class="type-badge entry-type-badge">{typeLabel}</span>
+    <div class="entry-body">
+      <h3 class="entry-title">
+        <a href={href}>{entry.data.title}</a>
+      </h3>
+      <p class="entry-meta">
+        <span class="entry-meta-base">{dateStr} · {meta[0]}<span class="entry-meta-signals"> · signals: {signals}</span></span>
+        <span class="entry-meta-mobile">{mobileMeta}</span>
+      </p>
+    </div>
+  </article>
+)}
+
+{variant === 'default' && (
+  <article class="note-card" data-note-card data-type={entry.data.type} data-themes={entry.data.themes.join(',')} data-tools={entry.data.tools.join(',')}>
+    <div class="note-meta">
+      <strong>[{typeLabel}]</strong> {dateStr}
+      {showCollection && <span> / {entry.collection}</span>}
+      <br />
+      {meta[0]}
+      <br />
+      {meta[1]}
+      <br />
+      signals: {signals}
+    </div>
+
+    <div>
+      <h3 class="note-title">
+        <a href={href}>{entry.data.title}</a>
+      </h3>
+      <p class="note-subtitle">{entry.data.subtitle}</p>
+    </div>
+
+    <footer class="card-footer">
+      <div class="tag-list">
+        <span class="tag">issue: {entry.data.issue}</span>
+        {entry.data.themes.slice(0, 2).map((theme) => (
+          <span class="tag">{theme}</span>
+        ))}
+      </div>
+    </footer>
+  </article>
+)}
+
+<style>
+  /* ── COVER VARIANT ─────────────────────────────── */
+  .card-cover {
+    padding: 1.8rem 1.6rem 1.5rem;
+    border-top: 2px solid var(--text);
+    border-left: 5px solid var(--accent);
+    background: var(--surface);
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .cover-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+  }
+
+  .cover-title a {
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .cover-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+  }
+
+  .cover-meta {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+    line-height: 1.6;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .cover-read {
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    margin-left: auto;
+    white-space: nowrap;
+    padding-top: 0.1rem;
+  }
+
+  .cover-read:hover {
+    color: var(--text);
+  }
+
+  /* lead-footer를 flex로 (태그 + 읽기 링크) */
+  .card-cover .lead-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ── LEAD VARIANT ──────────────────────────────── */
+  .card-lead {
+    border-top: 1px solid var(--line-strong);
+    padding: 0.85rem 0 0.95rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    height: 100%;
+  }
+
+  .lead-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+    line-height: 1.24;
+    letter-spacing: -0.025em;
+  }
+
+  .lead-title a {
+    text-decoration: none;
+  }
+
+  .lead-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+  }
+
+  .lead-meta {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ── COMPACT VARIANT ───────────────────────────── */
+  .entry-body {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  /* ── DEFAULT VARIANT ───────────────────────────── */
+  .card-footer {
+    margin-top: auto;
+    padding-top: 0.2rem;
+  }
+
+  /* ── SHARED ────────────────────────────────────── */
+  .lead-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  /* compact variant의 타입 뱃지 */
+  .entry-type-badge {
+    font-size: 0.58rem;
+    padding: 0.06rem 0.38rem;
+    white-space: nowrap;
+    align-self: start;
+    margin-top: 0.22rem;
+  }
+
+  /* 기본(데스크톱): 모바일 메타 숨김 */
+  .entry-meta-mobile {
+    display: none;
+  }
+
+  /* ── 모바일 ───────────────────────────────── */
+  @media (max-width: 768px) {
+    .card-cover {
+      padding: 1.2rem 1rem 1.1rem;
+    }
+
+    .cover-meta {
+      white-space: normal;
+    }
+
+    .lead-meta {
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .entry-meta {
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* 모바일: 데스크톱 메타 숨기고 mobile 메타 표시 */
+    .entry-meta-base {
+      display: none;
+    }
+
+    .entry-meta-mobile {
+      display: inline;
+      white-space: nowrap;
+    }
+  }
+</style>

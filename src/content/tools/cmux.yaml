@@ -1,0 +1,10 @@
+name: cmux
+slug: cmux
+changedWorkflow: 동시에 여러 실행 스트림을 관찰하면서 데모 직전 복구 작업을 병렬화한다.
+frequentSignals:
+  - demo-pressure
+  - speed
+relatedNotes:
+  - systems/one-person-three-roles-flow
+  - interviews/sharing-the-30-minute-deploy-checklist
+summary: 복수 프로세스 관찰과 즉시 대응이 필요한 현장에서 운영 가시성을 높인다.

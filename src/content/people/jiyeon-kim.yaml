@@ -1,0 +1,16 @@
+name: 김지연
+slug: jiyeon-kim
+role: AI 프로토타입 운영자
+company: independent
+stage: project
+tools:
+  - Claude Code
+  - Cursor
+  - GitHub
+signals:
+  - speed
+  - workflow-change
+relatedNotes:
+  - interviews/build-portfolio-through-deploy-logs
+  - field-notes/fix-terminal-one-minute-before-demo
+summary: 교육 배경보다 배포 로그를 먼저 보여주며, 문제 정의-실행-수정 루프를 빠르게 반복한다.

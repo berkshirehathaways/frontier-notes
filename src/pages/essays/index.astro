@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { getPublishedCollection } from '../../lib/content';
+
+const essays = await getPublishedCollection('essays');
+const lead = essays[0];
+const rest = essays.slice(1);
+---
+
+<BaseLayout title="에세이" description="노이즈가 왜 이런 사람들을 주목하는지 설명하는 관점 글입니다.">
+
+  <div class="page-head">
+    <p class="eyebrow mono">Essays · {essays.length} pieces</p>
+    <h1>에세이</h1>
+    <p class="muted page-desc">노이즈가 왜 이런 사람들을 주목하는지 설명하는 관점 글입니다.</p>
+  </div>
+
+  {lead && (
+    <section class="cover-section">
+      <ContentCard entry={lead} variant="cover" />
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="list-section">
+      <div class="list-header mono">이하 {rest.length}편</div>
+      {rest.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .list-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .list-section .editorial-entry:first-of-type {
+    border-top: 1px solid var(--line-strong);
+  }
+</style>

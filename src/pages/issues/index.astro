@@ -1,0 +1,379 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, getVisibleIssues, resolveIssueNotes } from '../../lib/content';
+
+const visibleIssues = await getVisibleIssues();
+
+const issueCards = await Promise.all(
+  visibleIssues.map(async (issue) => ({
+    issue,
+    notes: await resolveIssueNotes(issue.data.includedNotes),
+  })),
+);
+---
+
+<BaseLayout title="Issues" description="편집 주제로 묶은 노이즈의 이슈를 모았습니다.">
+
+  <!-- 페이지 헤더 -->
+  <div class="page-head">
+    <p class="eyebrow mono">Issue Archive · {visibleIssues.length} Issues</p>
+    <h1>Issues</h1>
+    <p class="muted page-desc">각 호는 하나의 편집 주제로 묶인 글 모음입니다. AI native generation의 현장 신호를 호별로 기록합니다.</p>
+  </div>
+
+  <!-- 호 목록: 매거진 챕터 스타일 -->
+  <div class="issues-stack">
+    {issueCards.map(({ issue, notes }, idx) => (
+      <article class="issue-chapter">
+        <!-- 호 헤더 -->
+        <div class="issue-chapter-head">
+          <div class="issue-meta-col">
+            <p class="issue-chapter-num mono">
+              Issue {issue.data.number ?? String(issueCards.length - idx).padStart(2, '0')}
+            </p>
+            <p class="issue-date mono">{formatDate(issue.data.publishedAt)}</p>
+            {issue.data.current && (
+              <span class="current-label mono">Current</span>
+            )}
+          </div>
+          <div class="issue-title-col">
+            <h2 class="issue-chapter-title">
+              {issue.data.publicPath
+                ? <a href={issue.data.publicPath} class="issue-title-link">{issue.data.title}</a>
+                : issue.data.title
+              }
+            </h2>
+            {issue.data.coverImage && (
+              <div class="issue-chapter-cover">
+                <img src={issue.data.coverImage} alt={issue.data.title} />
+              </div>
+            )}
+            <p class="issue-chapter-desc">{issue.data.description}</p>
+            <div class="tag-list" style="margin-top: 0.65rem;">
+              {issue.data.themes.map((theme) => (
+                <span class="tag">{theme}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- 콘텐츠 구성 -->
+        {(notes.length > 0 || issue.data.upcomingNotes.length > 0) && (
+          <div class="issue-contents">
+            <p class="toc-header mono">
+              콘텐츠 구성 {notes.length + issue.data.upcomingNotes.length}편
+            </p>
+            <ul class="issue-notes-list">
+              {notes.map((note, noteIdx) => (
+                <li class="issue-note-item">
+                  <span class="issue-note-type mono">
+                    {String(noteIdx + 1).padStart(2, '0')}<br />
+                    [{note.data.type.toUpperCase().replace('-',' ')}]
+                  </span>
+                  <div class="issue-note-body">
+                    <a href={`/${note.collection}/${note.id}`} class="issue-note-title">
+                      {note.data.title}
+                    </a>
+                    {note.data.subtitle && (
+                      <p class="issue-note-sub">{note.data.subtitle}</p>
+                    )}
+                    <p class="issue-note-meta mono">
+                      {formatDate(note.data.date)} ·
+                      signals: {note.data.signals.slice(0, 2).join(', ') || 'n/a'}
+                    </p>
+                  </div>
+                </li>
+              ))}
+              {issue.data.upcomingNotes.map((upcoming, upIdx) => (
+                <li class="issue-note-item upcoming-note">
+                  <span class="issue-note-type mono">
+                    {String(notes.length + upIdx + 1).padStart(2, '0')}<br />
+                    [{upcoming.type}]
+                  </span>
+                  <div class="issue-note-body">
+                    <span class="issue-note-title upcoming-title">{upcoming.title}</span>
+                    {upcoming.subtitle && (
+                      <p class="issue-note-sub">{upcoming.subtitle}</p>
+                    )}
+                    {upcoming.card_description && (
+                      <p class="issue-note-card-desc">{upcoming.card_description}</p>
+                    )}
+                    <p class="issue-note-meta mono upcoming-meta">발행 준비중</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ── 페이지 헤더 ─────────────────────────────── */
+  .page-head {
+    padding: 1.5rem 0 1.1rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .page-head h1 {
+    margin: 0.3rem 0 0.5rem;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── 호 스택 ────────────────────────────────── */
+  .issues-stack {
+    display: grid;
+    gap: 0;
+  }
+
+  /* ── 호 챕터 ────────────────────────────────── */
+  .issue-chapter {
+    border-top: 2px solid var(--text);
+    margin-top: 2rem;
+  }
+
+  .issue-chapter:first-child {
+    margin-top: 1rem;
+  }
+
+  .issue-chapter-head {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1.6rem;
+    padding: 1.1rem 0 1.1rem;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+
+  /* 왼쪽 메타 컬럼 */
+  .issue-meta-col {
+    display: grid;
+    gap: 0.3rem;
+    padding-top: 0.25rem;
+  }
+
+  .issue-chapter-num {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .issue-date {
+    font-size: var(--text-2xs);
+    color: var(--faint);
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .current-label {
+    display: inline-block;
+    font-size: 0.6rem;
+    background: var(--accent);
+    color: var(--accent-text);
+    padding: 0.08rem 0.4rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* 오른쪽 제목 컬럼 */
+  .issue-title-col {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .issue-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .issue-title-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+  }
+
+  .issue-chapter-title {
+    margin: 0;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+  }
+
+  .issue-chapter-cover {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .issue-chapter-cover img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    object-position: center 35%;
+  }
+
+  .issue-chapter-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.62;
+  }
+
+  /* ── 콘텐츠 구성 ────────────────────────────── */
+  .issue-contents {
+    padding: 0.85rem 0 0;
+  }
+
+  .toc-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin: 0 0 0.5rem;
+  }
+
+  .issue-notes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .issue-note-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem;
+    padding: 0.78rem 0;
+    border-top: 1px solid var(--line);
+    align-items: start;
+  }
+
+  .issue-note-type {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .issue-note-body {
+    display: grid;
+    gap: 0.22rem;
+    min-width: 0;
+  }
+
+  .issue-note-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.32;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+  }
+
+  .issue-note-title:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+  }
+
+  .issue-note-sub {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+  }
+
+  .issue-note-meta {
+    font-size: var(--text-2xs);
+    color: var(--faint);
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── 예정 글 (upcoming) ──────────────────────── */
+  .upcoming-note {
+    opacity: 0.72;
+  }
+
+  .upcoming-title {
+    display: block;
+    cursor: default;
+  }
+
+  .issue-note-card-desc {
+    font-size: var(--text-sm);
+    color: var(--faint);
+    line-height: 1.52;
+    margin: 0;
+    font-style: italic;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+  }
+
+  .upcoming-meta {
+    color: var(--accent-text);
+    background: var(--accent);
+    display: inline-block;
+    padding: 0.04rem 0.38rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* ── 반응형 ──────────────────────────────────── */
+  @media (max-width: 768px) {
+    .issue-chapter-head {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+
+    .issue-meta-col {
+      grid-template-columns: auto auto auto;
+      align-items: center;
+      gap: 0.5rem 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .issue-note-item {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+
+    .issue-note-type {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* 첫 번째 이슈 카드 상단 여백 축소 */
+    .issue-chapter {
+      margin-top: 1.2rem;
+    }
+
+    .issue-chapter:first-child {
+      margin-top: 0.5rem;
+    }
+  }
+</style>

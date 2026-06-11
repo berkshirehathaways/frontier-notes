@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { getPublishedCollection, sortByCuratedOrder } from '../../lib/content';
+
+const allInterviews = await getPublishedCollection('interviews');
+const relayInterviews = sortByCuratedOrder(
+  allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay'),
+);
+const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
+---
+
+<BaseLayout title="People" description="AI 최전선에서 일하는 사람들의 한 문장을 따라갑니다.">
+
+  <div class="page-head">
+    <p class="eyebrow mono">People · {allInterviews.length}편</p>
+    <h1>사람들</h1>
+    <p class="muted page-desc">노이즈가 만난 AI 최전선의 창업가와 빌더를 기록한다.</p>
+  </div>
+
+  <!-- 한줄 릴레이 인터뷰 -->
+  <section class="interview-section" aria-label="한줄 릴레이 인터뷰">
+    <div class="interview-section-head">
+      <p class="section-kind mono">한줄 릴레이 인터뷰 · {relayInterviews.length}편</p>
+      <p class="section-kind-desc muted">한줄 릴레이 인터뷰는 최전선에서 일하는 사람들의 한 문장을 따라가는 인터뷰다. 한 사람이 남긴 말이 다음 사람의 질문이 되고, 그렇게 현장의 언어가 쌓인다.</p>
+    </div>
+    {relayInterviews.length > 0 ? (
+      <div class="interview-list">
+        {relayInterviews.map((entry) => (
+          <ContentCard entry={entry} variant="compact" />
+        ))}
+      </div>
+    ) : (
+      <p class="mono empty-msg">준비 중</p>
+    )}
+  </section>
+
+  <!-- 심층 인터뷰 -->
+  <section class="interview-section" aria-label="심층 인터뷰">
+    <div class="interview-section-head">
+      <p class="section-kind mono">심층 인터뷰 · {deepInterviews.length}편</p>
+      <p class="section-kind-desc muted">심층 인터뷰는 한 사람의 작업 방식, 기획 의도, 공간 운영 방식이 특정 Issue와 어떻게 연결되는지 길게 따라가는 글이다.</p>
+    </div>
+    {deepInterviews.length > 0 ? (
+      <div class="interview-list">
+        {deepInterviews.map((entry) => (
+          <ContentCard entry={entry} variant="compact" />
+        ))}
+      </div>
+    ) : (
+      <p class="mono empty-msg">준비 중</p>
+    )}
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .interview-section {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--line-strong);
+  }
+
+  .interview-section-head {
+    margin-bottom: 0.8rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .section-kind {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .section-kind-desc {
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .interview-list .editorial-entry:first-child {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .empty-msg {
+    font-size: var(--text-xs);
+    color: var(--faint);
+    padding: 1rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .interview-section {
+      margin-top: 1rem;
+    }
+
+    .interview-section:first-of-type {
+      margin-top: 0.6rem;
+    }
+  }
+</style>

@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { getPublishedCollection, sortByCuratedOrder } from '../../lib/content';
+
+// interviewKind 기준으로 릴레이/심층 분리. (비어 있으면 릴레이로 처리)
+const allInterviews = await getPublishedCollection('interviews');
+const relayInterviews = sortByCuratedOrder(
+  allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay'),
+);
+const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
+const lead = relayInterviews[0];
+const rest = relayInterviews.slice(1);
+---
+
+<BaseLayout title="인터뷰" description="AI를 기본 작업 방식으로 삼는 창업가와 빌더의 생각과 작업 방식을 인터뷰합니다.">
+
+  <div class="page-head">
+    <p class="eyebrow mono">한줄 릴레이 인터뷰 · {relayInterviews.length}편</p>
+    <h1>인터뷰</h1>
+    <p class="muted page-desc">AI를 기본 작업 방식으로 삼는 창업가와 빌더의 생각과 작업 방식을 인터뷰합니다.</p>
+    <p class="relay-desc">한줄 릴레이 인터뷰는 최전선에서 일하는 사람들의 한 문장을 따라가는 인터뷰다. 한 사람이 남긴 말이 다음 사람의 질문이 되고, 그렇게 현장의 언어가 쌓인다.</p>
+    <p class="page-note muted" style="font-size: var(--text-xs); margin: 0.3rem 0 0;">인터뷰는 <a href="/people">사람들</a>에서도 분류별로 볼 수 있습니다.</p>
+  </div>
+
+  {lead && (
+    <section class="cover-section">
+      <ContentCard entry={lead} variant="cover" />
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="list-section">
+      <div class="list-header mono">이하 {rest.length}편</div>
+      {rest.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
+  {deepInterviews.length > 0 && (
+    <section class="list-section deep-section">
+      <div class="list-header mono">심층 인터뷰 · {deepInterviews.length}편</div>
+      <p class="deep-desc muted">한 사람의 작업 방식과 기획 의도가 특정 Issue와 어떻게 연결되는지 길게 따라가는 글이다.</p>
+      {deepInterviews.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .relay-desc {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 62ch;
+    margin: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .list-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .list-section .editorial-entry:first-of-type {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .deep-section {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--text);
+  }
+
+  .deep-desc {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0 0 0.6rem;
+  }
+</style>

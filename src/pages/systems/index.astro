@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { getPublishedCollection } from '../../lib/content';
+
+const systems = await getPublishedCollection('systems');
+const lead = systems[0];
+const rest = systems.slice(1);
+---
+
+<BaseLayout title="작업 시스템" description="AI 네이티브 창업가와 빌더의 일하는 방식, 검증 방식, 배포 방식을 분석합니다.">
+
+  <div class="page-head">
+    <p class="eyebrow mono">Work Systems · {systems.length} entries</p>
+    <h1>작업 시스템</h1>
+    <p class="muted page-desc">AI 네이티브 창업가와 빌더의 일하는 방식, 검증 방식, 배포 방식을 분석합니다.</p>
+    <a class="mono tools-link" href="/tools">도구 데이터베이스 → 도구</a>
+  </div>
+
+  {lead && (
+    <section>
+      <ContentCard entry={lead} variant="cover" />
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="list-section">
+      <div class="list-header mono">이하 {rest.length}편</div>
+      {rest.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .tools-link {
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .tools-link:hover {
+    color: var(--text);
+  }
+
+  .list-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .list-section .editorial-entry:first-of-type {
+    border-top: 1px solid var(--line-strong);
+  }
+</style>

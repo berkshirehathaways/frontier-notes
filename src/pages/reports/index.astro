@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { getPublishedCollection } from '../../lib/content';
+
+const reports = await getPublishedCollection('reports');
+const lead = reports[0];
+const rest = reports.slice(1);
+---
+
+<BaseLayout title="리포트" description="여러 인터뷰와 현장 기록에서 반복되는 패턴을 묶은 리포트입니다.">
+
+  <div class="page-head">
+    <p class="eyebrow mono">Reports · {reports.length} reports</p>
+    <h1>리포트</h1>
+    <p class="muted page-desc">여러 인터뷰와 현장 기록에서 반복되는 패턴을 묶은 리포트입니다.</p>
+  </div>
+
+  {lead && (
+    <section>
+      <ContentCard entry={lead} variant="cover" />
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="list-section">
+      <div class="list-header mono">이하 {rest.length}편</div>
+      {rest.map((entry) => (
+        <ContentCard entry={entry} variant="compact" />
+      ))}
+    </section>
+  )}
+
+  {reports.length === 0 && (
+    <div class="empty-state mono">
+      <p>리포트 준비중. 곧 발행됩니다.</p>
+    </div>
+  )}
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 1.4rem 0 1.1rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .page-head h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-desc {
+    font-size: var(--text-sm);
+    max-width: 60ch;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .list-header {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .empty-state {
+    padding: 2rem 0;
+    font-size: var(--text-xs);
+    color: var(--faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--line);
+  }
+</style>

@@ -1,0 +1,16 @@
+name: 최성우
+slug: sungwoo-choi
+role: 운영 자동화 엔지니어
+company: operator-lab
+stage: operator
+tools:
+  - Codex
+  - cmux
+  - GitHub
+signals:
+  - tool-adoption
+  - speed
+relatedNotes:
+  - systems/one-person-three-roles-flow
+  - systems/docs-follow-after-runtime
+summary: 한 명이 여러 직무를 오갈 수 있도록 도구 체인을 묶어 운영 속도를 높인다.

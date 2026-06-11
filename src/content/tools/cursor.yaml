@@ -1,0 +1,10 @@
+name: Cursor
+slug: cursor
+changedWorkflow: 개별 파일 단위 수정에서 전체 맥락을 보는 멀티파일 편집 흐름으로 이동시킨다.
+frequentSignals:
+  - product-sense
+  - speed
+relatedNotes:
+  - field-notes/fix-terminal-one-minute-before-demo
+  - interviews/build-portfolio-through-deploy-logs
+summary: 현장 수정 상황에서 탐색-수정-검증 사이클을 단축한다.

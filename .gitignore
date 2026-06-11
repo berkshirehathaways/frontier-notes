@@ -1,0 +1,42 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env*
+!.env.example
+
+# local agent/session state
+.omc/
+.omx/
+.codex/
+.agents/
+CLAUDE.md
+
+# private working notes
+docs/private/
+docs/internal/
+src/content/**/private-*.mdx
+src/content/**/internal-*.mdx
+
+# local admin server state
+.admin-server.pid
+.admin-server.log
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+.vercel/

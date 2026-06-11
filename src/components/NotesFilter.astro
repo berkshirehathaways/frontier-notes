@@ -1,0 +1,170 @@
+---
+interface Props {
+  themes: string[];
+  tools: string[];
+}
+
+const { themes, tools } = Astro.props;
+---
+
+<div class="filter-bar" role="search" aria-label="노트 필터">
+  <span class="filter-label mono">Filter:</span>
+  <div class="filter-controls">
+
+    <div class="filter-group">
+      <label class="filter-field-label mono" for="note-type-filter">type</label>
+      <select id="note-type-filter" class="filter-select mono">
+        <option value="">all</option>
+        <option value="essay">essay</option>
+        <option value="interview">interview</option>
+        <option value="field-note">field-note</option>
+        <option value="system">system</option>
+        <option value="report">report</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-field-label mono" for="note-theme-filter">theme</label>
+      <select id="note-theme-filter" class="filter-select mono">
+        <option value="">all</option>
+        {themes.map((theme) => <option value={theme}>{theme}</option>)}
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-field-label mono" for="note-tool-filter">tool</label>
+      <select id="note-tool-filter" class="filter-select mono">
+        <option value="">all</option>
+        {tools.map((tool) => <option value={tool}>{tool}</option>)}
+      </select>
+    </div>
+
+  </div>
+  <span class="filter-count mono" id="filter-count" aria-live="polite"></span>
+</div>
+
+<script>
+  const typeSelect = document.querySelector('#note-type-filter');
+  const themeSelect = document.querySelector('#note-theme-filter');
+  const toolSelect = document.querySelector('#note-tool-filter');
+  const countEl = document.querySelector('#filter-count');
+
+  if (
+    typeSelect instanceof HTMLSelectElement &&
+    themeSelect instanceof HTMLSelectElement &&
+    toolSelect instanceof HTMLSelectElement
+  ) {
+    const cards = Array.from(document.querySelectorAll('[data-note-card]')).filter(
+      (card): card is HTMLElement => card instanceof HTMLElement,
+    );
+
+    const runFilter = () => {
+      const type = typeSelect.value;
+      const theme = themeSelect.value;
+      const tool = toolSelect.value;
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const matchesType = !type || card.dataset.type === type;
+        const themes = card.dataset.themes?.split(',').filter(Boolean) ?? [];
+        const tools = card.dataset.tools?.split(',').filter(Boolean) ?? [];
+        const matchesTheme = !theme || themes.includes(theme);
+        const matchesTool = !tool || tools.includes(tool);
+        const show = matchesType && matchesTheme && matchesTool;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      if (countEl) {
+        const isFiltered = type || theme || tool;
+        countEl.textContent = isFiltered ? `${visible} / ${cards.length} notes` : '';
+      }
+    };
+
+    typeSelect.addEventListener('change', runFilter);
+    themeSelect.addEventListener('change', runFilter);
+    toolSelect.addEventListener('change', runFilter);
+  }
+</script>
+
+<style>
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  .filter-controls {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--line);
+    background: var(--surface-strong);
+    padding: 0.18rem 0.5rem 0.18rem 0.6rem;
+  }
+
+  .filter-field-label {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  .filter-select {
+    border: none;
+    background: transparent;
+    font-size: var(--text-xs);
+    color: var(--text);
+    cursor: pointer;
+    padding: 0;
+    min-width: 80px;
+    letter-spacing: 0.03em;
+    appearance: auto;
+  }
+
+  .filter-select:focus {
+    outline: none;
+  }
+
+  .filter-count {
+    font-size: var(--text-2xs);
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .filter-bar {
+      gap: 0.6rem;
+    }
+
+    .filter-controls {
+      gap: 0.5rem;
+    }
+
+    .filter-count {
+      margin-left: 0;
+    }
+  }
+</style>

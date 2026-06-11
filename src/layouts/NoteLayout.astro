@@ -1,0 +1,377 @@
+---
+import type { NoteEntry } from '../lib/content';
+import { formatDate, noteUrl } from '../lib/content';
+import { SITE } from '../lib/site';
+
+interface Props {
+  entry: NoteEntry;
+  related: NoteEntry[];
+}
+
+const { entry, related } = Astro.props;
+
+const typeLabel = entry.data.type.toUpperCase().replace('-', ' ');
+const tools = entry.data.tools.length ? entry.data.tools.join(', ') : 'n/a';
+const signals = entry.data.signals.length ? entry.data.signals.join(', ') : 'n/a';
+const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
+---
+
+<article class="note-detail">
+
+  <!-- 글 헤더 -->
+  <header class="detail-header">
+    <div class="detail-meta-row">
+      <span class="type-badge">{typeLabel}</span>
+      <span class="eyebrow detail-sep">·</span>
+      <span class="eyebrow">Issue {entry.data.issue}</span>
+      <span class="eyebrow detail-sep">·</span>
+      <span class="eyebrow">{formatDate(entry.data.date)}</span>
+    </div>
+    <h1 class="detail-title">{entry.data.title}</h1>
+    {entry.data.subtitle && (
+      <p class="detail-subtitle">{entry.data.subtitle}</p>
+    )}
+  </header>
+
+  <!-- 본문 레이아웃: 본문(좌) + 사이드바(우) -->
+  <div class="detail-grid">
+
+    <!-- 본문 영역 -->
+    <section class="content-area">
+      <div class="prose">
+        <slot />
+      </div>
+    </section>
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+
+      <!-- 메타데이터 패널 -->
+      <section class="meta-block">
+        <p class="meta-block-label mono">Metadata</p>
+        <dl class="meta-dl">
+          {entry.data.person && (
+            <div class="meta-row">
+              <dt>person</dt>
+              <dd>{entry.data.person}</dd>
+            </div>
+          )}
+          {entry.data.role && (
+            <div class="meta-row">
+              <dt>role</dt>
+              <dd>{entry.data.role}</dd>
+            </div>
+          )}
+          <div class="meta-row">
+            <dt>tools</dt>
+            <dd>{tools}</dd>
+          </div>
+          <div class="meta-row">
+            <dt>themes</dt>
+            <dd>{themes}</dd>
+          </div>
+          <div class="meta-row">
+            <dt>signals</dt>
+            <dd>{signals}</dd>
+          </div>
+          {entry.data.location && (
+            <div class="meta-row">
+              <dt>location</dt>
+              <dd>{entry.data.location}</dd>
+            </div>
+          )}
+        </dl>
+        <div class="tag-list" style="margin-top: 0.75rem;">
+          {entry.data.themes.slice(0, 4).map((theme) => (
+            <span class="tag">{theme}</span>
+          ))}
+        </div>
+      </section>
+
+      <!-- 다음 질문 -->
+      {entry.data.next_questions.length > 0 && (
+        <section class="sidebar-block">
+          <p class="meta-block-label mono">다음 질문</p>
+          <ul class="questions-list">
+            {entry.data.next_questions.map((question) => (
+              <li>{question}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <!-- CTA 영역 -->
+      <section class="sidebar-cta">
+        <p class="meta-block-label mono">다음 액션</p>
+        <a
+          class="cta-item"
+          href={`mailto:${SITE.contactEmail}?subject=노이즈%20다음에%20만날%20사람%20추천`}
+        >
+          다음에 만날 사람 추천하기 →
+        </a>
+        <a
+          class="cta-item"
+          href={`mailto:${SITE.contactEmail}?subject=노이즈%20비슷한%20작업%20방식%20제보`}
+        >
+          비슷한 작업 방식 제보하기 →
+        </a>
+      </section>
+
+    </aside>
+  </div>
+
+  <!-- 관련 글 -->
+  {related.length > 0 && (
+    <section class="related-section">
+      <div class="section-title">
+        <h2>관련 글</h2>
+      </div>
+      <ul class="related-list">
+        {related.map((item) => (
+          <li class="related-item">
+            <span class="eyebrow">[{item.data.type.toUpperCase().replace('-', ' ')}]</span>
+            <a href={noteUrl(item)} class="related-title">{item.data.title}</a>
+            <span class="related-sub muted">{item.collection}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+</article>
+
+<style>
+  /* ── 글 헤더 ────────────────────────────────── */
+  .note-detail {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  .detail-header {
+    padding: 1.5rem 0 1.2rem;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .detail-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.7rem;
+  }
+
+  .detail-sep {
+    opacity: 0.35;
+  }
+
+  .detail-title {
+    margin: 0 0 0.55rem;
+    font-size: clamp(2rem, 4.8vw, 3.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    max-width: 22ch;
+  }
+
+  .detail-subtitle {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1.58;
+    max-width: 56ch;
+  }
+
+  /* ── 본문 그리드 ─────────────────────────────── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.72fr);
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  /* ── 본문 영역 ───────────────────────────────── */
+  .content-area {
+    min-width: 0;
+  }
+
+  /* ── 사이드바 ────────────────────────────────── */
+  .sidebar {
+    display: grid;
+    gap: 1.1rem;
+    position: sticky;
+    top: 1.5rem;
+    min-width: 0;
+  }
+
+  /* 메타 블록: 라벨 + 데이터 */
+  .meta-block,
+  .sidebar-block,
+  .sidebar-cta {
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .meta-block-label {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--faint);
+    margin: 0 0 0.7rem;
+  }
+
+  /* 메타 데이터 행 */
+  .meta-dl {
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    gap: 0.5rem;
+    padding: 0.42rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .meta-row:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    padding-top: 0.08rem;
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.52;
+    color: var(--muted);
+  }
+
+  /* 다음 질문 */
+  .questions-list {
+    margin: 0;
+    padding-left: 1rem;
+    display: grid;
+    gap: 0.38rem;
+  }
+
+  .questions-list li {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* CTA 영역 */
+  .sidebar-cta {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .cta-item {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--muted);
+    text-decoration: none;
+    line-height: 1.5;
+    padding: 0.38rem 0;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: 0;
+  }
+
+  .cta-item:last-child {
+    border-bottom: none;
+  }
+
+  .cta-item:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.16rem;
+  }
+
+  /* ── 관련 글 ─────────────────────────────────── */
+  .related-section {
+    padding-top: 0.5rem;
+  }
+
+  .related-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .related-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.55rem;
+    padding: 0.62rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .related-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .related-title:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.16rem;
+  }
+
+  .related-sub {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── 반응형 ──────────────────────────────────── */
+  @media (max-width: 980px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+    }
+
+    .sidebar {
+      position: static;
+      border-top: 1px solid var(--line-strong);
+      padding-top: 0.5rem;
+    }
+
+    .meta-block,
+    .sidebar-block,
+    .sidebar-cta {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .detail-title {
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .detail-header {
+      padding: 1rem 0 0.9rem;
+    }
+
+    .related-item {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>

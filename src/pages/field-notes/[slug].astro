@@ -1,0 +1,42 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NoteLayout from '../../layouts/NoteLayout.astro';
+import { getAllPublishedNotes, getPublishedCollection } from '../../lib/content';
+import FigureImage from '../../components/FigureImage.astro';
+
+export async function getStaticPaths() {
+  const entries = await getPublishedCollection('field-notes');
+  return entries.map((entry) => ({ params: { slug: entry.id } }));
+}
+
+const slug = Astro.params.slug;
+if (!slug) throw new Error('Missing slug');
+
+const entry = await getEntry('field-notes', slug);
+if (!entry) throw new Error('Field note not found');
+
+const { Content } = await render(entry);
+const allNotes = await getAllPublishedNotes();
+const related = allNotes
+  .filter((item) => item.id !== entry.id)
+  .filter(
+    (item) =>
+      item.data.issue === entry.data.issue ||
+      item.data.related_people.some((person) => entry.data.related_people.includes(person)) ||
+      item.data.related_tools.some((tool) => entry.data.related_tools.includes(tool)),
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.subtitle}
+  image={entry.data.ogImage ?? entry.data.coverImage}
+  ogType="article"
+  publishedAt={entry.data.date}
+>
+  <NoteLayout entry={entry} related={related}>
+    <Content components={{ FigureImage }} />
+  </NoteLayout>
+</BaseLayout>

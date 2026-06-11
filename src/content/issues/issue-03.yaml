@@ -1,0 +1,21 @@
+title: 완주, 가벼움, 명확함, 경계
+slug: issue-03
+description: 네 명의 한국 AI 빌더가 LLM의 한계를 각자 다른 런타임으로 바꾸는 장면
+publishedAt: 2026-08-01
+current: false
+hidden: true
+themes:
+  - agent-harness
+  - runtime-design
+  - workflow-change
+includedNotes:
+  - collection: essays
+    slug: complete-light-clear-boundary
+  - collection: essays
+    slug: learn-from-shipping-window
+  - collection: interviews
+    slug: sharing-the-30-minute-deploy-checklist
+  - collection: field-notes
+    slug: backstage-tool-consensus-at-community-stage
+  - collection: systems
+    slug: issue-driven-weekly-operating-system

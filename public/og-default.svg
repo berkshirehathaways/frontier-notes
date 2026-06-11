@@ -1,0 +1,36 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F4F2EC"/>
+  <rect x="48" y="48" width="1104" height="534" fill="#FCFBF7" stroke="#B9B6AB" stroke-width="2"/>
+
+  <!-- eyebrow -->
+  <text x="84" y="114" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#9B9890" letter-spacing="4">MAGAZINE</text>
+
+  <!-- divider -->
+  <rect x="84" y="134" width="380" height="2" fill="#B9B6AB"/>
+
+  <!-- NOISE -->
+  <text x="84" y="228" font-family="Georgia, 'Times New Roman', serif" font-size="84" font-weight="700" fill="#101010">NOISE</text>
+
+  <!-- line 1: "the future is " + [nowhere] -->
+  <!-- "the future is " = 14 chars × 15.27px ≈ 214px → highlight starts at x≈298 -->
+  <rect x="293" y="256" width="117" height="31" fill="#c8f260"/>
+  <text y="281" font-family="Menlo, Monaco, Consolas, monospace" font-size="26" fill="#101010">
+    <tspan x="84">the future is </tspan><tspan fill="#1f4700">nowhere</tspan>
+  </text>
+
+  <!-- line 2: "the future is " + [now here] -->
+  <!-- "now here" = 8 chars (space counts) × 15.27px ≈ 122px → rect width = 132 -->
+  <rect x="293" y="294" width="132" height="31" fill="#c8f260"/>
+  <text y="319" font-family="Menlo, Monaco, Consolas, monospace" font-size="26" fill="#101010">
+    <tspan x="84">the future is </tspan><tspan fill="#1f4700">now here</tspan>
+  </text>
+
+  <!-- divider -->
+  <rect x="84" y="354" width="830" height="1" fill="#D5D3CA"/>
+
+  <!-- description -->
+  <text x="84" y="414" font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="#4D4D4D">Recording the scene before noise becomes signal.</text>
+
+  <!-- url -->
+  <text x="84" y="560" font-family="Menlo, Monaco, Consolas, monospace" font-size="17" fill="#9B9890">frontier-notes.vercel.app</text>
+</svg>

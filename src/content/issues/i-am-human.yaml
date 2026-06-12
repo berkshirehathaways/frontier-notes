@@ -1,5 +1,5 @@
 title: 나는 사람이야사람
-slug: i-am-human-human
+slug: i-am-human
 number: '02'
 publicPath: /issues-02
 status: published
@@ -10,7 +10,7 @@ description: >-
   서로를 부르고, 긁고, 채점하고, 낚았다. “Q도 지금 이거 사람 아닌거 같은데.” 누군가 그렇게 말하자 김연규는 답했다. “나는 사람이야…
   형도 사람이야사람!!!” Issue 02는 사람이 자기 인간성을 증명하고, 봇이 토큰 출처를 요구하던 밤에서 시작한다.
 publishedAt: 2026-06-12
-coverImage: /uploads/i-am-human-human/coverImage.png
+coverImage: /uploads/i-am-human/coverImage.png
 themes:
   - ai-native
   - agent-harness

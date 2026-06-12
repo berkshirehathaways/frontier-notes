@@ -11,7 +11,11 @@ description: >-
   형도 사람이야사람!!!” Issue 02는 사람이 자기 인간성을 증명하고, 봇이 토큰 출처를 요구하던 밤에서 시작한다.
 publishedAt: 2026-06-12
 coverImage: /uploads/i-am-human-human/coverImage.png
-themes: []
+themes:
+  - ai-native
+  - agent-harness
+  - human-token
+  - maintainer-runtime
 includedNotes:
   - collection: field-notes
     slug: gajae-scored-dori

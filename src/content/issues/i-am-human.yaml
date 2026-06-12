@@ -3,8 +3,8 @@ slug: i-am-human
 number: '02'
 publicPath: /issues-02
 status: published
-hidden: false
-current: true
+hidden: true
+current: false
 description: >-
   행사장에서 둘이던 사람은 온라인에서 네 명이 됐다. 김연규, 허예찬, 잡도리, 가재. 스레드와 디스코드, GitHub 로그를 오가며 이들은
   서로를 부르고, 긁고, 채점하고, 낚았다. “Q도 지금 이거 사람 아닌거 같은데.” 누군가 그렇게 말하자 김연규는 답했다. “나는 사람이야…

@@ -10,6 +10,7 @@ description: >-
   들렸다. AI는 생각보다 자주 길을 잃었고, 방 하나를 나가는 것도 어려워했다. 그런데 사람들은 그 실패를 숨기지 않고, 레포를 열고,
   하네스를 깎고, 끝날 때까지 다시 이야기했다. Issue 01은 실패하는 에이전트를 둘러싼 사람들의 말과 작업 방식을 기록한다.
 publishedAt: 2026-06-08
+coverImage: /uploads/coaching-the-bot-night/coverImage.jpg
 themes:
   - ai-native
   - agent-harness

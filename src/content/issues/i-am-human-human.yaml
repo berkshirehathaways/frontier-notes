@@ -12,5 +12,20 @@ description: >-
 publishedAt: 2026-06-12
 coverImage: /uploads/i-am-human-human/coverImage.png
 themes: []
-includedNotes: []
+includedNotes:
+  - collection: field-notes
+    slug: gajae-scored-dori
+    order: 1
+    type: FIELD NOTE
+    title: 가재가 도리를 채점하던 밤
+  - collection: interviews
+    slug: frenemy
+    order: 2
+    type: INTERVIEW
+    title: 친해서 더 세게 긁는 사이
+  - collection: systems
+    slug: token-source
+    order: 3
+    type: SYSTEM
+    title: 사랑 말고 토큰 출처
 upcomingNotes: []

@@ -21,4 +21,14 @@ includedNotes:
     order: 1
     type: FIELD NOTE
     title: "크론 끄고 보지마라"
+  - collection: interviews
+    slug: close-enough-to-scratch-harder
+    order: 2
+    type: INTERVIEW
+    title: "친해서 더 세게 긁는 사이"
+  - collection: systems
+    slug: token-source-not-love
+    order: 3
+    type: SYSTEM
+    title: "사랑 말고 토큰 출처"
 upcomingNotes: []

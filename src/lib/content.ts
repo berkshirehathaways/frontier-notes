@@ -44,9 +44,10 @@ export function sortByCuratedOrder<T extends { data: { date: Date; order?: numbe
  * status가 있으면 published만, 없으면 hidden:false 기준 (하위 호환).
  */
 export async function getVisibleIssues() {
-  const issues = await getCollection('issues', ({ data }) =>
-    data.status !== undefined ? data.status === 'published' : !data.hidden,
-  );
+  const issues = await getCollection('issues', ({ data }) => {
+    if (showDraftsInPreview) return true;
+    return data.status !== undefined ? data.status === 'published' : !data.hidden;
+  });
   return issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 }
 

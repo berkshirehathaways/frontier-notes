@@ -45,7 +45,7 @@ export function sortByCuratedOrder<T extends { data: { date: Date; order?: numbe
  */
 export async function getVisibleIssues() {
   const issues = await getCollection('issues', ({ data }) => {
-    if (showDraftsInPreview) return true;
+    if (showDraftsInPreview && data.status === 'draft') return true;
     return data.status !== undefined ? data.status === 'published' : !data.hidden;
   });
   return issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());

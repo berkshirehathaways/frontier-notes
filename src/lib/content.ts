@@ -4,7 +4,9 @@ export const NOTE_COLLECTIONS = ['essays', 'interviews', 'field-notes', 'systems
 export type NoteCollection = (typeof NOTE_COLLECTIONS)[number];
 export type NoteEntry = CollectionEntry<NoteCollection>;
 
-const showDraftsInDev = !import.meta.env.PROD && import.meta.env.SHOW_DRAFTS === 'true';
+const showDrafts = import.meta.env.SHOW_DRAFTS === 'true';
+const isVercelPreview = process.env.VERCEL_ENV === 'preview';
+const showDraftsInPreview = showDrafts && (!import.meta.env.PROD || isVercelPreview);
 
 export function formatDate(date: Date) {
   return new Intl.DateTimeFormat('ko-KR', {
@@ -19,7 +21,7 @@ function sortByDateDesc<T extends { data: { date: Date } }>(items: T[]) {
 }
 
 function shouldShowDraft(draft: boolean) {
-  return draft !== true || showDraftsInDev;
+  return draft !== true || showDraftsInPreview;
 }
 
 export async function getPublishedCollection(collection: NoteCollection) {

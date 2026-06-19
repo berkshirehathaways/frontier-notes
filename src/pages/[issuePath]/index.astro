@@ -2,14 +2,18 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatDate, getVisibleIssues, resolveIssueNotes } from '../../lib/content';
 
-const allIssues = await getVisibleIssues();
-const issue = allIssues.find((i) => i.data.publicPath === '/issues-01');
+export async function getStaticPaths() {
+  const issues = await getVisibleIssues();
 
-if (!issue) {
-  return Astro.redirect('/issues', 307);
+  return issues.flatMap((issue) => {
+    const issuePath = issue.data.publicPath?.match(/^\/([^/]+)\/?$/)?.[1];
+    return issuePath ? [{ params: { issuePath }, props: { issue } }] : [];
+  });
 }
 
+const { issue } = Astro.props;
 const notes = await resolveIssueNotes(issue.data.includedNotes);
+const totalNotes = notes.length + issue.data.upcomingNotes.length;
 const ogImage = issue.data.ogImage ?? issue.data.coverImage;
 ---
 
@@ -46,30 +50,50 @@ const ogImage = issue.data.ogImage ?? issue.data.coverImage;
   </div>
 
   <!-- 콘텐츠 구성 -->
-  <div class="issue-toc">
-    <p class="toc-header mono">콘텐츠 구성 {notes.length}편</p>
-    <ul class="toc-list">
-      {notes.map((note, idx) => {
-        const displayType = note.data.type.toUpperCase().replace('-', ' ');
-        return (
-          <li class="toc-item">
+  {(notes.length > 0 || issue.data.upcomingNotes.length > 0) && (
+    <div class="issue-toc">
+      <p class="toc-header mono">콘텐츠 구성 {totalNotes}편</p>
+      <ul class="toc-list">
+        {notes.map((note, idx) => {
+          const displayType = note.data.type.toUpperCase().replace('-', ' ');
+          return (
+            <li class="toc-item">
+              <span class="toc-meta mono">
+                <span class="toc-num">{String(idx + 1).padStart(2, '0')}</span>
+                <span class="toc-type">[{displayType}]</span>
+              </span>
+              <div class="toc-body">
+                <a href={`/${note.collection}/${note.id}`} class="toc-title">
+                  {note.data.title}
+                </a>
+                {note.data.subtitle && (
+                  <p class="toc-sub">{note.data.subtitle}</p>
+                )}
+              </div>
+            </li>
+          );
+        })}
+        {issue.data.upcomingNotes.map((upcoming, upcomingIdx) => (
+          <li class="toc-item upcoming-note">
             <span class="toc-meta mono">
-              <span class="toc-num">{String(idx + 1).padStart(2, '0')}</span>
-              <span class="toc-type">[{displayType}]</span>
+              <span class="toc-num">{String(notes.length + upcomingIdx + 1).padStart(2, '0')}</span>
+              <span class="toc-type">[{upcoming.type}]</span>
             </span>
             <div class="toc-body">
-              <a href={`/${note.collection}/${note.id}`} class="toc-title">
-                {note.data.title}
-              </a>
-              {note.data.subtitle && (
-                <p class="toc-sub">{note.data.subtitle}</p>
+              <span class="toc-title upcoming-title">{upcoming.title}</span>
+              {upcoming.subtitle && (
+                <p class="toc-sub">{upcoming.subtitle}</p>
               )}
+              {upcoming.card_description && (
+                <p class="toc-sub upcoming-desc">{upcoming.card_description}</p>
+              )}
+              <p class="toc-status mono">발행 준비중</p>
             </div>
           </li>
-        );
-      })}
-    </ul>
-  </div>
+        ))}
+      </ul>
+    </div>
+  )}
 
   <!-- 아카이브 링크 -->
   <div class="issue-footer">
@@ -216,6 +240,14 @@ const ogImage = issue.data.ogImage ?? issue.data.coverImage;
     text-underline-offset: 0.18rem;
   }
 
+  .upcoming-title {
+    color: var(--muted);
+  }
+
+  .upcoming-title:hover {
+    text-decoration: none;
+  }
+
   .toc-sub {
     font-size: var(--text-sm);
     color: var(--muted);
@@ -223,6 +255,18 @@ const ogImage = issue.data.ogImage ?? issue.data.coverImage;
     margin: 0;
     overflow-wrap: break-word;
     word-break: keep-all;
+  }
+
+  .upcoming-desc,
+  .toc-status {
+    font-size: var(--text-xs);
+    color: var(--faint);
+  }
+
+  .toc-status {
+    margin: 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   /* ── 푸터 ───────────────────────────────── */

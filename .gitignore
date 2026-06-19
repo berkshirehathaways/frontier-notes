@@ -22,6 +22,8 @@ pnpm-debug.log*
 .omx/
 .codex/
 .agents/
+.openchrome/
+docs/superpowers/
 CLAUDE.md
 
 # private working notes

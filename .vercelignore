@@ -1,0 +1,31 @@
+# Local inputs and private working files
+incoming/
+docs/private/
+docs/internal/
+src/content/**/private-*.mdx
+src/content/**/internal-*.mdx
+
+# Environment and deployment metadata
+.env*
+.vercel/
+
+# Agent/session state
+.omc/
+.omx/
+.codex/
+.agents/
+docs/superpowers/
+CLAUDE.md
+
+# Build output and dependencies
+dist/
+.astro/
+node_modules/
+
+# Local admin server state
+.admin-server.pid
+.admin-server.log
+
+# OS/editor noise
+.DS_Store
+.idea/

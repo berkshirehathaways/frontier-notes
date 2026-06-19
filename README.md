@@ -1,12 +1,12 @@
-# Noise (노이즈) — thefutureisnowhere
+# Frontier Note (프론티어노트) — thefutureisnowhere
 
-소음이 신호가 되기 전의 장면을 기록하는 에디토리얼 매거진입니다.
+AI 최전선에서 아직 이름 붙지 않은 작업 방식과 장면을 기록하는 에디토리얼 매거진입니다.
 
-- 사이트 이름: 노이즈
+- 사이트 이름: 프론티어노트
 - 영문 보조명: thefutureisnowhere
-- 부제: AI 최전선의 언어를 기록하는 매거진
+- 부제: AI 최전선의 아직 이름 붙지 않은 장면을 기록하는 매거진
 - 핵심 읽기: `the future is nowhere` ↔ `the future is now here`
-- 프로덕션: https://frontier-notes.vercel.app
+- 프로덕션: https://frontiernote.com
 
 ## 기술 스택
 
@@ -79,10 +79,11 @@ npm run admin:stop
 ## 빌드
 
 ```bash
+npm run check        # 공개 안전성 + 콘텐츠 링크 + 어드민 구조 + 타입 체크
 npm run check:public
 npm run typecheck
-npm run build        # 완전 정적 빌드 (SKIP_KEYSTATIC=true, /keystatic 없음)
-npm run build:full   # Keystatic 포함 빌드 (Vercel 어댑터, /keystatic 서버 라우트 활성화)
+npm run build        # 공개 사이트용 완전 정적 빌드 (ENABLE_KEYSTATIC=false, /keystatic 없음)
+npm run build:admin  # 어드민용 빌드 (ENABLE_KEYSTATIC=true, /keystatic 서버 라우트 활성화)
 ```
 
 ## 공개 저장소 운영
@@ -102,6 +103,13 @@ Keystatic은 빌드 모드에 따라 스토리지가 전환됩니다 (`keystatic
 - 개발: `local` — 파일을 직접 수정
 - 프로덕션 빌드: `github` — GitHub App OAuth 로그인 후 **GitHub 커밋으로 저장**
 
+권장 배포 구조:
+
+- 공개 사이트: `https://frontiernote.com`, Build Command `npm run build`, `/keystatic` 없음
+- 어드민 사이트: 별도 Vercel 프로젝트/도메인(예: `admin.frontiernote.com`), Build Command `npm run build:admin`, `/keystatic` 활성화
+
+`npm run build:full`은 기존 운영 문서와 호환하기 위한 `npm run build:admin` 별칭입니다.
+
 저장 흐름:
 
 ```
@@ -116,14 +124,15 @@ Keystatic은 빌드 모드에 따라 스토리지가 전환됩니다 (`keystatic
 가장 쉬운 방법: 로컬에서 GitHub 모드로 한 번 띄우면 Keystatic이 App 생성을 안내합니다.
 
 ```bash
-npm run build:full && npm run preview
+npm run build:admin && npm run preview
 # http://127.0.0.1:4321/keystatic 접속 → "Create GitHub App" 플로우를 따라가면
 # .env에 아래 환경변수가 자동 기록됩니다.
 ```
 
 수동으로 만들 경우 GitHub → Settings → Developer settings → GitHub Apps:
 
-- Callback URL: `https://frontier-notes.vercel.app/api/keystatic/github/oauth/callback`
+- Callback URL: `https://<admin-host>/api/keystatic/github/oauth/callback`
+- 같은 도메인에 어드민을 함께 둘 때만 `https://frontiernote.com/api/keystatic/github/oauth/callback`
 - (로컬 preview 테스트용으로 `http://127.0.0.1:4321/api/keystatic/github/oauth/callback` 추가 가능)
 - 권한: Repository permissions → Contents: Read & write, Metadata: Read-only
 - App을 `berkshirehathaways/frontier-notes` 저장소에 설치
@@ -139,30 +148,31 @@ npm run build:full && npm run preview
 
 비밀값은 절대 커밋하지 않습니다. `.env`는 `.gitignore`에 포함되어 있습니다.
 
-### 3. Vercel 빌드 커맨드 전환
+### 3. Vercel 빌드 커맨드 분리
 
-프로덕션 어드민을 켜려면 Vercel 프로젝트의 Build Command를 `npm run build:full`로 변경합니다.
-기본 `npm run build`를 유지하면 지금처럼 완전 정적 사이트로 배포되고 `/keystatic`은 존재하지 않습니다
-(어댑터·서버 함수 없음). 어떤 쪽이든 공개 페이지는 전부 정적 프리렌더링됩니다.
+공개 사이트 프로젝트는 Build Command를 `npm run build`로 유지합니다. 이 빌드는 완전 정적 사이트로
+배포되고 `/keystatic`은 존재하지 않습니다(어댑터·서버 함수 없음).
+
+어드민 프로젝트는 같은 저장소를 연결하되 Build Command를 `npm run build:admin`으로 설정합니다. 이 빌드에서만
+Vercel 어댑터와 Keystatic 서버 라우트가 켜집니다. 어떤 쪽이든 공개 페이지는 전부 정적 프리렌더링됩니다.
 
 ### 4. 배포 후 확인 사항
 
-- `https://frontier-notes.vercel.app/keystatic` 접속 → GitHub 로그인 → 편집 → 저장 시 커밋 생성 확인
+- 어드민 도메인의 `/keystatic` 접속 → GitHub 로그인 → 편집 → 저장 시 커밋 생성 확인
 - 커밋 후 Vercel이 자동 재빌드하고 사이트에 반영되는지 확인
 
 ## SEO / OG
 
 - 메타데이터는 `src/layouts/BaseLayout.astro`에 중앙화: title 패턴, description, canonical,
   Open Graph(og:type 포함), Twitter card, 상세 페이지의 `article:published_time`
-- OG 이미지 우선순위: frontmatter `ogImage` → `coverImage` → `/og-default.svg`
+- OG 이미지 우선순위: frontmatter `ogImage` → `coverImage` → `/og-default.png`
 - 기본 OG 이미지는 `the future is nowhere` / `the future is now here` 두 읽기를
   하이라이트와 공백으로 함께 보여줍니다
-- 알려진 한계: 기본 이미지가 SVG라 일부 SNS 크롤러(페이스북 등)는 렌더링하지 못할 수
-  있습니다. 필요해지면 동일 디자인의 1200×630 PNG로 교체하세요
+- 기본 OG는 SNS 크롤러 호환성을 위해 1200×630 PNG를 사용합니다
 
 ## 이미지 업로드
 
-- 커버: `public/uploads/covers` · 본문: `public/uploads/content`
+- 커버/OG/본문 이미지는 `public/uploads/**` 아래 실제 존재하는 파일만 참조합니다
 - 권장: webp, 썸네일 1200×675(≤300KB), 본문 이미지 ≤1600px(≤700KB)
 
 ## 새 글 작성 (어드민 기준)

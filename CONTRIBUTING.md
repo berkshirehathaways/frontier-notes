@@ -1,6 +1,6 @@
-# Contributing to Noise
+# Contributing to Frontier Note
 
-Noise accepts public-safe contributions through pull requests.
+Frontier Note accepts public-safe contributions through pull requests.
 
 ## Good PRs
 

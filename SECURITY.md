@@ -1,6 +1,6 @@
 # Security Policy
 
-Noise is maintained as a public-ready repository. Do not include credentials,
+Frontier Note is maintained as a public-ready repository. Do not include credentials,
 private contact details, unpublished private drafts, or local machine state in
 issues or pull requests.
 

@@ -1,10 +1,12 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { NOTE_COLLECTIONS, type NoteCollection } from './content-model';
 
-export const NOTE_COLLECTIONS = ['essays', 'interviews', 'field-notes', 'systems', 'reports'] as const;
-export type NoteCollection = (typeof NOTE_COLLECTIONS)[number];
+export { NOTE_COLLECTIONS, type NoteCollection };
 export type NoteEntry = CollectionEntry<NoteCollection>;
 
-const showDraftsInDev = !import.meta.env.PROD && import.meta.env.SHOW_DRAFTS === 'true';
+const showDrafts = import.meta.env.SHOW_DRAFTS === 'true';
+const isVercelPreview = process.env.VERCEL_ENV === 'preview';
+const showDraftsInPreview = showDrafts && (!import.meta.env.PROD || isVercelPreview);
 
 export function formatDate(date: Date) {
   return new Intl.DateTimeFormat('ko-KR', {
@@ -19,7 +21,7 @@ function sortByDateDesc<T extends { data: { date: Date } }>(items: T[]) {
 }
 
 function shouldShowDraft(draft: boolean) {
-  return draft !== true || showDraftsInDev;
+  return draft !== true || showDraftsInPreview;
 }
 
 export async function getPublishedCollection(collection: NoteCollection) {
@@ -42,9 +44,10 @@ export function sortByCuratedOrder<T extends { data: { date: Date; order?: numbe
  * status가 있으면 published만, 없으면 hidden:false 기준 (하위 호환).
  */
 export async function getVisibleIssues() {
-  const issues = await getCollection('issues', ({ data }) =>
-    data.status !== undefined ? data.status === 'published' : !data.hidden,
-  );
+  const issues = await getCollection('issues', ({ data }) => {
+    if (showDraftsInPreview && data.status === 'draft') return true;
+    return data.status !== undefined ? data.status === 'published' : !data.hidden;
+  });
   return issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 }
 

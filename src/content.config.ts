@@ -1,9 +1,17 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import {
+  ISSUE_NOTE_TYPE_VALUES,
+  ISSUE_STATUS_VALUES,
+  NOTE_COLLECTION_DEFS,
+  NOTE_COLLECTIONS,
+  NOTE_TYPE_VALUES,
+  type NoteCollection,
+} from './lib/content-model';
 import { STAGE_OPTIONS } from './lib/site';
 
-const noteType = z.enum(['essay', 'interview', 'field-note', 'system', 'report']);
+const noteType = z.enum(NOTE_TYPE_VALUES);
 
 const noteSchema = z.object({
   title: z.string(),
@@ -39,7 +47,7 @@ const issueSchema = z.object({
   slug: z.string(),
   number: z.string().optional(),
   publicPath: z.string().optional(),
-  status: z.enum(['draft', 'published', 'archived']).optional(),
+  status: z.enum(ISSUE_STATUS_VALUES).optional(),
   description: z.string(),
   publishedAt: z.coerce.date(),
   current: z.boolean().default(false),
@@ -50,10 +58,10 @@ const issueSchema = z.object({
   includedNotes: z
     .array(
       z.object({
-        collection: z.enum(['essays', 'interviews', 'field-notes', 'systems', 'reports']),
+        collection: z.enum(NOTE_COLLECTIONS),
         slug: z.string(),
         order: z.number().optional(),
-        type: z.string().optional(),
+        type: z.enum(ISSUE_NOTE_TYPE_VALUES).optional(),
         title: z.string().optional(),
       }),
     )
@@ -92,30 +100,24 @@ const toolsSchema = z.object({
   summary: z.string(),
 });
 
-const essays = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/essays' }),
-  schema: noteSchema,
-});
+function noteLoaderBase(collection: NoteCollection) {
+  const definition = NOTE_COLLECTION_DEFS.find((item) => item.key === collection);
+  if (!definition) throw new Error(`Unknown note collection: ${collection}`);
+  return definition.loaderBase;
+}
 
-const interviews = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/interviews' }),
-  schema: noteSchema,
-});
+function defineNoteCollection(collection: NoteCollection) {
+  return defineCollection({
+    loader: glob({ pattern: '**/*.{md,mdx}', base: noteLoaderBase(collection) }),
+    schema: noteSchema,
+  });
+}
 
-const fieldNotes = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/field-notes' }),
-  schema: noteSchema,
-});
-
-const systems = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/systems' }),
-  schema: noteSchema,
-});
-
-const reports = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/reports' }),
-  schema: noteSchema,
-});
+const essays = defineNoteCollection('essays');
+const interviews = defineNoteCollection('interviews');
+const fieldNotes = defineNoteCollection('field-notes');
+const systems = defineNoteCollection('systems');
+const reports = defineNoteCollection('reports');
 
 const issues = defineCollection({
   loader: glob({ pattern: '**/*.{yaml,yml,json}', base: './src/content/issues' }),

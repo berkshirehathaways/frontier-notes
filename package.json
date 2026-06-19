@@ -7,12 +7,18 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "SKIP_KEYSTATIC=true astro build",
-    "build:full": "astro build",
+    "build": "npm run build:public",
+    "build:public": "ENABLE_KEYSTATIC=false astro build",
+    "build:admin": "ENABLE_KEYSTATIC=true astro build",
+    "build:full": "npm run build:admin",
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "astro check",
+    "check": "npm run check:public && npm run test:content-links && npm run check:content && npm run check:admin-structure && npm run typecheck",
     "check:public": "node scripts/check-public-safety.mjs",
+    "check:content": "node scripts/check-content-links.mjs",
+    "check:admin-structure": "node scripts/check-admin-structure.mjs",
+    "test:content-links": "node --test scripts/check-content-links.test.mjs",
     "admin": "astro dev --host 127.0.0.1 --port 4321",
     "admin:open": "bash scripts/open-admin.sh",
     "admin:stop": "bash scripts/stop-admin.sh"
@@ -25,6 +31,7 @@
     "@keystatic/core": "^0.5.50",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
+    "@vercel/analytics": "^2.0.1",
     "astro": "^6.4.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
@@ -35,6 +42,7 @@
     "typescript": "^6.0.3"
   },
   "overrides": {
+    "esbuild": "^0.28.1",
     "@vercel/routing-utils": {
       "path-to-regexp": "6.3.0"
     },

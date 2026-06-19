@@ -1,9 +1,17 @@
 import { collection, config, fields } from '@keystatic/core';
+import {
+  ISSUE_NOTE_TYPE_OPTIONS,
+  ISSUE_STATUS_OPTIONS,
+  NOTE_COLLECTION_DEFS,
+  NOTE_TYPE_OPTIONS,
+  type NoteCollection,
+  type NoteType,
+} from './src/lib/content-model';
 import { SIGNAL_OPTIONS, STAGE_OPTIONS } from './src/lib/site';
 
 // 스토리지 모드:
 // - 개발(astro dev): local — 파일을 직접 수정
-// - 프로덕션 빌드(build:full): github — GitHub App OAuth 로그인 후 커밋으로 저장
+// - 어드민 빌드(build:admin): github — GitHub App OAuth 로그인 후 커밋으로 저장
 //   (저장 흐름: /keystatic 편집 → GitHub 커밋 → Vercel 재빌드 → 공개 사이트 반영)
 //   필요한 환경변수: KEYSTATIC_GITHUB_CLIENT_ID, KEYSTATIC_GITHUB_CLIENT_SECRET,
 //   KEYSTATIC_SECRET, PUBLIC_KEYSTATIC_GITHUB_APP_SLUG (README 참고)
@@ -11,18 +19,17 @@ const storage = import.meta.env.PROD
   ? ({ kind: 'github', repo: { owner: 'berkshirehathaways', name: 'frontier-notes' } } as const)
   : ({ kind: 'local' } as const);
 
-const noteTypeOptions = [
-  { label: 'Essay', value: 'essay' },
-  { label: 'Interview', value: 'interview' },
-  { label: 'Field Note', value: 'field-note' },
-  { label: 'System', value: 'system' },
-  { label: 'Report', value: 'report' },
-] as const;
-
 const stageOptions = STAGE_OPTIONS.map((value) => ({ label: value, value }));
 const signalOptions = SIGNAL_OPTIONS.map((value) => ({ label: value, value }));
+const noteCollectionOptions = NOTE_COLLECTION_DEFS.map(({ label, key }) => ({ label, value: key }));
 
-const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => ({
+function noteCollection(key: NoteCollection) {
+  const definition = NOTE_COLLECTION_DEFS.find((item) => item.key === key);
+  if (!definition) throw new Error(`Unknown note collection: ${key}`);
+  return definition;
+}
+
+const noteSchema = (defaultType: NoteType) => ({
   title: fields.slug({ name: { label: 'Title' } }),
   subtitle: fields.text({ label: 'Subtitle' }),
   slug: fields.text({
@@ -34,7 +41,7 @@ const noteSchema = (defaultType: (typeof noteTypeOptions)[number]['value']) => (
   type: fields.select({
     label: 'Type',
     defaultValue: defaultType,
-    options: noteTypeOptions.map((item) => ({ ...item })),
+    options: NOTE_TYPE_OPTIONS.map((item) => ({ ...item })),
   }),
   issue: fields.text({ label: 'Issue', description: '예: coaching-the-bot-night' }),
   person: fields.text({ label: 'Person', validation: { isRequired: false } }),
@@ -135,31 +142,31 @@ export default config({
   storage,
   ui: {
     brand: {
-      name: '노이즈 CMS',
+      name: '프론티어노트 CMS',
     },
     navigation: {
-      Notes: ['essays', 'interviews', 'field-notes', 'systems', 'reports'],
+      Notes: NOTE_COLLECTION_DEFS.map((definition) => definition.key),
       Issues: ['issues'],
       Data: ['people', 'tools'],
     },
   },
   collections: {
     essays: collection({
-      label: 'Essays',
+      label: noteCollection('essays').label,
       slugField: 'title',
-      path: 'src/content/essays/*',
+      path: noteCollection('essays').adminPath,
       format: { contentField: 'content' },
-      columns: ['type', 'issue', 'date', 'featured', 'draft'],
-      schema: noteSchema('essay'),
+      columns: [...noteCollection('essays').columns],
+      schema: noteSchema(noteCollection('essays').noteType),
     }),
     interviews: collection({
-      label: 'Interviews',
+      label: noteCollection('interviews').label,
       slugField: 'title',
-      path: 'src/content/interviews/*',
+      path: noteCollection('interviews').adminPath,
       format: { contentField: 'content' },
-      columns: ['type', 'issue', 'date', 'draft'],
+      columns: [...noteCollection('interviews').columns],
       schema: {
-        ...noteSchema('interview'),
+        ...noteSchema(noteCollection('interviews').noteType),
         interviewKind: fields.select({
           label: '인터뷰 형식',
           description: '비워두면 한줄 릴레이 인터뷰로 처리됩니다. 심층 인터뷰일 때만 deep을 선택합니다.',
@@ -172,28 +179,28 @@ export default config({
       },
     }),
     'field-notes': collection({
-      label: 'Field Notes',
+      label: noteCollection('field-notes').label,
       slugField: 'title',
-      path: 'src/content/field-notes/*',
+      path: noteCollection('field-notes').adminPath,
       format: { contentField: 'content' },
-      columns: ['type', 'issue', 'date', 'draft'],
-      schema: noteSchema('field-note'),
+      columns: [...noteCollection('field-notes').columns],
+      schema: noteSchema(noteCollection('field-notes').noteType),
     }),
     systems: collection({
-      label: 'Systems',
+      label: noteCollection('systems').label,
       slugField: 'title',
-      path: 'src/content/systems/*',
+      path: noteCollection('systems').adminPath,
       format: { contentField: 'content' },
-      columns: ['type', 'issue', 'date', 'draft'],
-      schema: noteSchema('system'),
+      columns: [...noteCollection('systems').columns],
+      schema: noteSchema(noteCollection('systems').noteType),
     }),
     reports: collection({
-      label: 'Reports',
+      label: noteCollection('reports').label,
       slugField: 'title',
-      path: 'src/content/reports/*',
+      path: noteCollection('reports').adminPath,
       format: { contentField: 'content' },
-      columns: ['type', 'issue', 'date', 'draft'],
-      schema: noteSchema('report'),
+      columns: [...noteCollection('reports').columns],
+      schema: noteSchema(noteCollection('reports').noteType),
     }),
     issues: collection({
       label: 'Issues',
@@ -213,11 +220,7 @@ export default config({
         status: fields.select({
           label: '발행 상태',
           defaultValue: 'draft',
-          options: [
-            { label: 'Draft', value: 'draft' },
-            { label: 'Published', value: 'published' },
-            { label: 'Archived', value: 'archived' },
-          ],
+          options: ISSUE_STATUS_OPTIONS.map((item) => ({ ...item })),
         }),
         hidden: fields.checkbox({ label: '목록에서 숨기기', defaultValue: true }),
         current: fields.checkbox({ label: '현재 이슈', defaultValue: false }),
@@ -244,26 +247,14 @@ export default config({
             collection: fields.select({
               label: 'Collection',
               defaultValue: 'essays',
-              options: [
-                { label: 'Essays', value: 'essays' },
-                { label: 'Interviews', value: 'interviews' },
-                { label: 'Field Notes', value: 'field-notes' },
-                { label: 'Systems', value: 'systems' },
-                { label: 'Reports', value: 'reports' },
-              ],
+              options: noteCollectionOptions,
             }),
             slug: fields.text({ label: 'Content Slug' }),
             order: fields.integer({ label: '순서', validation: { isRequired: false } }),
             type: fields.select({
               label: '타입 표시',
               defaultValue: 'ESSAY',
-              options: [
-                { label: 'ESSAY', value: 'ESSAY' },
-                { label: 'INTERVIEW', value: 'INTERVIEW' },
-                { label: 'FIELD NOTE', value: 'FIELD NOTE' },
-                { label: 'SYSTEM', value: 'SYSTEM' },
-                { label: 'REPORT', value: 'REPORT' },
-              ],
+              options: ISSUE_NOTE_TYPE_OPTIONS.map((item) => ({ ...item })),
             }),
             title: fields.text({ label: '글 제목', validation: { isRequired: false } }),
           }),

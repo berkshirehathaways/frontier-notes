@@ -18,7 +18,9 @@ const pageTitle = title ? `${title} | ${SITE.title}` : `${SITE.title} ${SITE.eng
 const currentPath = Astro.url.pathname;
 const canonicalUrl = Astro.url.href;
 const origin = Astro.url.origin;
-const ogImageUrl = `${origin}${image ?? SITE.defaultOgImage}`;
+const resolvedImage = image?.trim() || SITE.defaultOgImage;
+const ogImageUrl = new URL(resolvedImage, origin).toString();
+const isDefaultOgImage = resolvedImage === SITE.defaultOgImage;
 const isActiveNav = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
@@ -39,7 +41,7 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     )}
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
-    {!image && (
+    {isDefaultOgImage && (
       <>
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />

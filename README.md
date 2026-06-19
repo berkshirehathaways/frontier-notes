@@ -154,15 +154,14 @@ npm run build:full && npm run preview
 
 - 메타데이터는 `src/layouts/BaseLayout.astro`에 중앙화: title 패턴, description, canonical,
   Open Graph(og:type 포함), Twitter card, 상세 페이지의 `article:published_time`
-- OG 이미지 우선순위: frontmatter `ogImage` → `coverImage` → `/og-default.svg`
+- OG 이미지 우선순위: frontmatter `ogImage` → `coverImage` → `/og-default.png`
 - 기본 OG 이미지는 `the future is nowhere` / `the future is now here` 두 읽기를
   하이라이트와 공백으로 함께 보여줍니다
-- 알려진 한계: 기본 이미지가 SVG라 일부 SNS 크롤러(페이스북 등)는 렌더링하지 못할 수
-  있습니다. 필요해지면 동일 디자인의 1200×630 PNG로 교체하세요
+- 기본 OG는 SNS 크롤러 호환성을 위해 1200×630 PNG를 사용합니다
 
 ## 이미지 업로드
 
-- 커버: `public/uploads/covers` · 본문: `public/uploads/content`
+- 커버/OG/본문 이미지는 `public/uploads/**` 아래 실제 존재하는 파일만 참조합니다
 - 권장: webp, 썸네일 1200×675(≤300KB), 본문 이미지 ≤1600px(≤700KB)
 
 ## 새 글 작성 (어드민 기준)

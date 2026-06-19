@@ -4,7 +4,7 @@ export const SITE = {
   subtitle: 'AI 최전선의 아직 이름 붙지 않은 장면을 기록하는 매거진.',
   description: 'AI 최전선에서 아직 이름 붙지 않은 작업 방식과 장면을 기록하는 매거진입니다.',
   baseUrl: 'https://frontiernote.com',
-  defaultOgImage: '/og-default.svg',
+  defaultOgImage: '/og-default.png',
   coreLines: [
     'AI 최전선의 아직 이름 붙지 않은 장면을 기록합니다.',
     'Issue로 묶고, 사람으로 기억합니다.',

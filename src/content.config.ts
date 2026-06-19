@@ -1,9 +1,10 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { ISSUE_NOTE_TYPE_VALUES, ISSUE_STATUS_VALUES, NOTE_COLLECTIONS, NOTE_TYPE_VALUES } from './lib/content-model';
 import { STAGE_OPTIONS } from './lib/site';
 
-const noteType = z.enum(['essay', 'interview', 'field-note', 'system', 'report']);
+const noteType = z.enum(NOTE_TYPE_VALUES);
 
 const noteSchema = z.object({
   title: z.string(),
@@ -39,7 +40,7 @@ const issueSchema = z.object({
   slug: z.string(),
   number: z.string().optional(),
   publicPath: z.string().optional(),
-  status: z.enum(['draft', 'published', 'archived']).optional(),
+  status: z.enum(ISSUE_STATUS_VALUES).optional(),
   description: z.string(),
   publishedAt: z.coerce.date(),
   current: z.boolean().default(false),
@@ -50,10 +51,10 @@ const issueSchema = z.object({
   includedNotes: z
     .array(
       z.object({
-        collection: z.enum(['essays', 'interviews', 'field-notes', 'systems', 'reports']),
+        collection: z.enum(NOTE_COLLECTIONS),
         slug: z.string(),
         order: z.number().optional(),
-        type: z.string().optional(),
+        type: z.enum(ISSUE_NOTE_TYPE_VALUES).optional(),
         title: z.string().optional(),
       }),
     )

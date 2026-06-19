@@ -1,7 +1,7 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { NOTE_COLLECTIONS, type NoteCollection } from './content-model';
 
-export const NOTE_COLLECTIONS = ['essays', 'interviews', 'field-notes', 'systems', 'reports'] as const;
-export type NoteCollection = (typeof NOTE_COLLECTIONS)[number];
+export { NOTE_COLLECTIONS, type NoteCollection };
 export type NoteEntry = CollectionEntry<NoteCollection>;
 
 const showDrafts = import.meta.env.SHOW_DRAFTS === 'true';

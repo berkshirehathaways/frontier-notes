@@ -45,7 +45,10 @@ expectIncludes('astro.config.mjs', "site: 'https://frontiernote.com'", 'canonica
 expectIncludes('src/lib/site.ts', "baseUrl: 'https://frontiernote.com'", 'canonical SITE baseUrl');
 expectIncludes('keystatic.config.ts', './src/lib/content-model', 'Keystatic shared content model');
 expectIncludes('src/content.config.ts', './lib/content-model', 'Astro shared content model');
+expectIncludes('src/content.config.ts', 'NOTE_COLLECTION_DEFS', 'Astro note loader shared definitions');
+expectIncludes('src/content.config.ts', 'loaderBase', 'Astro note loader shared base paths');
 expectIncludes('src/lib/content.ts', './content-model', 'runtime shared content model');
+expectIncludes('scripts/check-content-links.mjs', 'src/lib/content-model.ts', 'content link check shared content model');
 
 if (failures.length > 0) {
   console.error('Admin structure check failed:');

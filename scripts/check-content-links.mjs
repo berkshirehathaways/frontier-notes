@@ -4,7 +4,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const contentDir = path.join(root, 'src/content');
-const noteCollections = ['essays', 'interviews', 'field-notes', 'systems', 'reports'];
+const contentModelFile = path.join(root, 'src/lib/content-model.ts');
 const standaloneIssueAliases = new Set(['standalone']);
 const issueAliases = new Map([['bot-night', 'coaching-the-bot-night']]);
 const failures = [];
@@ -20,6 +20,12 @@ function listFiles(dir, extensions) {
 
 function readText(file) {
   return readFileSync(file, 'utf8');
+}
+
+function stringTupleExport(file, exportName) {
+  const match = readText(file).match(new RegExp(`export const ${exportName} = \\[([\\s\\S]*?)\\] as const`));
+  if (!match) return [];
+  return [...match[1].matchAll(/'([^']+)'/g)].map((item) => item[1]);
 }
 
 function frontmatter(text) {
@@ -57,7 +63,12 @@ function noteExists(collection, slug) {
   return ['.mdx', '.md'].some((extension) => existsSync(path.join(contentDir, collection, `${slug}${extension}`)));
 }
 
+const noteCollections = stringTupleExport(contentModelFile, 'NOTE_COLLECTIONS');
 const issueRefs = new Set();
+
+if (noteCollections.length === 0) {
+  failures.push('src/lib/content-model.ts must export NOTE_COLLECTIONS as a non-empty string tuple');
+}
 
 for (const file of listFiles(path.join(contentDir, 'issues'), ['.yaml', '.yml', '.json'])) {
   const block = readText(file);

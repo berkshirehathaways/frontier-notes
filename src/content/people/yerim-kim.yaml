@@ -1,0 +1,16 @@
+name: 김예림
+slug: yerim-kim
+role: AI builder
+company: independent
+stage: project
+tools:
+  - Claude Code
+  - Grok
+signals:
+  - learning-by-doing
+  - tool-adoption
+  - exploration
+relatedNotes:
+  - interviews/turning-ai-into-a-playground
+  - field-notes/first-map
+summary: 새로운 기술 앞에서 먼저 설레고, 재미있어 보이면 AI와 밤을 새우며 여러 방식으로 만들어보는 빌더.

@@ -135,7 +135,7 @@ export default config({
   storage,
   ui: {
     brand: {
-      name: '노이즈 CMS',
+      name: '프론티어노트 CMS',
     },
     navigation: {
       Notes: ['essays', 'interviews', 'field-notes', 'systems', 'reports'],

@@ -1,12 +1,12 @@
 export const SITE = {
-  title: '노이즈',
+  title: '프론티어노트',
   englishName: 'thefutureisnowhere',
-  subtitle: 'AI 최전선의 언어를 기록하는 매거진.',
-  description: '소음이 신호가 되기 전의 장면을 기록하는 매거진입니다.',
-  baseUrl: 'https://frontier-notes.vercel.app',
+  subtitle: 'AI 최전선의 아직 이름 붙지 않은 장면을 기록하는 매거진.',
+  description: 'AI 최전선에서 아직 이름 붙지 않은 작업 방식과 장면을 기록하는 매거진입니다.',
+  baseUrl: 'https://frontiernote.com',
   defaultOgImage: '/og-default.svg',
   coreLines: [
-    'AI 최전선의 언어를 기록합니다.',
+    'AI 최전선의 아직 이름 붙지 않은 장면을 기록합니다.',
     'Issue로 묶고, 사람으로 기억합니다.',
   ],
   cta: {

@@ -1,12 +1,12 @@
-# Noise (노이즈) — thefutureisnowhere
+# Frontier Note (프론티어노트) — thefutureisnowhere
 
-소음이 신호가 되기 전의 장면을 기록하는 에디토리얼 매거진입니다.
+AI 최전선에서 아직 이름 붙지 않은 작업 방식과 장면을 기록하는 에디토리얼 매거진입니다.
 
-- 사이트 이름: 노이즈
+- 사이트 이름: 프론티어노트
 - 영문 보조명: thefutureisnowhere
-- 부제: AI 최전선의 언어를 기록하는 매거진
+- 부제: AI 최전선의 아직 이름 붙지 않은 장면을 기록하는 매거진
 - 핵심 읽기: `the future is nowhere` ↔ `the future is now here`
-- 프로덕션: https://frontier-notes.vercel.app
+- 프로덕션: https://frontiernote.com
 
 ## 기술 스택
 
@@ -123,7 +123,7 @@ npm run build:full && npm run preview
 
 수동으로 만들 경우 GitHub → Settings → Developer settings → GitHub Apps:
 
-- Callback URL: `https://frontier-notes.vercel.app/api/keystatic/github/oauth/callback`
+- Callback URL: `https://frontiernote.com/api/keystatic/github/oauth/callback`
 - (로컬 preview 테스트용으로 `http://127.0.0.1:4321/api/keystatic/github/oauth/callback` 추가 가능)
 - 권한: Repository permissions → Contents: Read & write, Metadata: Read-only
 - App을 `berkshirehathaways/frontier-notes` 저장소에 설치
@@ -147,7 +147,7 @@ npm run build:full && npm run preview
 
 ### 4. 배포 후 확인 사항
 
-- `https://frontier-notes.vercel.app/keystatic` 접속 → GitHub 로그인 → 편집 → 저장 시 커밋 생성 확인
+- `https://frontiernote.com/keystatic` 접속 → GitHub 로그인 → 편집 → 저장 시 커밋 생성 확인
 - 커밋 후 Vercel이 자동 재빌드하고 사이트에 반영되는지 확인
 
 ## SEO / OG

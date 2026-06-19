@@ -13,7 +13,7 @@ import vercel from '@astrojs/vercel';
 const skipKeystatic = process.env.SKIP_KEYSTATIC === 'true';
 
 export default defineConfig({
-  site: 'https://frontier-notes.vercel.app',
+  site: 'https://frontiernote.com',
   integrations: [mdx(), react(), ...(skipKeystatic ? [] : [keystatic()])],
   adapter: skipKeystatic ? undefined : vercel(),
 });

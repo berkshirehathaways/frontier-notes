@@ -9,6 +9,16 @@
       "source": "/field-notes/turn-off-cron-and-dont-watch/",
       "destination": "/field-notes/turn-off-cron",
       "permanent": true
+    },
+    {
+      "source": "/systems/each-others-most-relentless-users",
+      "destination": "/systems/relentless-users",
+      "permanent": true
+    },
+    {
+      "source": "/systems/each-others-most-relentless-users/",
+      "destination": "/systems/relentless-users",
+      "permanent": true
     }
   ]
 }

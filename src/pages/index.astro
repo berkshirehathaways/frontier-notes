@@ -7,7 +7,6 @@ import {
   getPublishedCollection,
   getVisibleIssues,
   resolveIssueNotes,
-  sortByCuratedOrder,
 } from '../lib/content';
 
 const issues = await getVisibleIssues();
@@ -27,9 +26,7 @@ const latestNotes = allNotes
 
 // People: interviews split by kind
 const allInterviews = await getPublishedCollection('interviews');
-const relayInterviews = sortByCuratedOrder(
-  allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay'),
-);
+const relayInterviews = allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay');
 const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
 ---
 

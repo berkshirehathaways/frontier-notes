@@ -34,8 +34,27 @@ import { SITE } from '../../lib/site';
         작은 농담이 새로운 작업 방식이 되고, 어색한 행동이 협업 방식이 되고, 실패 로그가 다음 사람의 문서가 됩니다.
       </p>
       <p>
-        프론티어노트는 그런 말과 장면을 Issue, Note, People 형식으로 엮어 발행합니다.
+        프론티어노트는 그런 말과 장면을 Issue, Field Note, People 형식으로 엮어 발행합니다.
       </p>
+
+      <h2><span class="comment-mark">//</span> 읽는 법</h2>
+      <div class="format-guide" aria-label="프론티어노트 읽는 법">
+        <section class="format-card">
+          <p class="format-label mono">ISSUES</p>
+          <h3>하나의 질문으로 묶은 묶음</h3>
+          <p>이슈는 여러 글을 하나의 현장 질문으로 묶은 편집 단위입니다. 지금 어떤 변화가 생기고 있는지 큰 흐름으로 읽습니다.</p>
+        </section>
+        <section class="format-card">
+          <p class="format-label mono">FIELD NOTES</p>
+          <h3>현장에서 먼저 보인 장면</h3>
+          <p>필드노트는 대화, 로그, 해커톤, 커뮤니티에서 포착한 짧은 장면입니다. 아직 결론보다 냄새가 먼저인 기록입니다.</p>
+        </section>
+        <section class="format-card">
+          <p class="format-label mono">PEOPLE</p>
+          <h3>작업 방식을 가진 사람들</h3>
+          <p>피플은 프론티어노트가 만난 창업가와 빌더의 말입니다. 한 사람의 질문과 태도가 다음 사람의 질문으로 이어집니다.</p>
+        </section>
+      </div>
 
       <h2><span class="comment-mark">//</span> thefutureisnowhere</h2>
       <p><code>thefutureisnowhere</code>는 프론티어노트를 관통하는 문장입니다.</p>
@@ -213,6 +232,42 @@ import { SITE } from '../../lib/site';
     letter-spacing: 0.02em;
   }
 
+  .format-guide {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin: 1rem 0 1.4rem;
+  }
+
+  .format-card {
+    border-top: 1px solid var(--line-strong);
+    padding-top: 0.75rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .format-label {
+    margin: 0;
+    font-size: var(--text-2xs);
+    letter-spacing: 0.1em;
+    color: var(--faint);
+  }
+
+  .format-card h3 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+  }
+
+  .format-card p:last-child {
+    margin: 0;
+    font-size: var(--text-xs);
+    line-height: 1.62;
+    color: var(--muted);
+  }
+
   /* 2열 그리드 */
   .about-grid {
     display: grid;
@@ -375,6 +430,11 @@ import { SITE } from '../../lib/site';
   @media (max-width: 980px) {
     .about-grid {
       grid-template-columns: 1fr;
+    }
+
+    .format-guide {
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
     }
 
     .about-meta {

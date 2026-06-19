@@ -27,7 +27,7 @@ themes:
   - maintainer-runtime
 includedNotes:
   - collection: field-notes
-    slug: turn-off-cron-and-dont-watch
+    slug: turn-off-cron
     order: 1
     type: FIELD NOTE
     title: 크론 끄고 보지마라

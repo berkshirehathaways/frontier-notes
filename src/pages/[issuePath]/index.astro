@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate, getVisibleIssues, resolveIssueNotes } from '../../lib/content';
+import { formatDate, getVisibleIssues, noteUrl, resolveIssueNotes } from '../../lib/content';
 
 export async function getStaticPaths() {
   const issues = await getVisibleIssues();
@@ -63,7 +63,7 @@ const ogImage = issue.data.ogImage ?? issue.data.coverImage;
                 <span class="toc-type">[{displayType}]</span>
               </span>
               <div class="toc-body">
-                <a href={`/${note.collection}/${note.id}`} class="toc-title">
+                <a href={noteUrl(note)} class="toc-title">
                   {note.data.title}
                 </a>
                 {note.data.subtitle && (

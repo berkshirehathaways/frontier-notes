@@ -78,7 +78,35 @@ function includedNotes(block) {
 }
 
 function noteExists(collection, slug) {
-  return ['.mdx', '.md'].some((extension) => existsSync(path.join(contentDir, collection, `${slug}${extension}`)));
+  return noteSlugIndex(collection).has(slug);
+}
+
+const noteSlugIndexes = new Map();
+
+function noteSlugIndex(collection) {
+  if (noteSlugIndexes.has(collection)) return noteSlugIndexes.get(collection);
+
+  const index = new Map();
+  const routeSlugs = new Map();
+  const collectionDir = path.join(contentDir, collection);
+
+  for (const file of listFiles(collectionDir, ['.mdx', '.md'])) {
+    const relativeFile = path.relative(root, file);
+    const basename = path.basename(file, path.extname(file));
+    const slug = scalarValue(frontmatter(readText(file)), 'slug') ?? basename;
+
+    if (routeSlugs.has(slug)) {
+      failures.push(`duplicate note slug ${collection}/${slug} in ${routeSlugs.get(slug)} and ${relativeFile}`);
+    } else {
+      routeSlugs.set(slug, relativeFile);
+    }
+
+    index.set(slug, relativeFile);
+    index.set(basename, relativeFile);
+  }
+
+  noteSlugIndexes.set(collection, index);
+  return index;
 }
 
 const noteCollections = stringTupleExport(contentModelFile, 'NOTE_COLLECTIONS');
@@ -86,6 +114,10 @@ const issueRefs = new Set();
 
 if (noteCollections.length === 0) {
   failures.push('src/lib/content-model.ts must export NOTE_COLLECTIONS as a non-empty string tuple');
+}
+
+for (const collection of noteCollections) {
+  noteSlugIndex(collection);
 }
 
 for (const file of listFiles(path.join(contentDir, 'issues'), ['.yaml', '.yml', '.json'])) {

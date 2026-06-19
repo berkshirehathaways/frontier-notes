@@ -1,5 +1,5 @@
 ---
-import { getEntry, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NoteLayout from '../../layouts/NoteLayout.astro';
 import { getAllPublishedNotes, getPublishedCollection } from '../../lib/content';
@@ -7,14 +7,10 @@ import FigureImage from '../../components/FigureImage.astro';
 
 export async function getStaticPaths() {
   const entries = await getPublishedCollection('essays');
-  return entries.map((entry) => ({ params: { slug: entry.id } }));
+  return entries.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
 }
 
-const slug = Astro.params.slug;
-if (!slug) throw new Error('Missing slug');
-
-const entry = await getEntry('essays', slug);
-if (!entry) throw new Error('Essay not found');
+const { entry } = Astro.props;
 
 const { Content } = await render(entry);
 const allNotes = await getAllPublishedNotes();

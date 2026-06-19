@@ -1,19 +1,15 @@
 ---
-import { getEntry, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NoteLayout from '../../layouts/NoteLayout.astro';
 import { getAllPublishedNotes, getPublishedCollection } from '../../lib/content';
 
 export async function getStaticPaths() {
   const entries = await getPublishedCollection('systems');
-  return entries.map((entry) => ({ params: { slug: entry.id } }));
+  return entries.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
 }
 
-const slug = Astro.params.slug;
-if (!slug) throw new Error('Missing slug');
-
-const entry = await getEntry('systems', slug);
-if (!entry) throw new Error('System note not found');
+const { entry } = Astro.props;
 
 const { Content } = await render(entry);
 const allNotes = await getAllPublishedNotes();

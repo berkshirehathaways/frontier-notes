@@ -57,7 +57,7 @@ export async function getAllPublishedNotes() {
 }
 
 export function noteUrl(entry: NoteEntry) {
-  return `/${entry.collection}/${entry.id}`;
+  return `/${entry.collection}/${entry.data.slug}`;
 }
 
 export async function getNoteBySlug(collection: NoteCollection, slug: string) {

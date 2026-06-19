@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/field-notes/turn-off-cron-and-dont-watch",
+      "destination": "/field-notes/turn-off-cron",
+      "permanent": true
+    },
+    {
+      "source": "/field-notes/turn-off-cron-and-dont-watch/",
+      "destination": "/field-notes/turn-off-cron",
+      "permanent": true
+    }
+  ]
+}

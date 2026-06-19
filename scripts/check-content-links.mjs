@@ -39,20 +39,38 @@ function scalarValue(block, key) {
   return match ? match[1].trim().replace(/^['"]|['"]$/g, '') : undefined;
 }
 
-function includedNotes(block) {
+function sectionLines(block, key) {
   const lines = block.split('\n');
+  const start = lines.findIndex((line) => new RegExp(`^${key}:\\s*(?:$|\\[\\]\\s*$)`).test(line));
+  if (start === -1 || lines[start].includes('[]')) return [];
+
+  const section = [];
+  for (const line of lines.slice(start + 1)) {
+    if (line.trim() === '') {
+      section.push(line);
+      continue;
+    }
+    if (!/^\s/.test(line)) break;
+    section.push(line);
+  }
+
+  return section;
+}
+
+function includedNotes(block) {
+  const lines = sectionLines(block, 'includedNotes');
   const notes = [];
   let current;
 
   for (const line of lines) {
-    const collection = line.match(/^\\s*- collection:\\s*(.+)$/);
+    const collection = line.match(/^\s*-\s+collection:\s*(.+)$/);
     if (collection) {
       current = { collection: collection[1].trim().replace(/^['"]|['"]$/g, '') };
       notes.push(current);
       continue;
     }
 
-    const slug = line.match(/^\\s+slug:\\s*(.+)$/);
+    const slug = line.match(/^\s+slug:\s*(.+)$/);
     if (slug && current) current.slug = slug[1].trim().replace(/^['"]|['"]$/g, '');
   }
 

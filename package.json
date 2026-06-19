@@ -14,10 +14,11 @@
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "astro check",
-    "check": "npm run check:public && npm run check:content && npm run check:admin-structure && npm run typecheck",
+    "check": "npm run check:public && npm run test:content-links && npm run check:content && npm run check:admin-structure && npm run typecheck",
     "check:public": "node scripts/check-public-safety.mjs",
     "check:content": "node scripts/check-content-links.mjs",
     "check:admin-structure": "node scripts/check-admin-structure.mjs",
+    "test:content-links": "node --test scripts/check-content-links.test.mjs",
     "admin": "astro dev --host 127.0.0.1 --port 4321",
     "admin:open": "bash scripts/open-admin.sh",
     "admin:stop": "bash scripts/stop-admin.sh"

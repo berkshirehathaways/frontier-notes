@@ -55,15 +55,18 @@ Frontier Notes feels like a quiet technical magazine: editorial, archival, and s
 
 ### Font Stack
 
+- Title: `--font-title`
 - Sans: `--font-sans`
 - Serif: `--font-serif`
 - Mono: `--font-mono`
 
 ### Rules
 
-- Editorial titles use the serif stack.
+- Korean editorial titles use the modern title stack, currently Pretendard Variable first.
+- Serif is reserved for rare editorial accents, not default page or card titles.
 - Metadata and issue labels use the mono stack.
-- Korean text uses `word-break: keep-all` where wrapping quality matters.
+- Korean prose uses `word-break: keep-all` and `overflow-wrap: break-word` so words do not split mid-syllable on mobile.
+- Do not use `word-break: break-all` or `overflow-wrap: anywhere` on Korean descriptions, subtitles, leads, or section intros. Reserve aggressive breaking for machine tokens, URLs, tags, and metadata only.
 
 ## 4. Spacing & Layout
 
@@ -83,12 +86,15 @@ Spacing is based on 4px increments.
 | `--sp-10` | `2.5rem` | Page rhythm |
 | `--sp-12` | `3rem` | Major sections |
 | `--sp-16` | `4rem` | Reserved large sections |
+| `--page-top-space` | `clamp(var(--sp-3), 1.6vw, var(--sp-5))` | Top breathing room before the first site element |
+| `--home-opening-space` | `clamp(var(--sp-5), 2.8vw, var(--sp-10))` | Quiet whitespace before the home hero title |
 
 ### Grid
 
 - Site shell max width: `1280px`.
 - Primary breakpoints: `1024px`, `900px`, `768px`.
 - Editorial layouts favor CSS Grid and hard divider lines.
+- No page should start flush against the viewport edge. The first element uses `--page-top-space`; the home page uses `--home-opening-space` before the hero title so the top gap reads as intentional editorial space without adding a decorative rule.
 
 ## 5. Components
 
@@ -105,7 +111,7 @@ Spacing is based on 4px increments.
 - **Spacing**: compact, rule-separated rows.
 - **Behavior**: Korean titles use `word-break: keep-all` and `overflow-wrap: break-word`.
 - **Mobile issue feature behavior**: the home current-issue description stays fully visible, while theme tags stay on one clipped row without wrapping.
-- **Mobile issue list behavior**: archive/detail note subtitles stay compact and may truncate with ellipsis to keep list rows scannable.
+- **Mobile issue list behavior**: archive/detail subtitles and descriptions wrap by Korean word. Keep rows compact with spacing and type scale, not by splitting words or forcing prose into one clipped line.
 
 ### Issue Membership Labels
 

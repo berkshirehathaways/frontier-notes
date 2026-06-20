@@ -7,13 +7,12 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
-  /** 콘텐츠 상세 페이지는 'article', 그 외에는 기본값 'website' */
   ogType?: 'website' | 'article';
-  /** ogType이 article일 때 article:published_time으로 출력 */
   publishedAt?: Date;
+  hideSiteHeader?: boolean;
 }
 
-const { title, description = SITE.description, image, ogType = 'website', publishedAt } = Astro.props;
+const { title, description = SITE.description, image, ogType = 'website', publishedAt, hideSiteHeader = false } = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.title}` : `${SITE.title} ${SITE.englishName}`;
 const currentPath = Astro.url.pathname;
 const canonicalUrl = Astro.url.href;
@@ -53,52 +52,56 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     <meta name="twitter:image" content={ogImageUrl} />
     <title>{pageTitle}</title>
     <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="site-shell">
 
-      <!-- 상단 바: 브랜드 식별자 + 유틸리티 링크 -->
-      <div class="topbar">
-        <a href="/" class="topbar-id" aria-label="홈">
-          <span class="topbar-brand">{SITE.title}</span>
-          <span class="topbar-sentence mono" id="headerPhrase">thefuture<span class="th-is">is</span><span class="th-now">now</span><span class="th-here">here</span></span>
-        </a>
-        <nav class="util-nav" aria-label="유틸리티 메뉴">
-          <ul>
-            {HUB_NAV.map((item) => (
-              <li>
-                <a
-                  class={currentPath.startsWith(item.href) ? 'active' : ''}
-                  href={item.href}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+      {!hideSiteHeader && (
+        <>
+          <div class="topbar">
+            <a href="/" class="topbar-id" aria-label="홈으로 이동: 프론티어노트 thefutureisnowhere">
+              <span class="topbar-brand">{SITE.title}:</span>
+              <span class="topbar-sentence mono" id="headerPhrase">thefuture<span class="th-is">is</span><span class="th-now">now</span><span class="th-here">here</span></span>
+            </a>
+            <nav class="util-nav" aria-label="유틸리티 메뉴">
+              <ul>
+                {HUB_NAV.map((item) => (
+                  <li>
+                    <a
+                      class={currentPath.startsWith(item.href) ? 'active' : ''}
+                      href={item.href}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
 
-      <!-- 편집 내비게이션 -->
-      <nav class="primary-nav" aria-label="메인 메뉴">
-        <ul>
-          {MAIN_NAV.map((item) => (
-            <li>
-              <a
-                class={isActiveNav(item.href) ? 'active' : ''}
-                href={item.href}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+          <nav class="primary-nav" aria-label="메인 메뉴">
+            <ul>
+              {MAIN_NAV.map((item) => (
+                <li>
+                  <a
+                    class={isActiveNav(item.href) ? 'active' : ''}
+                    href={item.href}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </>
+      )}
 
-      <main>
+      <main class:list={[hideSiteHeader && 'main-flush']}>
         <slot />
       </main>
 
@@ -256,6 +259,10 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     margin-top: 1.5rem;
   }
 
+  main.main-flush {
+    margin-top: 0;
+  }
+
   /* ── 푸터 ────────────────────────────────── */
   .footer {
     margin-top: 3rem;
@@ -364,6 +371,10 @@ const isActiveNav = (href: string) => currentPath === href || currentPath.starts
     /* 네비게이션 아래 → 본문 시작까지 여백 축소 */
     main {
       margin-top: 0.85rem;
+    }
+
+    main.main-flush {
+      margin-top: 0;
     }
   }
 </style>

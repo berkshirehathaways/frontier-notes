@@ -29,23 +29,46 @@ const latestNotes = allNotes
 const allInterviews = await getPublishedCollection('interviews');
 const relayInterviews = allInterviews.filter((e) => !e.data.interviewKind || e.data.interviewKind === 'relay');
 const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'deep');
+
+const homeNavItems = [
+  { href: '/issues', label: 'ISSUES', hangul: '이슈', desc: '묶어 읽기' },
+  { href: '/notes', label: 'NOTES', hangul: '노트', desc: '현장 기록' },
+  { href: '/people', label: 'PEOPLE', hangul: '피플', desc: '사람 따라가기' },
+  { href: '/about', label: 'ABOUT', hangul: '소개', desc: '무엇을 기록하나' },
+  { href: '/interview-proposal', label: 'CONTRIBUTE', hangul: '제안', desc: '다음 장면 보내기' },
+] as const;
 ---
 
-<BaseLayout>
-
+<BaseLayout hideSiteHeader>
   <!-- Hero -->
   <div class="world-block" aria-label="편집 세계관">
     <div class="world-display">
-      <h1 class="world-giant mono" id="worldPhrase" aria-label="the future is nowhere / the future is now here">thefuture<span class="w-is">is</span><span class="w-now">now</span><span class="w-here">here</span></h1>
+      <h1 class="world-title" aria-label="프론티어노트, the future is nowhere / the future is now here">
+        <span class="world-title-ko">프론티어노트</span>
+        <span class="world-giant mono" id="worldPhrase">thefuture<span class="w-is">is</span><span class="w-now">now</span><span class="w-here">here</span></span>
+      </h1>
     </div>
     <div class="world-readings">
       <span class="world-reading-item" id="readingNowhere">→ the future is nowhere</span>
       <span class="world-reading-item" id="readingNowHere">→ the future is now here</span>
     </div>
     <p class="world-tagline">
-      <span class="tagline-l1">미래는 아직 어디에도 없다.</span>
-      <span class="tagline-l2">그런데 AI 네이티브 창업가와 빌더의 손에는 있다.</span>
+      <span class="tagline-l1">미래는 아직 어디에도 없다. 그런데 AI 네이티브 창업가와 빌더의 손에는 이미 와 있다.</span>
+      <span class="tagline-l2">프론티어노트는 그 장면을 이슈, 노트, 사람으로 묶어 기록하는 매거진이다.</span>
     </p>
+    <nav class="home-path-nav" aria-label="프론티어노트 읽기 경로">
+      <ul>
+        {homeNavItems.map((item) => (
+          <li>
+            <a href={item.href}>
+              <span class="path-label mono">{item.label}</span>
+              <span class="path-hangul">{item.hangul}</span>
+              <span class="path-desc">{item.desc}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   </div>
 
   <!-- Current Issue -->
@@ -216,22 +239,39 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
 <style>
   /* ── 세계관 블록: 초대형 타이포 ─────────── */
   .world-block {
-    padding: 1.2rem 0 0.9rem;
-    border-top: 2px solid var(--accent);
+    padding: var(--home-opening-space) 0 1rem;
+    border-top: 0;
     border-bottom: 1px solid var(--line);
   }
 
   .world-display {
     line-height: 1;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.62rem;
+  }
+
+  .world-title {
+    display: grid;
+    gap: 0.24rem;
+    margin: 0;
+  }
+
+  .world-title-ko {
+    font-family: var(--font-title);
+    font-size: clamp(2.1rem, 4.6vw, 4.9rem);
+    font-weight: 400;
+    letter-spacing: -0.012em;
+    line-height: 1.02;
+    color: var(--text);
+    word-break: keep-all;
   }
 
   .world-giant {
     margin: 0;
+    display: block;
     font-family: var(--font-mono);
-    font-size: clamp(1rem, 6vw, 7rem);
+    font-size: clamp(1.35rem, 4.6vw, 5.3rem);
     font-weight: 400;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.055em;
     line-height: 0.95;
     color: var(--text);
     white-space: nowrap;
@@ -291,19 +331,79 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
   }
 
   .world-tagline {
-    margin: 0.9rem 0 0;
-    font-size: clamp(1rem, 1.8vw, 1.25rem);
-    line-height: 1.65;
+    margin: 0.82rem 0 0;
+    font-size: clamp(0.98rem, 1.45vw, 1.13rem);
+    line-height: 1.58;
     color: var(--muted);
-    max-width: 58ch;
+    max-width: 62ch;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 0.12rem;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   .tagline-l1,
   .tagline-l2 {
     display: block;
+  }
+
+  .tagline-l2 {
+    font-size: 0.9em;
+    color: var(--text);
+  }
+
+  .home-path-nav {
+    margin-top: 0.95rem;
+    padding-top: 0.58rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .home-path-nav ul {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .home-path-nav a {
+    min-height: 4.2rem;
+    display: grid;
+    align-content: start;
+    gap: 0.18rem;
+    padding: 0.62rem 0.72rem 0.65rem;
+    border-right: 1px solid var(--line);
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .home-path-nav a:hover {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .path-label {
+    font-size: var(--text-2xs);
+    letter-spacing: 0.09em;
+    color: var(--faint);
+  }
+
+  .path-hangul {
+    font-family: var(--font-title);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+  }
+
+  .path-desc {
+    font-size: var(--text-2xs);
+    line-height: 1.35;
+    color: var(--muted);
+    word-break: keep-all;
   }
 
   /* ── 이슈 제목 링크 ──────────────────────── */
@@ -495,14 +595,70 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
 
 
   @media (max-width: 768px) {
-    /* 홈 히어로: 상단 padding 소폭 축소 (감성 유지) */
     .world-block {
-      padding-top: 0.75rem;
+      padding-top: clamp(1.25rem, 7vw, 1.65rem);
+    }
+
+    .world-title {
+      gap: 0.16rem;
+    }
+
+    .world-title-ko {
+      font-size: clamp(2rem, 11vw, 2.85rem);
+      letter-spacing: -0.012em;
+    }
+
+    .world-giant {
+      font-size: clamp(1.42rem, 6.9vw, 2rem);
+      letter-spacing: -0.085em;
     }
 
     .world-block .world-readings {
       flex-direction: column;
       gap: 0.2rem;
+    }
+
+    .world-tagline {
+      font-size: clamp(0.95rem, 4.5vw, 1.12rem);
+      line-height: 1.55;
+      max-width: 100%;
+    }
+
+    .tagline-l2 {
+      font-size: 0.82em;
+    }
+
+    .home-path-nav {
+      margin-top: 0.68rem;
+      padding-top: 0.5rem;
+    }
+
+    .home-path-nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      border-left: none;
+    }
+
+    .home-path-nav a {
+      min-height: auto;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.28rem;
+      padding: 0.34rem 0.48rem;
+      border: 1px solid var(--line);
+      background: var(--bg-soft);
+    }
+
+    .path-label,
+    .path-desc {
+      display: none;
+    }
+
+    .path-hangul {
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      line-height: 1.1;
     }
 
     .interviews-series-desc {

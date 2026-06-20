@@ -48,6 +48,9 @@
   --sp-10: 2.5rem;
   --sp-12: 3rem;
   --sp-16: 4rem;
+  --page-top-space: clamp(var(--sp-3), 1.6vw, var(--sp-5));
+  --home-opening-space: clamp(var(--sp-5), 2.8vw, var(--sp-10));
+  --opening-rail-height: 0.18rem;
 
   /* --- 타이포 위계 --- */
   --text-2xs: 0.64rem;
@@ -71,9 +74,11 @@
 
   /* --- 메타데이터 폰트 --- */
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace;
-  --font-serif: 'Noto Serif KR', 'Nanum Myeongjo', 'AppleMyungjo', 'Iowan Old Style', Georgia, serif;
-  --font-sans: 'SUIT Variable', 'Pretendard Variable', 'Pretendard', 'Noto Sans KR',
+  --font-title: 'Pretendard Variable', 'Pretendard', 'SUIT Variable', 'IBM Plex Sans KR', 'Noto Sans KR',
     'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+  --font-sans: 'Pretendard Variable', 'Pretendard', 'SUIT Variable', 'Noto Sans KR',
+    'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+  --font-serif: 'Noto Serif KR', 'Nanum Myeongjo', 'AppleMyungjo', 'Iowan Old Style', Georgia, serif;
 
   /* --- 그림자 사용 규칙: 없음 --- */
   /* 그림자는 전혀 사용하지 않는다. 깊이는 선으로만 표현한다. */
@@ -132,14 +137,55 @@ p {
   margin: 0;
 }
 
+:where(
+  p,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .page-desc,
+  .section-desc,
+  .section-kind-desc,
+  .relay-desc,
+  .deep-desc,
+  .people-kind-desc,
+  .issue-desc,
+  .issue-feature-desc,
+  .issue-chapter-desc,
+  .issue-note-sub,
+  .issue-note-card-desc,
+  .toc-sub,
+  .toc-subtitle,
+  .upcoming-desc,
+  .note-subtitle,
+  .lead-subtitle,
+  .detail-subtitle,
+  .head-desc,
+  .interviews-series-desc,
+  .world-tagline,
+  .path-desc
+) {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+:where(pre, code, kbd, samp, .mono, .tag, .issue-chip, .type-badge, .eyebrow) {
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
-  letter-spacing: -0.025em;
+  font-family: var(--font-title);
+  font-weight: 700;
+  letter-spacing: -0.055em;
   line-height: var(--leading-heading);
 }
 
@@ -157,7 +203,7 @@ button {
 .site-shell {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.1rem 5rem;
+  padding: var(--page-top-space) 1.1rem 5rem;
 }
 
 main {
@@ -186,7 +232,7 @@ main {
 }
 
 .serif {
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
 }
 
 /* 에디토리얼 카테고리 라벨: [ESSAY], [FIELD NOTE] 등 */
@@ -327,7 +373,7 @@ main {
 
 .note-title {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
   font-size: clamp(1.1rem, 2vw, 1.32rem);
   line-height: var(--leading-snug);
   letter-spacing: -0.025em;
@@ -424,7 +470,7 @@ a.issue-chip:hover {
 .prose h2 {
   margin-top: 2.2rem;
   margin-bottom: 0.65rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
   font-size: 1.38rem;
   line-height: var(--leading-heading);
   letter-spacing: -0.02em;
@@ -435,7 +481,7 @@ a.issue-chip:hover {
 .prose h3 {
   margin-top: 1.65rem;
   margin-bottom: 0.5rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
   font-size: 1.18rem;
   line-height: var(--leading-snug);
   letter-spacing: -0.02em;
@@ -591,7 +637,7 @@ a.issue-chip:hover {
 
 .editorial-entry .entry-title {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
   font-size: var(--text-base);
   line-height: var(--leading-snug);
   letter-spacing: -0.02em;
@@ -801,7 +847,7 @@ a.issue-chip:hover {
 }
 
 .issue-toc-list .toc-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
   font-size: clamp(1.02rem, 1.28vw, var(--text-lg));
   line-height: 1.24;
   letter-spacing: -0.025em;
@@ -949,7 +995,7 @@ a.issue-chip:hover {
 }
 
 .issue-note-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-title);
   font-size: var(--text-base);
   line-height: var(--leading-snug);
   letter-spacing: -0.02em;
@@ -1035,7 +1081,7 @@ a.issue-chip:hover {
 
 @media (max-width: 768px) {
   .site-shell {
-    padding: 0 0.85rem 4rem;
+    padding: var(--page-top-space) 0.85rem 4rem;
   }
 
   main {
@@ -1094,14 +1140,14 @@ a.issue-chip:hover {
     line-height: 1.22;
     overflow: visible;
     word-break: keep-all;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   .issue-toc-list .toc-subtitle {
     font-size: var(--text-sm);
     line-height: 1.5;
     word-break: keep-all;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   .issue-cover-img {
@@ -1117,8 +1163,8 @@ a.issue-chip:hover {
     width: 100%;
     overflow: visible;
     white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-all;
+    overflow-wrap: break-word;
+    word-break: keep-all;
   }
 
   .issue-feature-tags {

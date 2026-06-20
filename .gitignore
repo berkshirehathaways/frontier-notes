@@ -31,6 +31,7 @@ docs/private/
 docs/internal/
 src/content/**/private-*.mdx
 src/content/**/internal-*.mdx
+src/content/**/*-draft.mdx
 
 # local admin server state
 .admin-server.pid

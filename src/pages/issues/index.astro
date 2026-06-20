@@ -280,7 +280,7 @@ const issueCards = await Promise.all(
   }
 
   .issue-note-title {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: clamp(1rem, 2vw, 1.2rem);
     line-height: 1.32;
     letter-spacing: -0.02em;
@@ -371,9 +371,11 @@ const issueCards = await Promise.all(
     .issue-note-sub,
     .issue-note-card-desc {
       max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     /* 첫 번째 이슈 카드 상단 여백 축소 */

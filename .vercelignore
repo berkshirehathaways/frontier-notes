@@ -4,6 +4,7 @@ docs/private/
 docs/internal/
 src/content/**/private-*.mdx
 src/content/**/internal-*.mdx
+src/content/**/*-draft.mdx
 
 # Environment and deployment metadata
 .env*

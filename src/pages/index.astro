@@ -82,9 +82,11 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
           <ul class="issue-toc-list">
             {currentIssueNotes.map((note, i) => (
               <li>
-                <span class="toc-num mono">{String(i + 1).padStart(2, '0')}</span>
-                <span class="toc-type">[{note.data.type.toUpperCase().replace('-', ' ')}]</span>
                 <a href={noteUrl(note)} class="toc-note-link">
+                  <span class="toc-meta">
+                    <span class="toc-num mono">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="toc-type">[{note.data.type.toUpperCase().replace('-', ' ')}]</span>
+                  </span>
                   <span class="toc-title">{note.data.title}</span>
                   {note.data.subtitle && <span class="toc-subtitle">{note.data.subtitle}</span>}
                 </a>
@@ -93,10 +95,15 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
           </ul>
         ) : currentIssue.data.upcomingNotes?.length ? (
           <ul class="issue-toc-list">
-            {currentIssue.data.upcomingNotes.map((upcoming) => (
+            {currentIssue.data.upcomingNotes.map((upcoming, i) => (
               <li class="toc-upcoming">
-                <span class="toc-type">[{upcoming.type}]</span>
-                <span class="toc-title toc-title-upcoming">{upcoming.title}</span>
+                <span class="toc-note-link">
+                  <span class="toc-meta">
+                    <span class="toc-num mono">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="toc-type">[{upcoming.type}]</span>
+                  </span>
+                  <span class="toc-title toc-title-upcoming">{upcoming.title}</span>
+                </span>
               </li>
             ))}
           </ul>

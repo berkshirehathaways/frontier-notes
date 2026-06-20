@@ -68,7 +68,7 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
             <img src={currentIssue.data.coverImage} alt={currentIssue.data.title} />
           </div>
         )}
-        <p style="color: var(--muted); font-size: var(--text-sm); line-height: 1.62; margin: 0;">{currentIssue.data.description}</p>
+        <p class="issue-feature-desc">{currentIssue.data.description}</p>
         <div class="tag-list" style="margin-top: 0.85rem;">
           {currentIssue.data.themes.map((theme) => (
             <span class="tag">{theme}</span>

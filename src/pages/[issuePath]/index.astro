@@ -302,5 +302,13 @@ const ogImage = issue.data.ogImage ?? issue.data.coverImage;
       align-items: center;
       gap: 0.5rem;
     }
+
+    .issue-desc,
+    .toc-sub {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 </style>

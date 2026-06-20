@@ -652,6 +652,7 @@ main {
   border-right: var(--border-thin) solid var(--line);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .issue-feature-main > .issue-number,
@@ -664,6 +665,7 @@ main {
 .issue-feature-toc {
   padding: 1.4rem 1.2rem 1.3rem;
   background: var(--bg);
+  min-width: 0;
 }
 
 .issue-number {
@@ -693,6 +695,13 @@ main {
   font-size: clamp(1.6rem, 3vw, 2.3rem);
   line-height: var(--leading-heading);
   letter-spacing: -0.03em;
+}
+
+.issue-feature-desc {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: 1.62;
+  margin: 0;
 }
 
 .issue-cover-img {
@@ -1026,6 +1035,13 @@ main {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .issue-feature-desc {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /* editorial-entry: badge 열 고정폭 6rem → 모든 제목 시작점 동일 */

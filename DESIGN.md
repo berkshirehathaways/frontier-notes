@@ -100,6 +100,7 @@ Spacing is based on 4px increments.
 - **Structure**: metadata column plus content column.
 - **Spacing**: compact, rule-separated rows.
 - **Behavior**: Korean titles use `word-break: keep-all` and `overflow-wrap: break-word`.
+- **Mobile tagline behavior**: issue descriptions and note subtitles/taglines stay on one line and truncate with ellipsis, so issue pages keep a consistent scan height.
 
 ## 6. Motion & Interaction
 

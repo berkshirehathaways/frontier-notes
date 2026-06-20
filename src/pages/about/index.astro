@@ -96,16 +96,18 @@ import { SITE } from '../../lib/site';
           <div class="fact-row">
             <dt>github</dt>
             <dd>
-              <a href="https://github.com/berkshirehathaways" target="_blank" rel="noreferrer noopener">
-                berkshirehathaways
+              <a class="profile-link" href="https://github.com/berkshirehathaways" target="_blank" rel="noreferrer noopener">
+                <span>berkshirehathaways</span>
+                <span class="external-mark" aria-hidden="true">↗</span>
               </a>
             </dd>
           </div>
           <div class="fact-row">
             <dt>linkedin</dt>
             <dd>
-              <a href="https://www.linkedin.com/in/marketingsteven/" target="_blank" rel="noreferrer noopener">
-                marketingsteven
+              <a class="profile-link" href="https://www.linkedin.com/in/marketingsteven/" target="_blank" rel="noreferrer noopener">
+                <span>marketingsteven</span>
+                <span class="external-mark" aria-hidden="true">↗</span>
               </a>
             </dd>
           </div>
@@ -309,7 +311,7 @@ import { SITE } from '../../lib/site';
 
   .fact-row {
     display: grid;
-    grid-template-columns: 72px 1fr;
+    grid-template-columns: minmax(5.6rem, max-content) minmax(0, 1fr);
     gap: 0.5rem;
     padding: 0.38rem 0;
     border-top: 1px solid var(--line);
@@ -327,6 +329,7 @@ import { SITE } from '../../lib/site';
     letter-spacing: 0.08em;
     color: var(--faint);
     padding-top: 0.06rem;
+    white-space: nowrap;
   }
 
   dd {
@@ -335,6 +338,53 @@ import { SITE } from '../../lib/site';
     font-size: var(--text-xs);
     color: var(--muted);
     letter-spacing: 0.02em;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .profile-link {
+    display: inline-grid;
+    grid-template-columns: minmax(0, auto) 1.45em;
+    align-items: center;
+    gap: 0.42rem;
+    max-width: 100%;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .profile-link span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .external-mark {
+    display: inline-grid;
+    width: 1.45em;
+    height: 1.45em;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    color: var(--muted);
+    font-size: 0.78em;
+    line-height: 1;
+    transition:
+      background-color 0.12s ease,
+      border-color 0.12s ease,
+      color 0.12s ease,
+      transform 0.12s ease;
+  }
+
+  .profile-link:hover {
+    text-decoration: none;
+  }
+
+  .profile-link:hover .external-mark,
+  .profile-link:focus-visible .external-mark {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-text);
+    transform: translate(1px, -1px);
   }
 
   /* maker 프로필 이미지 */

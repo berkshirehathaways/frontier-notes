@@ -40,6 +40,38 @@ const homeNavItems = [
 ---
 
 <BaseLayout hideSiteHeader>
+  <header class="home-header" aria-label="프론티어노트 홈 메뉴">
+    <a href="/" class="home-header-brand" aria-label="frontiernote 홈으로 이동">
+      <span class="home-brand-desktop mono">AI NATIVE FIELD MAGAZINE</span>
+      <span class="home-brand-mobile">frontiernote</span>
+    </a>
+    <nav class="home-header-nav" aria-label="홈 주요 메뉴">
+      <ul>
+        {homeNavItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <details class="home-mobile-menu">
+      <summary aria-label="모바일 메뉴">
+        <span class="home-menu-label home-menu-label-closed mono">MENU</span>
+        <span class="home-menu-label home-menu-label-open mono">CLOSE</span>
+        <span class="home-menu-mark" aria-hidden="true"></span>
+      </summary>
+      <nav class="home-mobile-menu-panel" aria-label="모바일 홈 메뉴">
+        <a href={currentIssue?.data.publicPath ?? '/issues'}>Current Issue</a>
+        {homeNavItems.map((item) => (
+          <a href={item.href}>
+            <span class="mono">{item.label}</span>
+            <span>{item.hangul}</span>
+          </a>
+        ))}
+      </nav>
+    </details>
+  </header>
+
   <!-- Hero -->
   <div class="world-block" aria-label="편집 세계관">
     <div class="world-display">
@@ -53,22 +85,10 @@ const homeNavItems = [
       <span class="world-reading-item" id="readingNowHere">→ the future is now here</span>
     </div>
     <p class="world-tagline">
-      <span class="tagline-l1">미래는 아직 어디에도 없다. 그런데 AI 네이티브 창업가와 빌더의 손에는 이미 와 있다.</span>
-      <span class="tagline-l2">프론티어노트는 그 장면을 이슈, 노트, 사람으로 묶어 기록하는 매거진이다.</span>
+      <span class="tagline-l1 tagline-desktop">미래는 아직 어디에도 없다. 그런데 AI 네이티브 창업가와 빌더의 손에는 이미 와 있다.</span>
+      <span class="tagline-l2 tagline-desktop">프론티어노트는 그 장면을 이슈, 노트, 사람으로 묶어 기록하는 매거진이다.</span>
+      <span class="tagline-mobile">AI 네이티브 창업가와 빌더의 손에 먼저 온 장면을 기록한다.</span>
     </p>
-    <nav class="home-path-nav" aria-label="프론티어노트 읽기 경로">
-      <ul>
-        {homeNavItems.map((item) => (
-          <li>
-            <a href={item.href}>
-              <span class="path-label mono">{item.label}</span>
-              <span class="path-hangul">{item.hangul}</span>
-              <span class="path-desc">{item.desc}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
   </div>
 
   <!-- Current Issue -->
@@ -237,6 +257,61 @@ const homeNavItems = [
 </script>
 
 <style>
+  /* ── 홈 전용 상단 네비 ───────────────────── */
+  .home-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-5);
+    padding: 0.35rem 0 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .home-header-brand {
+    min-width: 0;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .home-brand-desktop {
+    display: inline-block;
+    font-size: var(--text-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .home-brand-mobile {
+    display: none;
+  }
+
+  .home-header-nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: clamp(1.1rem, 2.8vw, 2.1rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .home-header-nav a {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .home-header-nav a:hover {
+    color: var(--text);
+  }
+
+  .home-mobile-menu {
+    display: none;
+  }
+
   /* ── 세계관 블록: 초대형 타이포 ─────────── */
   .world-block {
     padding: var(--home-opening-space) 0 1rem;
@@ -344,13 +419,18 @@ const homeNavItems = [
   }
 
   .tagline-l1,
-  .tagline-l2 {
+  .tagline-l2,
+  .tagline-mobile {
     display: block;
+  }
+
+  .tagline-mobile {
+    display: none;
   }
 
   .tagline-l2 {
     font-size: 0.9em;
-    color: var(--text);
+    color: inherit;
   }
 
   .home-path-nav {
@@ -595,70 +675,280 @@ const homeNavItems = [
 
 
   @media (max-width: 768px) {
-    .world-block {
-      padding-top: clamp(1.25rem, 7vw, 1.65rem);
+    .home-header {
+      position: relative;
+      padding: 0.25rem 0 0.8rem;
+      gap: var(--sp-4);
     }
 
-    .world-title {
-      gap: 0.16rem;
-    }
-
-    .world-title-ko {
-      font-size: clamp(2rem, 11vw, 2.85rem);
-      letter-spacing: -0.012em;
-    }
-
-    .world-giant {
-      font-size: clamp(1.42rem, 6.9vw, 2rem);
-      letter-spacing: -0.085em;
-    }
-
-    .world-block .world-readings {
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .world-tagline {
-      font-size: clamp(0.95rem, 4.5vw, 1.12rem);
-      line-height: 1.55;
-      max-width: 100%;
-    }
-
-    .tagline-l2 {
-      font-size: 0.82em;
-    }
-
-    .home-path-nav {
-      margin-top: 0.68rem;
-      padding-top: 0.5rem;
-    }
-
-    .home-path-nav ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      border-left: none;
-    }
-
-    .home-path-nav a {
-      min-height: auto;
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0.28rem;
-      padding: 0.34rem 0.48rem;
-      border: 1px solid var(--line);
-      background: var(--bg-soft);
-    }
-
-    .path-label,
-    .path-desc {
+    .home-brand-desktop,
+    .home-header-nav {
       display: none;
     }
 
-    .path-hangul {
-      font-family: var(--font-sans);
-      font-size: var(--text-sm);
-      line-height: 1.1;
+    .home-brand-mobile {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: clamp(1.18rem, 5.7vw, 1.42rem);
+      line-height: 1;
+      letter-spacing: -0.055em;
+      color: var(--text);
+    }
+
+    .home-mobile-menu {
+      display: block;
+      justify-self: end;
+      position: static;
+    }
+
+    .home-mobile-menu summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      min-height: 2.1rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .home-mobile-menu summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .home-mobile-menu summary:focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    .home-menu-label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+    }
+
+    .home-menu-label-open {
+      display: none;
+    }
+
+    .home-mobile-menu[open] .home-menu-label-closed {
+      display: none;
+    }
+
+    .home-mobile-menu[open] .home-menu-label-open {
+      display: inline;
+    }
+
+    .home-menu-mark {
+      width: 0.62rem;
+      height: 0.62rem;
+      display: inline-block;
+      position: relative;
+    }
+
+    .home-menu-mark::before,
+    .home-menu-mark::after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--text);
+      transform-origin: center;
+      transition: transform 0.2s ease;
+    }
+
+    .home-menu-mark::before {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .home-menu-mark::after {
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+    }
+
+    .home-mobile-menu[open] .home-menu-mark::before {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .home-mobile-menu[open] .home-menu-mark::after {
+      top: 50%;
+      transform: translateY(-50%) rotate(-45deg);
+    }
+
+    .home-mobile-menu-panel {
+      position: fixed;
+      z-index: 5;
+      top: calc(var(--page-top-space) + 3.05rem);
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: grid;
+      gap: 0;
+      align-content: start;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 0.2rem 1.1rem;
+      border-top: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--bg);
+    }
+
+    .home-mobile-menu-panel a {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      padding: 0.72rem 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      font-family: var(--font-title);
+      font-size: var(--text-lg);
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+    }
+
+    .home-mobile-menu-panel a:last-child {
+      border-bottom: 0;
+    }
+
+    .home-mobile-menu-panel .mono {
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .world-block {
+      padding-top: clamp(0.78rem, 4.6vw, 1.08rem);
+      padding-bottom: 0.72rem;
+    }
+
+    .world-title {
+      gap: 0;
+    }
+
+    .world-title-ko {
+      display: none;
+    }
+
+    .world-giant {
+      font-size: clamp(1.66rem, 7.65vw, 1.98rem);
+      letter-spacing: -0.078em;
+      line-height: 1.04;
+    }
+
+    .world-block .world-readings {
+      display: none;
+    }
+
+    .world-tagline {
+      margin-top: 0.58rem;
+      font-size: clamp(0.9rem, 3.95vw, 1rem);
+      line-height: 1.54;
+      max-width: 27ch;
+      gap: 0;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    .tagline-desktop {
+      display: none;
+    }
+
+    .tagline-mobile {
+      display: block;
+    }
+
+    .tagline-l2 {
+      font-size: 0.9em;
+    }
+
+    .issue-feature {
+      border: 0;
+      background: transparent;
+    }
+
+    .issue-feature-main {
+      padding: 1.15rem 0 1.15rem;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .issue-feature-main h2 {
+      margin-bottom: 0.75rem;
+      font-size: clamp(2.02rem, 10vw, 2.45rem);
+      line-height: 1.08;
+      letter-spacing: -0.06em;
+    }
+
+    .issue-number {
+      gap: 0.55rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.56rem;
+      letter-spacing: 0.1em;
+    }
+
+    .issue-number .current-badge {
+      padding: 0.16rem 0.52rem;
+      font-size: 0.62rem;
+    }
+
+    .issue-cover-img {
+      margin: 0 0 0.92rem;
+      width: 100%;
+      min-height: clamp(12.6rem, 54vw, 14.6rem);
+      background: var(--text);
+    }
+
+    .issue-cover-img img {
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .issue-feature-desc {
+      font-size: var(--text-base);
+      line-height: 1.72;
+      color: var(--muted);
+    }
+
+    .issue-feature-tags {
+      margin-top: 0.88rem;
+    }
+
+    .issue-feature-toc {
+      padding: 1.05rem 0 0.3rem;
+      background: transparent;
+    }
+
+    .issue-toc-label {
+      font-family: var(--font-title);
+      font-size: var(--text-base);
+      letter-spacing: -0.035em;
+      text-transform: none;
+    }
+
+    .issue-toc-list li {
+      padding: 0.56rem 0;
+    }
+
+    .issue-toc-list .toc-note-link {
+      display: grid;
+      grid-template-columns: 8.1rem minmax(0, 1fr);
+      gap: 0.2rem 0.75rem;
+      align-items: baseline;
+    }
+
+    .issue-toc-list .toc-meta {
+      gap: 0.45rem;
+    }
+
+    .issue-toc-list .toc-subtitle {
+      display: none;
     }
 
     .interviews-series-desc {

@@ -1172,6 +1172,8 @@ a.issue-chip:hover {
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.4rem), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 2.4rem), transparent);
   }
 
   .issue-feature-tags .tag {
@@ -1179,11 +1181,10 @@ a.issue-chip:hover {
     white-space: nowrap;
   }
 
-  /* editorial-entry: badge 열 고정폭 6rem → 모든 제목 시작점 동일 */
   .editorial-entry {
     padding: 0.55rem 0;
-    gap: 0.4rem 0.5rem;
-    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 0.4rem 0.55rem;
+    grid-template-columns: 5.35rem minmax(0, 1fr);
   }
 
   .editorial-entry .entry-body {

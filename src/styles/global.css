@@ -547,7 +547,7 @@ main {
 
 .editorial-entry {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 6rem minmax(0, 1fr);
   gap: 0.6rem 0.9rem;
   padding: 0.72rem 0;
   border-top: var(--border-thin) solid var(--line);

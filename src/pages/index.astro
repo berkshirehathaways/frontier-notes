@@ -6,6 +6,7 @@ import {
   getAllPublishedNotes,
   getPublishedCollection,
   getVisibleIssues,
+  noteUrl,
   resolveIssueNotes,
 } from '../lib/content';
 
@@ -83,7 +84,7 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
               <li>
                 <span class="toc-num mono">{String(i + 1).padStart(2, '0')}</span>
                 <span class="toc-type">[{note.data.type.toUpperCase().replace('-', ' ')}]</span>
-                <a href={`/${note.collection}/${note.id}`}>
+                <a href={noteUrl(note)}>
                   <span class="toc-title">{note.data.title}</span>
                 </a>
               </li>

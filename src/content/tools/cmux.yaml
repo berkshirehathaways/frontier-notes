@@ -6,5 +6,4 @@ frequentSignals:
   - speed
 relatedNotes:
   - systems/one-person-three-roles-flow
-  - interviews/sharing-the-30-minute-deploy-checklist
 summary: 복수 프로세스 관찰과 즉시 대응이 필요한 현장에서 운영 가시성을 높인다.

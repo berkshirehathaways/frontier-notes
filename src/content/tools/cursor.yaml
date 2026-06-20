@@ -6,5 +6,4 @@ frequentSignals:
   - speed
 relatedNotes:
   - field-notes/fix-terminal-one-minute-before-demo
-  - interviews/build-portfolio-through-deploy-logs
 summary: 현장 수정 상황에서 탐색-수정-검증 사이클을 단축한다.

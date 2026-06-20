@@ -10,8 +10,6 @@ themes:
 includedNotes:
   - collection: essays
     slug: launch-frontier-notes
-  - collection: interviews
-    slug: build-portfolio-through-deploy-logs
   - collection: field-notes
     slug: fix-terminal-one-minute-before-demo
   - collection: systems

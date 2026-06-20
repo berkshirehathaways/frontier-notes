@@ -8,7 +8,7 @@ current: true
 description: >-
   사람 둘과 에이전트 둘이 한 디스코드 채널에서 서로를 부르고, 긁고, 평가하고, 낚았다. Issue 02는 AI가 사람처럼 말한다는 이야기가
   아니라, 제품의 말투가 된 캐릭터가 권한의 경계를 건드리기 시작한 밤의 기록이다.
-publishedAt: 2026-06-12
+publishedAt: 2026-06-20
 coverImage: /uploads/i-am-human/coverImage.png
 themes:
   - ai-native

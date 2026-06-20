@@ -1,6 +1,6 @@
 ---
 import type { NoteEntry } from '../lib/content';
-import { formatDate, noteUrl } from '../lib/content';
+import { formatDate, getIssueMembership, noteUrl } from '../lib/content';
 import { SITE } from '../lib/site';
 
 interface Props {
@@ -14,6 +14,8 @@ const typeLabel = entry.data.type.toUpperCase().replace('-', ' ');
 const tools = entry.data.tools.length ? entry.data.tools.join(', ') : 'n/a';
 const signals = entry.data.signals.length ? entry.data.signals.join(', ') : 'n/a';
 const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
+const issueMembership = await getIssueMembership(entry);
+const issueLabel = issueMembership?.label ?? `Issue ${entry.data.issue}`;
 ---
 
 <article class="note-detail">
@@ -23,7 +25,11 @@ const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
     <div class="detail-meta-row">
       <span class="type-badge">{typeLabel}</span>
       <span class="eyebrow detail-sep">·</span>
-      <span class="eyebrow">Issue {entry.data.issue}</span>
+      {issueMembership ? (
+        <a class="issue-chip detail-issue-chip" href={issueMembership.href ?? '#'}>{issueMembership.label}</a>
+      ) : (
+        <span class="eyebrow">{issueLabel}</span>
+      )}
       <span class="eyebrow detail-sep">·</span>
       <span class="eyebrow">{formatDate(entry.data.date)}</span>
     </div>
@@ -62,6 +68,16 @@ const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
               <dd>{entry.data.role}</dd>
             </div>
           )}
+          <div class="meta-row">
+            <dt>issue</dt>
+            <dd>
+              {issueMembership ? (
+                <a class="meta-issue-link" href={issueMembership.href ?? '#'}>{issueMembership.label}</a>
+              ) : (
+                entry.data.issue
+              )}
+            </dd>
+          </div>
           <div class="meta-row">
             <dt>tools</dt>
             <dd>{tools}</dd>
@@ -165,6 +181,10 @@ const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
     opacity: 0.35;
   }
 
+  .detail-issue-chip {
+    max-width: min(100%, 34rem);
+  }
+
   .detail-title {
     margin: 0 0 0.55rem;
     font-size: clamp(2rem, 4.8vw, 3.4rem);
@@ -253,6 +273,17 @@ const themes = entry.data.themes.length ? entry.data.themes.join(', ') : 'n/a';
     font-size: var(--text-sm);
     line-height: 1.52;
     color: var(--muted);
+  }
+
+  .meta-issue-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .meta-issue-link:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.16rem;
   }
 
   /* 다음 질문 */

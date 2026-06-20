@@ -3,6 +3,14 @@ import { NOTE_COLLECTIONS, type NoteCollection } from './content-model';
 
 export { NOTE_COLLECTIONS, type NoteCollection };
 export type NoteEntry = CollectionEntry<NoteCollection>;
+export type IssueEntry = CollectionEntry<'issues'>;
+
+export interface IssueMembership {
+  title: string;
+  numberLabel: string;
+  label: string;
+  href?: string;
+}
 
 const showDrafts = import.meta.env.SHOW_DRAFTS === 'true';
 const isVercelPreview = process.env.VERCEL_ENV === 'preview';
@@ -49,6 +57,45 @@ export async function getVisibleIssues() {
     return data.status !== undefined ? data.status === 'published' : !data.hidden;
   });
   return issues.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+}
+
+let issueMembershipMapPromise: Promise<Map<string, IssueMembership>> | undefined;
+
+function issueMembershipLabel(issue: IssueEntry): IssueMembership {
+  const numberLabel = issue.data.number ? `Issue ${issue.data.number}` : 'Issue';
+  return {
+    title: issue.data.title,
+    numberLabel,
+    label: `${numberLabel} · ${issue.data.title}`,
+    href: issue.data.publicPath,
+  };
+}
+
+function noteRefKey(collection: NoteCollection, slug: string) {
+  return `${collection}/${slug}`;
+}
+
+export async function getIssueMembershipMap() {
+  issueMembershipMapPromise ??= (async () => {
+    const issues = await getVisibleIssues();
+    const map = new Map<string, IssueMembership>();
+
+    for (const issue of issues) {
+      const label = issueMembershipLabel(issue);
+      for (const note of issue.data.includedNotes) {
+        map.set(noteRefKey(note.collection, note.slug), label);
+      }
+    }
+
+    return map;
+  })();
+
+  return issueMembershipMapPromise;
+}
+
+export async function getIssueMembership(entry: NoteEntry) {
+  const issueMap = await getIssueMembershipMap();
+  return issueMap.get(noteRefKey(entry.collection, entry.data.slug)) ?? issueMap.get(noteRefKey(entry.collection, entry.id));
 }
 
 export async function getAllPublishedNotes() {

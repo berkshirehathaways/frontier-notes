@@ -369,6 +369,31 @@ main {
   text-transform: lowercase;
 }
 
+.issue-chip {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: var(--border-thin) solid var(--line-strong);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  padding: 0.08rem 0.45rem;
+  text-decoration: none;
+}
+
+a.issue-chip:hover {
+  color: var(--text);
+  border-color: var(--text);
+  text-decoration: none;
+}
+
 /* 타입 뱃지: 라임 강조 */
 .type-badge {
   display: inline-flex;
@@ -704,6 +729,11 @@ main {
   margin: 0;
 }
 
+.issue-feature-tags {
+  margin-top: 0.85rem;
+  min-width: 0;
+}
+
 .issue-cover-img {
   margin: 0 -1.3rem 1rem;
   width: calc(100% + 2.6rem);
@@ -764,6 +794,22 @@ main {
   line-height: 1.38;
   letter-spacing: -0.015em;
   color: var(--text);
+}
+
+.issue-toc-list .toc-note-link {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.issue-toc-list .toc-subtitle {
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  line-height: 1.45;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .issue-toc-list a {
@@ -956,11 +1002,14 @@ main {
 @media (max-width: 900px) {
   .issue-feature {
     grid-template-columns: 1fr;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .issue-feature-main {
     border-right: none;
     border-bottom: var(--border-thin) solid var(--line);
+    overflow: hidden;
   }
 
   .research-index {
@@ -1037,10 +1086,32 @@ main {
     overflow: hidden;
   }
 
+  .issue-cover-img {
+    flex: none;
+    min-height: 12.5rem;
+  }
+
   .issue-feature-desc {
+    display: block;
+    line-height: 1.68;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+  }
+
+  .issue-feature-tags {
+    flex-wrap: nowrap;
     max-width: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .issue-feature-tags .tag {
+    flex: 0 0 auto;
     white-space: nowrap;
   }
 

@@ -1,5 +1,9 @@
 # Frontier Notes Design System
 
+이 문서는 색, 타이포그래피, 간격, 컴포넌트 원칙을 정하는 시각 토큰 기준이다.
+콘텐츠 위계, 페이지 포맷, 콘텐츠 타입별 표시 규칙은
+`docs/design/content-hierarchy.md`를 따른다.
+
 ## 1. Atmosphere & Identity
 
 Frontier Notes feels like a quiet technical magazine: editorial, archival, and slightly terminal-like. The signature is paper-toned density with hard rules, restrained accent, and media treated as evidence rather than decoration.
@@ -100,7 +104,15 @@ Spacing is based on 4px increments.
 - **Structure**: metadata column plus content column.
 - **Spacing**: compact, rule-separated rows.
 - **Behavior**: Korean titles use `word-break: keep-all` and `overflow-wrap: break-word`.
-- **Mobile tagline behavior**: issue descriptions and note subtitles/taglines stay on one line and truncate with ellipsis, so issue pages keep a consistent scan height.
+- **Mobile issue feature behavior**: the home current-issue description stays fully visible, while theme tags stay on one clipped row without wrapping.
+- **Mobile issue list behavior**: archive/detail note subtitles stay compact and may truncate with ellipsis to keep list rows scannable.
+
+### Issue Membership Labels
+
+- **Structure**: a small mono `.issue-chip` that resolves from issue membership, not raw note frontmatter.
+- **Content**: use `Issue NN · title` when the note is included in a public issue.
+- **Behavior**: labels stay on one line and truncate with ellipsis before pushing list layouts sideways.
+- **Hierarchy**: issue membership is quieter than the green type badge and should not reuse the accent fill.
 
 ## 6. Motion & Interaction
 

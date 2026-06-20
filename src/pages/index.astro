@@ -69,7 +69,7 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
           </div>
         )}
         <p class="issue-feature-desc">{currentIssue.data.description}</p>
-        <div class="tag-list" style="margin-top: 0.85rem;">
+        <div class="tag-list issue-feature-tags">
           {currentIssue.data.themes.map((theme) => (
             <span class="tag">{theme}</span>
           ))}
@@ -84,8 +84,9 @@ const deepInterviews = allInterviews.filter((e) => e.data.interviewKind === 'dee
               <li>
                 <span class="toc-num mono">{String(i + 1).padStart(2, '0')}</span>
                 <span class="toc-type">[{note.data.type.toUpperCase().replace('-', ' ')}]</span>
-                <a href={noteUrl(note)}>
+                <a href={noteUrl(note)} class="toc-note-link">
                   <span class="toc-title">{note.data.title}</span>
+                  {note.data.subtitle && <span class="toc-subtitle">{note.data.subtitle}</span>}
                 </a>
               </li>
             ))}

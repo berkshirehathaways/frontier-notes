@@ -1,8 +1,8 @@
 # Frontier Notes Design System
 
 이 문서는 색, 타이포그래피, 간격, 컴포넌트 원칙을 정하는 시각 토큰 기준이다.
-콘텐츠 위계, 페이지 포맷, 콘텐츠 타입별 표시 규칙은
-`docs/design/content-hierarchy.md`를 따른다.
+콘텐츠 위계는 `docs/design/content-hierarchy.md`, 콘텐츠 타입별 카드/상세/모바일 포맷은
+`docs/design/content-type-system.md`를 따른다.
 
 ## 1. Atmosphere & Identity
 

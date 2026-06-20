@@ -24,7 +24,7 @@ Frontier Note accepts public-safe contributions through pull requests.
 - Keep public person data limited to information already intended for publication.
 - Mark unfinished notes with `draft: true`.
 - Published issues should use `status: published`; unfinished issues should stay `draft`.
-- Design or layout changes should follow `DESIGN.md` and `docs/design/content-hierarchy.md`.
+- Design or layout changes should follow `DESIGN.md`, `docs/design/content-hierarchy.md`, and `docs/design/content-type-system.md`.
 - Public UI should show issue membership from `includedNotes`, not raw internal issue slugs.
 
 ## Before Opening a PR
